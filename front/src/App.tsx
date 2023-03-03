@@ -22,15 +22,7 @@ const Background = styled.div<StyledContainerProps>`
 `;
 
 function App() {
-  interface User {
-    name: string;
-    age: number;
-  }
-  let user: User = {
-    name: "xx",
-    age: 30,
-  };
-  console.log(user.name);
+
   return (
     <Container>
       <GlobalStyle />
