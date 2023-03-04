@@ -16,9 +16,10 @@ const Background = styled.div<StyledContainerProps>`
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url(${(props) => props.background});
+  background-image: url(${(props) => props.background}), var(--green-gd);
   background-position: center center;
   background-size: cover;
+  background-blend-mode: multiply;
 `;
 
 function App() {

@@ -2,9 +2,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 import Main from "./page/Main";
 
-const Container = styled.div`
+const Container = styled.section`
   width: 100%;
   max-width: 50rem;
+  position: relative;
 `;
 const AppRouter = () => {
   return (
