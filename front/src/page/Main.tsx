@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Button from "../component/common/Button";
 import centerStar from "../image/centerStar.png";
-
+import Star from "../image/Star.png"
 const MainWrap = styled.article`
   text-align: center;
   padding: 8rem 2rem 3rem;
@@ -10,11 +10,23 @@ const MainWrap = styled.article`
   align-items: center;
   min-height: calc(100vh - 11rem);
   h2 {
+    position: relative;
     font-weight: 300;
     letter-spacing: 1rem;
     line-height: 3rem;
   }
+  img {
+    position: absolute;
+    width: 95%;
+    top:50%;
+    transform: translateY(-50%);
+  }
+  button {
+    margin-top:auto;
+    position: relative;
+  }
 `;
+
 const CircleWrap = styled.div`
   width: 90%;
   max-width: 34rem;
@@ -29,7 +41,9 @@ const CircleWrap = styled.div`
     display: block;
     content: "";
   }
-  /* background-image: url(${centerStar}); */
+  background-image: url(${centerStar});
+  background-position: center center;
+  background-repeat: no-repeat;
   div {
     border-radius: 50%;
     width: 100%;
@@ -47,7 +61,7 @@ const CircleWrap = styled.div`
   }
   .puppleCircleWrap {
     animation-name: circleRotate;
-    border: 1px solid #9e01ff;
+    border: 0.5px solid #9e01ff;
     .puppleCircle {
       top: -9px;
       background-color: #9e01ff;
@@ -57,7 +71,7 @@ const CircleWrap = styled.div`
     animation-name: circleRotateReverse;
     width: 84%;
     height: 84%;
-    border: 1px solid #01ffc2;
+    border: 0.5px solid #01ffc2;
     .greenCircle {
       top: 50%;
       right: -9px;
@@ -68,7 +82,7 @@ const CircleWrap = styled.div`
     animation-name: circleRotate;
     width: 66%;
     height: 66%;
-    border: 1px solid #0167ff;
+    border: 0.5px solid #0167ff;
     animation-duration: 14s;
     .blueCircle {
       top: 65%;
@@ -80,7 +94,7 @@ const CircleWrap = styled.div`
     animation-name: circleRotateReverse;
     width: 50%;
     height: 50%;
-    border: 1px solid #fff;
+    border: 0.5px solid #fff;
     animation-duration: 12s;
     .whiteCircle {
       top: 0px;
@@ -92,7 +106,7 @@ const CircleWrap = styled.div`
     animation-name: circleRotate;
     width: 33%;
     height: 33%;
-    border: 1px solid #ffea7e;
+    border: 0.5px solid #ffea7e;
     animation-duration: 10s;
     .yellowCircle {
       bottom: -7px;
@@ -110,13 +124,11 @@ const CircleWrap = styled.div`
       transform: rotate(-360deg);
     }
   }
-  button {
-    margin-top:auto;
-  }
 `;
 const Main = () => {
   return (
     <MainWrap>
+        <img src={Star} alt="Star" />
       <h2>
         CREATE YOUR
         <br />
