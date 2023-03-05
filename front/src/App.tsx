@@ -2,6 +2,7 @@ import styled from "styled-components";
 import AppRouter from "./AppRouter";
 import GlobalStyle from "./GrobalStyle";
 import backgroundDefalut from "./image/backgroundDefault.png";
+
 interface StyledContainerProps {
   readonly background: string;
 }

@@ -1,7 +1,14 @@
 import styled from "styled-components";
 import Button from "../component/common/Button";
 import centerStar from "../image/centerStar.png";
-import Star from "../image/Star.png"
+import Star from "../image/Star.png";
+import CreateModal from "../component/modal/CreateModal";
+import { useState } from "react";
+
+interface BackgroundToString {
+  readonly background: string;
+}
+
 const MainWrap = styled.article`
   text-align: center;
   padding: 8rem 2rem 3rem;
@@ -14,15 +21,10 @@ const MainWrap = styled.article`
     font-weight: 300;
     letter-spacing: 1rem;
     line-height: 3rem;
-  }
-  img {
-    position: absolute;
-    width: 95%;
-    top:50%;
-    transform: translateY(-50%);
+    margin-bottom: 3rem;
   }
   button {
-    margin-top:auto;
+    margin-top: 8rem;
     position: relative;
   }
 `;
@@ -125,10 +127,28 @@ const CircleWrap = styled.div`
     }
   }
 `;
+
+const StarImg = styled.div<BackgroundToString>`
+  position: absolute;
+  width: 95%;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 95%;
+  background-image: url(${(props) => props.background});
+  background-size: cover;
+  background-position: center center;
+`;
+
 const Main = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleIsOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <MainWrap>
-        <img src={Star} alt="Star" />
+      <StarImg background={Star} />
       <h2>
         CREATE YOUR
         <br />
@@ -150,9 +170,9 @@ const Main = () => {
         <div className="yellowCircleWrap">
           <span className="yellowCircle" />
         </div>
-        {/* <img src={centerStar} alt="centerStar" /> */}
       </CircleWrap>
-      <Button text={"나의 우주 만들기"}/>
+      <Button text={"나의 우주 만들기"} onClick={() => handleIsOpen()} />
+      <CreateModal handleClose={() => setIsOpen(false)} isOpen={isOpen} />
     </MainWrap>
   );
 };
