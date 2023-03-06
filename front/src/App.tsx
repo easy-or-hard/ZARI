@@ -24,7 +24,6 @@ const Background = styled.div<StyledContainerProps>`
 `;
 
 function App() {
-
   return (
     <Container>
       <GlobalStyle />

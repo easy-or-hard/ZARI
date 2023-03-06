@@ -4,8 +4,9 @@ const GlobalStyle = createGlobalStyle`
 :root {
   /* font-size */
   --title-font: 2.2rem;
-  --main-font : 1.6rem;
   --button-font : 1.8rem;
+  --main-font : 1.6rem;
+  --small-font : 1.4rem;
 
   /* color */
   --black-color : #161616;
@@ -22,7 +23,12 @@ body {
   color: #fff;
   font-size:var(--main-font);
 }
-h2 {margin:0; padding: 0;}
+h2, button, input {margin:0; padding: 0;}
+button, input {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
 `;
 
 export default GlobalStyle;

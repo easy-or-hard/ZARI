@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 type ButtonProps = {
@@ -13,11 +12,11 @@ const ButtonWrap = styled.button`
   border: none;
   font-size: var(--button-font);
   font-weight: 700;
-  cursor: pointer;
+  background-color: #fff;
 `;
 
 const Button: React.FC<ButtonProps> = ({ text, onClick }) => {
-  return <ButtonWrap onClick={onClick}>{text}</ButtonWrap>;
+  return <ButtonWrap type="button" onClick={onClick}>{text}</ButtonWrap>;
 };
 
 export default Button;

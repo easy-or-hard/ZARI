@@ -23,7 +23,7 @@ const MainWrap = styled.article`
     line-height: 3rem;
     margin-bottom: 3rem;
   }
-  button {
+  >button {
     margin-top: 8rem;
     position: relative;
   }
