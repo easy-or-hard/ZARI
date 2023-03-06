@@ -11,7 +11,7 @@ export default class ApiRouter extends AbstractRouter {
      * @param {e.Application} application
      */
     static setRoute(application: e.Application) {
-        application.route("/html")
+        application.route("/api")
             .all((req, res, next) => {next();})
             .get((req, res) => {res.json({value: "this is ApiRouter"})})
     }

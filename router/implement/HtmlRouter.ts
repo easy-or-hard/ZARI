@@ -10,7 +10,7 @@ export default class HtmlRouter extends AbstractRouter {
      * @param {e.Application} application
      */
     static setRoute(application: e.Application) {
-        application.route("/api")
+        application.route("/html")
             .all((req, res, next) => {next();})
             .get((req, res) => {res.json({value: "this is HtmlRouter"})})
     }
