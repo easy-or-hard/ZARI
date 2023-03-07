@@ -1,11 +1,12 @@
-import { ChangeEvent, useState } from "react";
 import styled from "styled-components";
 import essentialStar from "../../image/essentialStar.png";
 
 interface InputProps {
   id: string;
   placeholder?: string;
-  rule?: { max: number; min: number };
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  minLength?: number;
 }
 
 const InputWrap = styled.div`
@@ -28,12 +29,13 @@ const InputWrap = styled.div`
     font-size: var(--small-font);
   }
 `;
-const Input: React.FC<InputProps> = ({ id, placeholder, rule }) => {
-  const [isValue, setValue] = useState("");
-  const handleValue = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-  
+const Input: React.FC<InputProps> = ({
+  id,
+  placeholder,
+  value,
+  onChange,
+  minLength,
+}) => {
   return (
     <InputWrap>
       <div className="labelWrap">
@@ -44,11 +46,16 @@ const Input: React.FC<InputProps> = ({ id, placeholder, rule }) => {
         type="text"
         id={id}
         placeholder={placeholder}
-        minLength={rule?.min}
-        maxLength={rule?.max}
-        onChange={handleValue}
+        value={value}
+        minLength={minLength}
+        onChange={onChange}
       />
-      {/* {rule? (<span>{isValue.length}</span>/<span>8</span>)} */}
+
+      {id === "space" && (
+        <>
+          <span>{value.length}</span>/<span>8</span>
+        </>
+      )}
     </InputWrap>
   );
 };

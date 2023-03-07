@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Button from "../common/Button";
 import btnClose from "../../image/btnClose.png";
 import Input from "../common/Input";
+import useInput from "../../util/useInput";
 
 interface CreateModalProps {
   handleClose?: () => void;
@@ -42,6 +43,9 @@ const CreateModalWrap = styled.div<CreateModalProps>`
 `;
 
 const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
+  const maxLength = (value: string) => value.length <= 8 ; // vaidator예시함수 글자수 최대 10
+  const {value: spaceValue, onChange: spaceOnChange} = useInput("", maxLength);
+
   return (
     <CreateModalWrap isOpen={isOpen}>
       <div className="background" onClick={handleClose} />
@@ -49,7 +53,13 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
         <button type="button" className="closeBtn" onClick={handleClose}>
           <img src={btnClose} alt="closeBtn" />
         </button>
-        <Input id="space" placeholder="2글자 이상 8글자 이하(공백포함)" rule={{max:8, min:2}}/>
+        <Input
+          id="space"
+          placeholder="2글자 이상 8글자 이하(공백포함)"
+          value={spaceValue}
+          minLength={2}
+          onChange={spaceOnChange}
+        />
         <Button text="만들기 완료" />
       </form>
     </CreateModalWrap>
