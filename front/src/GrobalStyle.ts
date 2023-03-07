@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
 
   /* color */
   --black-color : #161616;
-  --gray-color: #d9d9d9;
+  --gray-color: #b6b6b6;
   --pupple-gd: linear-gradient(125deg, rgb(255,44,233), rgb(0,20,255));
   --pastel-gd: linear-gradient(125deg, rgb(120,163,235), rgb(251,194,235));
   --orange-gd: linear-gradient(125deg, rgb(255,246,185), rgb(255,0,91));
@@ -29,6 +29,7 @@ button, input {
   border: none;
   cursor: pointer;
 }
+input::placeholder {color:var(--gray-color)}
 `;
 
 export default GlobalStyle;

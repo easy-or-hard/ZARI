@@ -3,6 +3,7 @@ import Button from "../common/Button";
 import btnClose from "../../image/btnClose.png";
 import Input from "../common/Input";
 import useInput from "../../util/useInput";
+import SelectBox from "../common/Selectbox";
 
 interface CreateModalProps {
   handleClose?: () => void;
@@ -43,8 +44,11 @@ const CreateModalWrap = styled.div<CreateModalProps>`
 `;
 
 const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
-  const maxLength = (value: string) => value.length <= 8 ; // vaidator예시함수 글자수 최대 10
-  const {value: spaceValue, onChange: spaceOnChange} = useInput("", maxLength);
+  const maxLength = (value: string) => value.length <= 8; // vaidator예시함수 글자수 최대 10
+  const { value: spaceValue, onChange: spaceOnChange } = useInput(
+    "",
+    maxLength
+  );
 
   return (
     <CreateModalWrap isOpen={isOpen}>
@@ -55,7 +59,15 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
         </button>
         <Input
           id="space"
+          label="나의 우주 이름은?"
           placeholder="2글자 이상 8글자 이하(공백포함)"
+          value={spaceValue}
+          minLength={2}
+          onChange={spaceOnChange}
+        />
+        <SelectBox
+          id="space"
+          label="나의 별자리는?"
           value={spaceValue}
           minLength={2}
           onChange={spaceOnChange}

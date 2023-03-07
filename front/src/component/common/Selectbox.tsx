@@ -1,16 +1,15 @@
 import styled from "styled-components";
 import essentialStar from "../../image/essentialStar.png";
 
-interface InputProps {
-  label?: string
+interface SelectProps {
+  label?: string;
   id: string;
-  placeholder?: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   minLength?: number;
 }
 
-const InputWrap = styled.div`
+const SelectWrap = styled.div`
   text-align: left;
   .labelWrap {
     margin-bottom: 1.2rem;
@@ -37,16 +36,15 @@ const LengthChecker = styled.div`
   font-size: var(--small-font);
   margin-top: 0.2rem;
 `;
-const Input: React.FC<InputProps> = ({
+const SelectBox: React.FC<SelectProps> = ({
   label,
   id,
-  placeholder,
   value,
   onChange,
   minLength,
 }) => {
   return (
-    <InputWrap>
+    <SelectWrap>
       {label && (
         <>
           <div className="labelWrap">
@@ -58,7 +56,6 @@ const Input: React.FC<InputProps> = ({
       <input
         type="text"
         id={id}
-        placeholder={placeholder}
         value={value}
         minLength={minLength}
         onChange={onChange}
@@ -69,8 +66,8 @@ const Input: React.FC<InputProps> = ({
           <span>{value.length}</span>/<span>8</span>
         </LengthChecker>
       )}
-    </InputWrap>
+    </SelectWrap>
   );
 };
 
-export default Input;
+export default SelectBox;
