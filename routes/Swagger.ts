@@ -3,28 +3,19 @@ import specs from "../conf/swagger";
 import express from "express";
 
 export default class SwaggerRouter {
-    private static readonly swaggerRouter: SwaggerRouter = this.initialize();
     /**
      * get routes instance
      * @type {express.Router}
      */
-    static router : express.Router;
+    static router : express.Router = this.routerInitializer();
 
-    private static initialize() {
-        return new SwaggerRouter();
-    }
+    private constructor() {}
 
-    private constructor() {
-        SwaggerRouter.router = express.Router();
-        SwaggerRouter.setRoute();
-    }
+    private static routerInitializer() {
+        let router: express.Router = express.Router();
 
-    private static setRoute() {
-        this.router.use(swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
-    }
+        router.use(swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
-    private static get = (request: express.Request, response: express.Response) => {
-        let jsonValue = {value: "this is SwaggerRouter get"};
-        response.json(jsonValue);
+        return router;
     }
 }
