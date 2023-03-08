@@ -2,22 +2,22 @@
 import express from "express";
 import log4js, {Logger} from "log4js";
 
-// project implement
-import HtmlRouter from "./router/implement/HtmlRouter";
-import ApiRouter from "./router/implement/ApiRouter";
+import ApiRouter from "./routes/ApiRouter";
+import SwaggerRouter from "./routes/Swagger";
 
-// const
-import ENVIRONMENT_CONST from "./conf/ENVIROMENT_CONST";
-import DEFAULT_CONST from "./conf/SERVICE_CONST"
-
+/**
+ * variable declaration
+ */
+let port: number = 80;
+let loggerLevel: string = "debug";
 
 class App {
-    static readonly app : express.Application = express();
-    static readonly port : number = DEFAULT_CONST.PORT;
+    private static readonly app : express.Application = express();
+    private static readonly port : number = port;
 
     static serverStart() {
-        HtmlRouter.setRoute(this.app);
-        ApiRouter.setRoute(this.app);
+        this.app.use("/api", ApiRouter.router);
+
 
         this.loggerInit();
         this.listen();
@@ -25,7 +25,7 @@ class App {
 
     private static loggerInit(): Logger {
         let logger: Logger = log4js.getLogger();
-        logger.level = ENVIRONMENT_CONST.LOGGER_LEVEL || DEFAULT_CONST.LOGGER_LEVEL;
+        logger.level = loggerLevel;
         return logger;
     }
 
