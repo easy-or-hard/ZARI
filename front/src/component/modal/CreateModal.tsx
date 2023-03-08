@@ -4,6 +4,8 @@ import btnClose from "../../image/btnClose.png";
 import Input from "../common/Input";
 import useInput from "../../util/useInput";
 import SelectBox from "../common/Selectbox";
+import Constellation from "../../dummyData/Constellation";
+import useSelect from "../../util/useSelect";
 
 interface CreateModalProps {
   handleClose?: () => void;
@@ -49,6 +51,10 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
     "",
     maxLength
   );
+  const {value: selectValue, onChange: selectOnChange} = useSelect(
+    `${Constellation[0].value} (${Constellation[0].date})`
+  );
+
 
   return (
     <CreateModalWrap isOpen={isOpen}>
@@ -66,11 +72,11 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
           onChange={spaceOnChange}
         />
         <SelectBox
-          id="space"
+          id="Constellation"
           label="나의 별자리는?"
-          value={spaceValue}
-          minLength={2}
-          onChange={spaceOnChange}
+          value={selectValue}
+          onChange={selectOnChange}
+          data={Constellation}
         />
         <Button text="만들기 완료" />
       </form>
