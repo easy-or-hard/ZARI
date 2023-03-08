@@ -6,6 +6,7 @@ import useInput from "../../util/useInput";
 import SelectBox from "../common/Selectbox";
 import Constellation from "../../dummyData/Constellation";
 import useSelect from "../../util/useSelect";
+import ThemeSelect from "../createModal/ThemeSelect";
 
 interface CreateModalProps {
   handleClose?: () => void;
@@ -32,8 +33,8 @@ const CreateModalWrap = styled.div<CreateModalProps>`
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: calc(50rem - 8rem);
+    width: calc(100% - 9rem);
+    max-width: calc(50rem);
     padding: 5rem 2rem 2rem;
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 20px;
@@ -43,6 +44,9 @@ const CreateModalWrap = styled.div<CreateModalProps>`
       right: 2rem;
     }
   }
+  form > div {
+    margin-bottom: 3rem;
+  }
 `;
 
 const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
@@ -51,11 +55,15 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
     "",
     maxLength
   );
-  const {value: selectValue, onChange: selectOnChange} = useSelect(
+  const { value: selectValue, onChange: selectOnChange } = useSelect(
     `${Constellation[0].value} (${Constellation[0].date})`
   );
-
-
+  const { value: themeValue, onChange: themeOnChange } = useSelect("green");
+  console.log({
+    space: spaceValue,
+    select: selectValue,
+    theme: themeValue
+  })
   return (
     <CreateModalWrap isOpen={isOpen}>
       <div className="background" onClick={handleClose} />
@@ -78,6 +86,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
           onChange={selectOnChange}
           data={Constellation}
         />
+        <ThemeSelect value={themeValue} onChange={themeOnChange}/>
         <Button text="만들기 완료" />
       </form>
     </CreateModalWrap>

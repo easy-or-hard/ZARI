@@ -17,6 +17,7 @@ const InputWrap = styled.div`
     display: flex;
     align-items: flex-start;
     label {
+      font-weight: 700;
       cursor: pointer;
     }
   }

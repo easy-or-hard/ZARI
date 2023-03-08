@@ -23,13 +23,14 @@ body {
   color: #fff;
   font-size:var(--main-font);
 }
-h2, button, input {margin:0; padding: 0;}
+h2, button, input, ul, li {margin:0; padding: 0;}
 button, input {
   background-color: transparent;
   border: none;
   cursor: pointer;
 }
 input::placeholder {color:var(--gray-color)}
+li {list-style:none}
 `;
 
 export default GlobalStyle;
