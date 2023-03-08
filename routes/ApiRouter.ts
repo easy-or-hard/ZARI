@@ -1,31 +1,27 @@
-import express, {NextFunction} from "express";
+import express from "express";
 
 /**
  * singleton pattern, early initialization pattern
  */
 export default class ApiRouter {
-    private static readonly apiRouter: ApiRouter = this.initialize();
     /**
      * get routes instance
      * @type {express.Router}
      */
-    static router : express.Router;
+    static router : express.Router = this.routerInitializer();
 
-    private static initialize() {
-        return new ApiRouter();
-    }
+    private constructor() {}
 
-    private constructor() {
-        ApiRouter.router = express.Router();
-        ApiRouter.setRoute();
-    }
+    private static routerInitializer() {
+        let router: express.Router = express.Router();
 
-    private static setRoute() {
-        this.router.route("")
+        router.route("")
             .get(ApiRouter.get)
             .post(ApiRouter.post)
             .put(ApiRouter.put)
             .delete(ApiRouter.delete);
+
+        return router;
     }
 
     /**
