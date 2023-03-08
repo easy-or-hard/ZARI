@@ -17,7 +17,7 @@ class App {
 
     static serverStart() {
         this.app.use("/api", ApiRouter.router);
-
+        this.app.use("/api-docs", SwaggerRouter.router);
 
         this.loggerInit();
         this.listen();
