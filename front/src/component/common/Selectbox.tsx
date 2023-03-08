@@ -30,12 +30,6 @@ const SelectWrap = styled.div`
   }
 `;
 
-const LengthChecker = styled.div`
-  text-align: right;
-  color: var(--gray-color);
-  font-size: var(--small-font);
-  margin-top: 0.2rem;
-`;
 const SelectBox: React.FC<SelectProps> = ({
   label,
   id,
@@ -53,6 +47,9 @@ const SelectBox: React.FC<SelectProps> = ({
           </div>
         </>
       )}
+      <ul>
+        <li>궁수자리 (11월23일 ~ 12월 24일)</li>
+      </ul>
       <input
         type="text"
         id={id}
@@ -60,12 +57,6 @@ const SelectBox: React.FC<SelectProps> = ({
         minLength={minLength}
         onChange={onChange}
       />
-
-      {id === "space" && (
-        <LengthChecker>
-          <span>{value.length}</span>/<span>8</span>
-        </LengthChecker>
-      )}
     </SelectWrap>
   );
 };
