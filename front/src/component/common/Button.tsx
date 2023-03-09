@@ -13,6 +13,10 @@ const ButtonWrap = styled.button`
   font-size: var(--button-font);
   font-weight: 700;
   background-color: #fff;
+  transition: 0.2s opacity;
+  :hover {
+    opacity: 0.9;
+  }
 `;
 
 const Button: React.FC<ButtonProps> = ({ text, onClick }) => {

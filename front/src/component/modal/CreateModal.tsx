@@ -59,11 +59,12 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
     `${Constellation[0].value} (${Constellation[0].date})`
   );
   const { value: themeValue, onChange: themeOnChange } = useSelect("green");
-  console.log({
-    space: spaceValue,
-    select: selectValue,
-    theme: themeValue
-  })
+  // console.log({
+  //   space: spaceValue,
+  //   select: selectValue,
+  //   theme: themeValue
+  // })
+
   return (
     <CreateModalWrap isOpen={isOpen}>
       <div className="background" onClick={handleClose} />
