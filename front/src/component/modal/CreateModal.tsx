@@ -47,6 +47,7 @@ const CreateModalWrap = styled.div<CreateModalProps>`
   form > div {
     margin-bottom: 3rem;
   }
+  
 `;
 
 const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
@@ -88,7 +89,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
           data={Constellation}
         />
         <ThemeSelect value={themeValue} onChange={themeOnChange}/>
-        <Button text="만들기 완료" />
+        <Button text="만들기 완료" color="blue"/>
       </form>
     </CreateModalWrap>
   );
