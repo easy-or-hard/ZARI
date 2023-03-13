@@ -7,6 +7,7 @@ import SelectBox from "../common/Selectbox";
 import Constellation from "../../dummyData/Constellation";
 import useSelect from "../../util/useSelect";
 import ThemeSelect from "../createModal/ThemeSelect";
+import { useEffect, useState } from "react";
 
 interface CreateModalProps {
   handleClose?: () => void;
@@ -47,7 +48,6 @@ const CreateModalWrap = styled.div<CreateModalProps>`
   form > div {
     margin-bottom: 3rem;
   }
-  
 `;
 
 const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
@@ -57,9 +57,27 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
     maxLength
   );
   const { value: selectValue, onChange: selectOnChange } = useSelect(
-    `${Constellation[0].value} (${Constellation[0].date})`
+    // `${Constellation[0].value} (${Constellation[0].date})`
+    "별자리를 선택하세요."
   );
   const { value: themeValue, onChange: themeOnChange } = useSelect("green");
+  const [isComplete, setIsComplete] = useState(false);
+  useEffect(() => {
+    const createValue = {
+      spaceValue,
+      selectValue,
+      themeValue,
+    };
+    if (
+      createValue.spaceValue.length >= 2 &&
+      createValue.selectValue !== "별자리를 선택하세요." &&
+      createValue.themeValue
+    ) {
+      setIsComplete(true);
+    } else {
+      setIsComplete(false)
+    }
+  }, [selectValue, spaceValue, themeValue]);
   // console.log({
   //   space: spaceValue,
   //   select: selectValue,
@@ -76,7 +94,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
         <Input
           id="space"
           label="나의 우주 이름은?"
-          placeholder="2글자 이상 8글자 이하(공백포함)"
+          placeholder="2~8자로 적어주세요."
           value={spaceValue}
           minLength={2}
           onChange={spaceOnChange}
@@ -88,8 +106,8 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
           onChange={selectOnChange}
           data={Constellation}
         />
-        <ThemeSelect value={themeValue} onChange={themeOnChange}/>
-        <Button text="만들기 완료" color="blue"/>
+        <ThemeSelect value={themeValue} onChange={themeOnChange} />
+        <Button text="만들기 완료" isComplete={isComplete} />
       </form>
     </CreateModalWrap>
   );

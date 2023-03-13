@@ -3,10 +3,10 @@ import styled from "styled-components";
 type ButtonProps = {
   text: string;
   onClick?: () => void;
-  color?: string
+  isComplete?: boolean
 };
 interface ComponentProps {
-  readonly color?: string;
+  readonly isComplete?: boolean;
 }
 const ButtonWrap = styled.button<ComponentProps>`
   height: 6rem;
@@ -15,16 +15,16 @@ const ButtonWrap = styled.button<ComponentProps>`
   border: none;
   font-size: var(--button-font);
   font-weight: 700;
-  background-color: ${props => props.color === "blue" ? "var(--blue-color)" : "#fff"};
-  transition: 0.2s opacity;
+  background-color: ${props => props.isComplete ? "var(--blue-color)" : "#fff"};
+  cursor: ${props => props.isComplete ? "pointer" : "auto"};
+  transition: 0.2s all;
   :hover {
-    opacity: 0.9;
+    opacity: ${props => props.isComplete ? "0.9" : "1"};
   }
 `;
 
-const Button: React.FC<ButtonProps> = ({ text, onClick, color }) => {
-  console.log(color);
-  return <ButtonWrap type="button" onClick={onClick} color={color}>{text}</ButtonWrap>;
+const Button: React.FC<ButtonProps> = ({ text, onClick, isComplete }) => {
+  return <ButtonWrap type="button" onClick={onClick} isComplete={isComplete}>{text}</ButtonWrap>;
 };
 
 export default Button;

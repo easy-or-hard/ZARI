@@ -43,7 +43,6 @@ const DropDownContainer = styled.div<ListProps>`
     z-index: 1;
     color: #fff;
     width: calc(100% - 2rem);
-    background-color: #000;
     border: 1px solid #fff;
     padding: 1rem;
     height: 2.4rem;
@@ -68,14 +67,15 @@ const DropDownContainer = styled.div<ListProps>`
 `;
 const DropDownListContainer = styled.ul<ListProps>`
   width: calc(100% - 2rem);
-  max-height: ${(props) => (props.isOpen ? "10rem" : "0")};
+  max-height: 14rem;
+  display: ${(props) => props.isOpen ? "block" : "none"};
   transition: 0.2s all;
   background-color: rgba(0, 0, 0, 0.6);
   position: absolute;
-  top: 0;
+  top: 5.6rem;
   border: 1px solid #fff;
   border-radius: 8px;
-  padding: 4.4rem 1rem 0;
+  padding: .5rem 1rem;
   font-size: var(--small-font);
   overflow: scroll;
   backdrop-filter: blur(10px);
@@ -112,7 +112,6 @@ const SelectBox: React.FC<SelectProps> = ({
       <DropDownContainer id={id} isOpen={isOpen}>
         <div className="dropDownHeader" onClick={handleIsOpen}>
           {value}
-
         </div>
         <DropDownListContainer isOpen={isOpen}>
           {data.map((item) => (
