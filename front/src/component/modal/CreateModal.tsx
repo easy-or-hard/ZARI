@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Button from "../common/Button";
 import btnClose from "../../image/btnClose.png";
 import Input from "../common/Input";
 import useInput from "../../util/useInput";
@@ -8,6 +7,7 @@ import Constellation from "../../dummyData/Constellation";
 import useSelect from "../../util/useSelect";
 import ThemeSelect from "../createModal/ThemeSelect";
 import { useEffect, useState } from "react";
+import CompleteButton from "../common/CompleteButtom";
 
 interface CreateModalProps {
   handleClose?: () => void;
@@ -107,7 +107,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
           data={Constellation}
         />
         <ThemeSelect value={themeValue} onChange={themeOnChange} />
-        <Button text="만들기 완료" isComplete={isComplete} />
+        <CompleteButton text="만들기 완료" isComplete={isComplete} />
       </form>
     </CreateModalWrap>
   );
