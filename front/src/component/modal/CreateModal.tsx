@@ -8,6 +8,7 @@ import useSelect from "../../util/useSelect";
 import ThemeSelect from "../createModal/ThemeSelect";
 import { useEffect, useState } from "react";
 import CompleteButton from "../common/CompleteButtom";
+import ConfirmModal from "../createModal/ConfirmModal";
 
 interface CreateModalProps {
   handleClose?: () => void;
@@ -75,14 +76,16 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
     ) {
       setIsComplete(true);
     } else {
-      setIsComplete(false)
+      setIsComplete(false);
     }
   }, [selectValue, spaceValue, themeValue]);
-  // console.log({
-  //   space: spaceValue,
-  //   select: selectValue,
-  //   theme: themeValue
-  // })
+
+  // 컨펌모달
+  const [confirmIsOpen, setConfirmIsOpen] = useState(false);
+
+  const handleConfirmIsOpen = () => {
+    setConfirmIsOpen(!confirmIsOpen);
+  };
 
   return (
     <CreateModalWrap isOpen={isOpen}>
@@ -107,7 +110,15 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
           data={Constellation}
         />
         <ThemeSelect value={themeValue} onChange={themeOnChange} />
-        <CompleteButton text="만들기 완료" isComplete={isComplete} />
+        <CompleteButton
+          text="만들기 완료"
+          onClick={() => handleConfirmIsOpen()}
+          isComplete={isComplete}
+        />
+        <ConfirmModal
+          handleClose={() => setConfirmIsOpen(false)}
+          isOpen={confirmIsOpen}
+        />
       </form>
     </CreateModalWrap>
   );
