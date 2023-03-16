@@ -4,6 +4,7 @@ const GlobalStyle = createGlobalStyle`
 :root {
   /* font-size */
   --title-font: 2.2rem;
+  --sub-title-font : 2.0rem;
   --button-font : 1.8rem;
   --main-font : 1.6rem;
   --small-font : 1.4rem;

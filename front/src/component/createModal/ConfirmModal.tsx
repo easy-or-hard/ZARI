@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Button from "../common/Button";
 import CompleteButton from "../common/CompleteButtom";
 
 interface ConfirmModalProps {
@@ -32,13 +33,28 @@ const ModalWrap = styled.div<ModalProps>`
     flex-direction: column;
     width: calc(100% - 9rem);
     max-width: calc(50rem);
-    padding: 5rem 2rem 2rem;
+    padding: 4rem 2rem 2rem;
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 20px;
     text-align: left;
+    h3 {
+      font-size: var(--sub-title-font);
+      margin-bottom: 1.4rem;
+    }
+    p {
+      line-height: 2.6rem;
+      margin-bottom: 3.4rem;
+    }
   }
 `;
 const ButtonWrap = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+button {
+  width: calc(50% - 4px);
+}
+
   
 `
 const ConfirmModal: React.FC<ConfirmModalProps> = ({ handleClose, isOpen }) => {
@@ -52,7 +68,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ handleClose, isOpen }) => {
           <br /> 한번 정해진 이름은 바꿀 수 없어요.
         </p>
         <ButtonWrap>
-          <CompleteButton  text="취소" isComplete={true} onClick={handleClose}/>
+          <Button  text="취소" liner={true} onClick={handleClose}/>
           <CompleteButton  text="만들기" isComplete={true} />
         </ButtonWrap>
       </div>
