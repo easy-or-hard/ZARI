@@ -1,11 +1,14 @@
 import styled from "styled-components";
-import Button from "../common/Button";
 import btnClose from "../../image/btnClose.png";
 import Input from "../common/Input";
 import useInput from "../../util/useInput";
 import SelectBox from "../common/Selectbox";
 import Constellation from "../../dummyData/Constellation";
 import useSelect from "../../util/useSelect";
+import ThemeSelect from "../createModal/ThemeSelect";
+import { useEffect, useState } from "react";
+import CompleteButton from "../common/CompleteButtom";
+import ConfirmModal from "../createModal/ConfirmModal";
 
 interface CreateModalProps {
   handleClose?: () => void;
@@ -32,8 +35,8 @@ const CreateModalWrap = styled.div<CreateModalProps>`
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: calc(50rem - 8rem);
+    width: calc(100% - 9rem);
+    max-width: calc(50rem);
     padding: 5rem 2rem 2rem;
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 20px;
@@ -43,6 +46,9 @@ const CreateModalWrap = styled.div<CreateModalProps>`
       right: 2rem;
     }
   }
+  form > div {
+    margin-bottom: 3rem;
+  }
 `;
 
 const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
@@ -51,10 +57,35 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
     "",
     maxLength
   );
-  const {value: selectValue, onChange: selectOnChange} = useSelect(
-    `${Constellation[0].value} (${Constellation[0].date})`
+  const { value: selectValue, onChange: selectOnChange } = useSelect(
+    // `${Constellation[0].value} (${Constellation[0].date})`
+    "별자리를 선택하세요."
   );
+  const { value: themeValue, onChange: themeOnChange } = useSelect("green");
+  const [isComplete, setIsComplete] = useState(false);
+  useEffect(() => {
+    const createValue = {
+      spaceValue,
+      selectValue,
+      themeValue,
+    };
+    if (
+      createValue.spaceValue.length >= 2 &&
+      createValue.selectValue !== "별자리를 선택하세요." &&
+      createValue.themeValue
+    ) {
+      setIsComplete(true);
+    } else {
+      setIsComplete(false);
+    }
+  }, [selectValue, spaceValue, themeValue]);
 
+  // 컨펌모달
+  const [confirmIsOpen, setConfirmIsOpen] = useState(false);
+
+  const handleConfirmIsOpen = () => {
+    setConfirmIsOpen(!confirmIsOpen);
+  };
 
   return (
     <CreateModalWrap isOpen={isOpen}>
@@ -66,7 +97,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
         <Input
           id="space"
           label="나의 우주 이름은?"
-          placeholder="2글자 이상 8글자 이하(공백포함)"
+          placeholder="2~8자로 적어주세요."
           value={spaceValue}
           minLength={2}
           onChange={spaceOnChange}
@@ -78,7 +109,16 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
           onChange={selectOnChange}
           data={Constellation}
         />
-        <Button text="만들기 완료" />
+        <ThemeSelect value={themeValue} onChange={themeOnChange} />
+        <CompleteButton
+          text="만들기 완료"
+          onClick={() => handleConfirmIsOpen()}
+          isComplete={isComplete}
+        />
+        <ConfirmModal
+          handleClose={() => setConfirmIsOpen(false)}
+          isOpen={confirmIsOpen}
+        />
       </form>
     </CreateModalWrap>
   );
