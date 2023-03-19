@@ -3,7 +3,7 @@ import btnClose from "../../image/btnClose.png";
 import Input from "../common/Input";
 import useInput from "../../util/useInput";
 import SelectBox from "../common/Selectbox";
-import Constellation from "../../dummyData/Constellation";
+import Constellation from "../../dummyData/constellation";
 import useSelect from "../../util/useSelect";
 import ThemeSelect from "../createModal/ThemeSelect";
 import { useEffect, useState } from "react";
