@@ -4,6 +4,7 @@ const GlobalStyle = createGlobalStyle`
 :root {
   /* font-size */
   --title-font: 2.2rem;
+  --sub-title-font : 2.0rem;
   --button-font : 1.8rem;
   --main-font : 1.6rem;
   --small-font : 1.4rem;
@@ -11,6 +12,7 @@ const GlobalStyle = createGlobalStyle`
   /* color */
   --black-color : #161616;
   --gray-color: #b6b6b6;
+  --blue-color: #20D8B7;
   --pupple-gd: linear-gradient(125deg, rgb(255,44,233), rgb(0,20,255));
   --pastel-gd: linear-gradient(125deg, rgb(120,163,235), rgb(251,194,235));
   --orange-gd: linear-gradient(125deg, rgb(255,246,185), rgb(255,0,91));
@@ -23,13 +25,14 @@ body {
   color: #fff;
   font-size:var(--main-font);
 }
-h2, button, input {margin:0; padding: 0;}
+h2, button, input, ul, li {margin:0; padding: 0;}
 button, input {
   background-color: transparent;
   border: none;
   cursor: pointer;
 }
 input::placeholder {color:var(--gray-color)}
+li {list-style:none}
 `;
 
 export default GlobalStyle;
