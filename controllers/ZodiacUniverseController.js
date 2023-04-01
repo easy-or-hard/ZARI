@@ -1,17 +1,19 @@
 import express from "express";
+import ZodiacUniverseService from "../services/ZodiacUniverseService.js";
 const { Request, Response, NextFunction } = express;
-import ZodiacUniverseModel from '../models/ZodiacUniverseModel.js';
 
 export default class ZodiacUniverseController {
+    /**
+     * @type {ZodiacUniverseController}
+     * @protected
+     */
     static #instance;
 
     constructor() {
-        if (ZodiacUniverseController.#instance) {
-            return ZodiacUniverseController.#instance;
+        if (this.constructor.#instance) {
+            return this.constructor.#instance;
         }
-        ZodiacUniverseController.#instance = this;
-
-        this.zodiacUniverseModel = new ZodiacUniverseModel();
+        this.constructor.#instance = this;
     }
 
     /**
@@ -21,10 +23,9 @@ export default class ZodiacUniverseController {
      * @param {NextFunction} next
      * @returns {Promise<void>}
      */
-    create = async (req, res, next) => {
-        let result = await this.zodiacUniverseModel.create();
-        console.log('controller create');
-        res.status(201).send(result);
+    async create(req, res, next) {
+        const {status, result} = await ZodiacUniverseService.findByPk(req.body.name);
+        res.status(status).send(result);
     }
 
     /**
@@ -34,10 +35,9 @@ export default class ZodiacUniverseController {
      * @param {NextFunction} next
      * @returns {Promise<void>}
      */
-    readAll = async (req, res, next) => {
-        let result = this.zodiacUniverseModel.readAll();
-        console.log('controller readAll');
-        res.status(200).send(result);
+    async findAll(req, res, next) {
+        const {status, result} = await ZodiacUniverseService.findAll();
+        res.status(status).send(result);
     }
 
     /**
@@ -48,15 +48,9 @@ export default class ZodiacUniverseController {
      * @param {NextFunction} next
      * @returns {Promise<void>}
      */
-    readById = async (req, res, next) => {
-        let zodiacUniverseName = req.params.name;
-        let result = this.zodiacUniverseModel.readById(zodiacUniverseName)
-
-        if (!result) {
-            return next();
-        }
-
-        console.log('controller readById');
-        res.status(200).send(result);
-    }
+    async findByPk(req, res, next) {
+        const name = req.params.name;
+        const {status, result} = await ZodiacUniverseService.findByPk(name);
+        res.status(status).send(result);
+    };
 }

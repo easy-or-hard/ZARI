@@ -1,27 +1,26 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
-const { Express, Request, Response, NextFunction } = express;
 import helmet from "helmet";
 import morgan from "morgan";
-import ZodiacUniverseRouter from "./routes/ZodiacUniverseRoutes.js";
+import dotenv from "dotenv";
+import ZodiacUniverseRoutes from "./routes/ZodiacUniverseRoutes.js";
 import NotFoundHandler from "./handlers/NotFoundHandler.js";
 import ErrorHandler from "./handlers/ErrorHandler.js";
+import ZodiacUniverseModel from "./models/ZodiacUniverseModel.js";
+
 
 class App {
-    /**
-     * @type {Express}
-     */
-    #express;
+    #express = express();
 
     constructor() {
-        this.#express = express();
         this.#preProcess();
         this.#routerInitialize();
         this.#exceptionHandler();
     }
 
     #preProcess = () => {
+        dotenv.config();
         let staticOptions = {
             dotfiles: 'ignore',
             etag: false,
@@ -33,6 +32,7 @@ class App {
                 res.set('x-timestamp', Date.now());
             }
         }
+
         let corsOptions = {
             origin: 'http://localhost:8080',
             optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -49,9 +49,7 @@ class App {
     }
 
     #routerInitialize = () => {
-        this.#express.use('/api', ZodiacUniverseRouter.instanceRouter);
-
-
+        this.#express.use('/api', ZodiacUniverseRoutes.router);
     }
 
     #exceptionHandler = () => {
@@ -66,4 +64,7 @@ class App {
     }
 }
 
-new App().start();
+ZodiacUniverseModel.sync().then(() => {
+    console.log('Database is ready');
+    new App().start();
+});
