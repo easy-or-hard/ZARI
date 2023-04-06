@@ -1,25 +1,91 @@
 import ParentRoutes from "./ParentRoutes.js";
-import ZodiacUniverseController from "../controllers/ZodiacUniverseController.js";
+import asyncHandler from "express-async-handler";
+import ZodiacUniverseController from "../controllers/zodiacUniverseController.js";
+
 
 export default new class ZodiacUniverseRoute extends ParentRoutes {
-    /**
-     *
-     * @type {ZodiacUniverseController}
-     */
-    #controller= new ZodiacUniverseController();
     constructor() {
         super();
         this.#routeInitialize();
     }
 
+    /**
+     * @swagger
+     * /zodiac-universes/{name}:
+     *   get:
+     *     summary: 조디악 유니버스 객체를 조회한다.
+     *     description: 안녕하세요
+     *     parameters:
+     *       - in: path
+     *         name: name
+     *         required: true
+     *         schema:
+     *           type: string
+     *         description: 조디악 유니버스 이름
+     *     responses:
+     *       200:
+     *         description: A zodiac universe
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 name:
+     *                   type: string
+     *                 description:
+     *                   type: string
+     * /zodiac-universes:
+     *   post:
+     *     summary: 새로운 조디악 유니버스 객체를 생성한다.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               name:
+     *                 type: string
+     *               description:
+     *                 type: string
+     *     responses:
+     *       201:
+     *         description: 조디악 유니버스 객체 생성 성공
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 name:
+     *                   type: string
+     *                 description:
+     *                   type: string
+     *       409:
+     *         description: 조디악 유니버스 객체가 이미 존재함
+     *   get:
+     *     summary: 모든 조디악 유니버스 객체를 조회한다.
+     *     responses:
+     *       200:
+     *         description: 조디악 유니버스 객체 목록
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 type: object
+     *                 properties:
+     *                   name:
+     *                     type: string
+     *                   description:
+     *                     type: string
+     */
     #routeInitialize() {
-        this.router.all('/zodiac-universes', this.#controller.findAll);
         this.router.route('/zodiac-universes')
-            .post(this.#controller.create)
-            .get(this.#controller.findAll)
+            .post(asyncHandler(ZodiacUniverseController.create))
+            .get(asyncHandler(ZodiacUniverseController.findAll))
         // .put(this.zodiacUniverseModel.update)
         // .delete(this.zodiacUniverseController.remove);
-
-        this.router.get('/zodiac-universes/:name', this.#controller.findByPk);
+        
+        this.router.get('/zodiac-universes/:name', ZodiacUniverseController.findByPk);
     }
 }

@@ -11,7 +11,11 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node App.js"
+    "start": "node bin/www.js",
+    "dev": "cross-env NODE_ENV=development node bin/www.js",
+    "dev--watch": "cross-env NODE_ENV=development node --watch bin/www.js",
+    "dev-local": "cross-env NODE_ENV=local node bin/www.js",
+    "dev-local--watch": "cross-env NODE_ENV=local node --watch bin/www.js"
   },
   "repository": {
     "type": "git",
@@ -26,12 +30,17 @@
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
     "helmet": "^6.0.1",
     "morgan": "^1.10.0",
     "pg": "^8.10.0",
     "sequelize": "^6.30.0",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.2",
+    "winston": "^3.8.2"
   }
 }

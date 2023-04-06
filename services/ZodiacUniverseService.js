@@ -1,6 +1,7 @@
 import ZodiacUniverseModel from "../models/ZodiacUniverseModel.js";
+import {ConflictError, NotFoundError} from "./errors/ConflictError.js";
 
-export default new class ZodiacService {
+export default new class ZodiacUniverseService {
     static #instance;
 
     constructor() {
@@ -10,32 +11,48 @@ export default new class ZodiacService {
         this.constructor.#instance = this;
     }
 
-    async create(req) {
-        const hasZodiacUniverse = await ZodiacUniverseModel.findByPk(req.body.name);
-
-        let status;
-        let result;
+    /**
+     *
+     * @param data
+     * @returns {Promise<ZodiacUniverseModel>}
+     * @throws ConflictError
+     */
+    async create(data) {
+        const condition = {where: {name: data.name}, group: ['name']};
+        const count = await ZodiacUniverseModel.count(condition);
+        const hasZodiacUniverse = count > 0;
         if (hasZodiacUniverse) {
-            status = 409;
-            result = "Zodiac Universe already exists";
-        } else {
-            status = 201;
-            result = await ZodiacUniverseModel.create(req.body);
+            throw new ConflictError("Zodiac Universe already exists");
         }
-
-        return {status, result};
+        return await ZodiacUniverseModel.create(data);
     }
 
+    /**
+     *
+     * @param {string} name
+     * @returns {Promise<ZodiacUniverseModel>}
+     */
     async findByPk(name) {
-        let result = await ZodiacUniverseModel.findByPk(name);
-        const status = result ? 200 : 404;
-        result = result ? result : "Zodiac Universe not found";
-        return {status, result};
+        const result = await ZodiacUniverseModel.findByPk(name);
+        if (!result) {
+            throw new NotFoundError("Zodiac Universe not found");
+        }
+        return result;
     }
 
-    async findAll() {
-        const result = await ZodiacUniverseModel.findAll();
-        const status = 200;
-        return {status, result};
+    /**
+     *
+     * @param {number} page
+     * @param {number} pageSize
+     * @param {string} sortBy
+     * @param {'ASC' | 'DESC'} sortOrder
+     * @returns {Promise<ZodiacUniverseModel[]>}
+     */
+    async findAll(page = 1, pageSize = 10, sortBy = 'updatedAt', sortOrder = 'DESC') {
+        const offset = (page - 1) * pageSize;
+        const limit = pageSize;
+        const order = [[sortBy, sortOrder]];
+        const options = { offset, limit, order };
+        return await ZodiacUniverseModel.findAll(options);
     }
 }

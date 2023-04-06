@@ -1,8 +1,9 @@
 import express from "express";
+import asyncHandler from "express-async-handler";
 import ZodiacUniverseService from "../services/ZodiacUniverseService.js";
 const { Request, Response, NextFunction } = express;
 
-export default class ZodiacUniverseController {
+export default new class ZodiacUniverseController {
     /**
      * @type {ZodiacUniverseController}
      * @protected
@@ -14,6 +15,10 @@ export default class ZodiacUniverseController {
             return this.constructor.#instance;
         }
         this.constructor.#instance = this;
+
+        this.findByPk = asyncHandler(this.findByPk.bind(this));
+        this.create = asyncHandler(this.create.bind(this));
+        this.findAll = asyncHandler(this.findAll.bind(this));
     }
 
     /**
@@ -24,8 +29,8 @@ export default class ZodiacUniverseController {
      * @returns {Promise<void>}
      */
     async create(req, res, next) {
-        const {status, result} = await ZodiacUniverseService.findByPk(req.body.name);
-        res.status(status).send(result);
+        const zodiacUniverse = await ZodiacUniverseService.create(req.body);
+        res.status(201).json(zodiacUniverse);
     }
 
     /**
@@ -36,8 +41,8 @@ export default class ZodiacUniverseController {
      * @returns {Promise<void>}
      */
     async findAll(req, res, next) {
-        const {status, result} = await ZodiacUniverseService.findAll();
-        res.status(status).send(result);
+        const result = await ZodiacUniverseService.findAll();
+        res.status(200).send(result);
     }
 
     /**
@@ -50,7 +55,7 @@ export default class ZodiacUniverseController {
      */
     async findByPk(req, res, next) {
         const name = req.params.name;
-        const {status, result} = await ZodiacUniverseService.findByPk(name);
-        res.status(status).send(result);
+        const result =  await ZodiacUniverseService.findByPk(name);
+        res.status(200).send(result);
     };
 }

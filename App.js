@@ -1,26 +1,32 @@
-import cookieParser from "cookie-parser";
-import cors from "cors";
 import express from "express";
-import helmet from "helmet";
-import morgan from "morgan";
-import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import ZodiacUniverseRoutes from "./routes/ZodiacUniverseRoutes.js";
 import NotFoundHandler from "./handlers/NotFoundHandler.js";
 import ErrorHandler from "./handlers/ErrorHandler.js";
-import ZodiacUniverseModel from "./models/ZodiacUniverseModel.js";
+import SwaggerSpec from "./openapis/SwaggerSpec.js";
+import customProcess from "./configure/customProcess.js";
+import customMorgan from "./configure/customMorgan.js";
+import customLogger from "./handlers/customLogger.js";
+import customCors from "./security/customCors.js";
+import customHelmet from "./security/customHelmet.js";
 
+export default new class App {
+    static #instance;
 
-class App {
     #express = express();
 
     constructor() {
+        if (this.constructor.#instance) {
+            return this.constructor.#instance;
+        }
+        this.constructor.#instance = this;
+
         this.#preProcess();
         this.#routerInitialize();
         this.#exceptionHandler();
     }
 
-    #preProcess = () => {
-        dotenv.config();
+    #preProcess() {
         let staticOptions = {
             dotfiles: 'ignore',
             etag: false,
@@ -33,38 +39,29 @@ class App {
             }
         }
 
-        let corsOptions = {
-            origin: 'http://localhost:8080',
-            optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-            credentials: true, // Access-Control-Allow-Credentials
-        }
-
         this.#express.use(express.json());
         this.#express.use(express.urlencoded({extended: false}));
         this.#express.use(express.static('public', staticOptions));
-        this.#express.use(cors(corsOptions));
         this.#express.use(cookieParser());
-        this.#express.use(morgan('dev'));
-        this.#express.use(helmet());
+        this.#express.use(customMorgan.morgan());
+        this.#express.use(customCors.cors());
+        this.#express.use(customHelmet.helmet());
     }
 
-    #routerInitialize = () => {
+    #routerInitialize() {
+        this.#express.use('/api-docs', SwaggerSpec.server, SwaggerSpec.setup());
         this.#express.use('/api', ZodiacUniverseRoutes.router);
     }
 
-    #exceptionHandler = () => {
+    #exceptionHandler() {
         this.#express.use(NotFoundHandler.notFound);
         this.#express.use(ErrorHandler.errorHandler);
     }
 
-    start = () => {
-        this.#express.listen(8080, () => {
-            console.log('Server is running on port 8080');
-        });
+    listen() {
+        this.#express.listen(customProcess.env.PORT,
+            () => {
+                customLogger.info(`Server is running on port ${customProcess.env.PORT}`);}
+        );
     }
 }
-
-ZodiacUniverseModel.sync().then(() => {
-    console.log('Database is ready');
-    new App().start();
-});

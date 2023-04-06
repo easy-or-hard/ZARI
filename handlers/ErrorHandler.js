@@ -1,12 +1,14 @@
 import express from "express";
 const { Request, Response, NextFunction } = express;
 
-export default class ErrorHandling {
+export default new class ErrorHandling {
+    static #instance;
+
     constructor() {
-        // cant new
-        if (new.target) {
-            throw new TypeError("Cannot construct Abstract instances directly");
+        if (this.constructor.#instance) {
+            return this.constructor.#instance;
         }
+        this.constructor.#instance = this;
     }
 
     /**
@@ -16,9 +18,12 @@ export default class ErrorHandling {
      * @param {Response} res
      * @param {NextFunction} next
      */
-    static errorHandler = (err, req, res, next) => {
-        console.error('errorHandler');
+    errorHandler = (err, req, res, next) => {
         console.error(err.stack);
-        res.status(500).send('error!!!!!!!!!');
+
+        const statusCode = err.statusCode || 500;
+        const message = err.message || 'Internal Server Error';
+
+        res.status(statusCode).send(message);
     }
 }
