@@ -81,11 +81,11 @@ export default new class ZodiacUniverseRoute extends ParentRoutes {
      */
     #routeInitialize() {
         this.router.route('/zodiac-universes')
-            .post(asyncHandler(ZodiacUniverseController.create))
-            .get(asyncHandler(ZodiacUniverseController.findAll))
+            .post(ZodiacUniverseController.create)
+            .get(ZodiacUniverseController.findAll)
         // .put(this.zodiacUniverseModel.update)
         // .delete(this.zodiacUniverseController.remove);
-        
+
         this.router.get('/zodiac-universes/:name', ZodiacUniverseController.findByPk);
     }
 }
