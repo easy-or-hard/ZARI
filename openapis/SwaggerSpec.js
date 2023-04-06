@@ -23,6 +23,7 @@ export default new class SwaggerSpec {
                 },
             ],
         },
+        definition: {}, // do not use this, instead use swaggerDefinition field
         apis: ["./routes/*.js"]
     };
 
