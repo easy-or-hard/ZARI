@@ -1,14 +1,12 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import ZodiacUniverseRoutes from "./routes/ZodiacUniverseRoutes.js";
-import NotFoundHandler from "./handlers/NotFoundHandler.js";
-import ErrorHandler from "./handlers/ErrorHandler.js";
-import SwaggerSpec from "./openapis/SwaggerSpec.js";
-import customProcess from "./configure/customProcess.js";
-import customMorgan from "./configure/customMorgan.js";
-import customLogger from "./handlers/customLogger.js";
-import customCors from "./security/customCors.js";
-import customHelmet from "./security/customHelmet.js";
+import ZodiacUniverseRoutes from "./src/routes/zodiac-universe-routes.js";
+import NotFoundHandler from "./src/exception_handlers/not-found-handler.js";
+import ErrorHandler from "./src/exception_handlers/error-handler.js";
+import SwaggerSpec from "./src/openapis/swagger-spec.js";
+import customMorgan from "./src/configure/custom-morgan.js";
+import customCors from "./src/security/custom-cors.js";
+import customHelmet from "./src/security/custom-helmet.js";
 
 export default new class App {
     static #instance;
@@ -20,6 +18,7 @@ export default new class App {
             return this.constructor.#instance;
         }
         this.constructor.#instance = this;
+
 
         this.#preProcess();
         this.#routerInitialize();
@@ -43,9 +42,9 @@ export default new class App {
         this.#express.use(express.urlencoded({extended: false}));
         this.#express.use(express.static('public', staticOptions));
         this.#express.use(cookieParser());
-        this.#express.use(customMorgan.morgan());
-        this.#express.use(customCors.cors());
-        this.#express.use(customHelmet.helmet());
+        // this.#express.use(customMorgan.morgan());
+        // this.#express.use(customCors.cors());
+        // this.#express.use(customHelmet.helmet());
     }
 
     #routerInitialize() {
@@ -58,10 +57,7 @@ export default new class App {
         this.#express.use(ErrorHandler.errorHandler);
     }
 
-    listen() {
-        this.#express.listen(customProcess.env.PORT,
-            () => {
-                customLogger.info(`Server is running on port ${customProcess.env.PORT}`);}
-        );
+    listen(...args) {
+        this.#express.listen(...args);
     }
 }

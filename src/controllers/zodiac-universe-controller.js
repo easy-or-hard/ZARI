@@ -1,6 +1,6 @@
 import express from "express";
 import asyncHandler from "express-async-handler";
-import ZodiacUniverseService from "../services/ZodiacUniverseService.js";
+import ZodiacUniverseService from "../services/zodiac-universe-service.js";
 const { Request, Response, NextFunction } = express;
 
 export default new class ZodiacUniverseController {

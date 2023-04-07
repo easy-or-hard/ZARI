@@ -1,6 +1,6 @@
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
-import customProcess from "../configure/customProcess.js";
+import customProcess from "../configure/custom-process.js";
 
 
 export default new class SwaggerSpec {
@@ -24,7 +24,7 @@ export default new class SwaggerSpec {
             ],
         },
         definition: {}, // do not use this, instead use swaggerDefinition field
-        apis: ["./routes/*.js"]
+        apis: ["./src/routes/*.js"]
     };
 
     constructor() {

@@ -1,5 +1,5 @@
 import winston from 'winston';
-import customProcess from "../configure/customProcess.js";
+import customProcess from "../configure/custom-process.js";
 
 export default new class CustomLogger {
     static #instance;

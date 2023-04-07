@@ -1,8 +1,8 @@
 {
-  "name": "star-bottle",
+  "name": "zodiac-universe",
   "version": "1.0.0",
   "description": "project 001 from team 'easy or hard'",
-  "main": "App.js",
+  "main": "app.js",
   "type": "module",
   "target": "es2020",
   "engines": {
@@ -10,12 +10,11 @@
     "npm": ">=9.0.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node bin/www.js",
-    "dev": "cross-env NODE_ENV=development node bin/www.js",
-    "dev--watch": "cross-env NODE_ENV=development node --watch bin/www.js",
-    "dev-local": "cross-env NODE_ENV=local node bin/www.js",
-    "dev-local--watch": "cross-env NODE_ENV=local node --watch bin/www.js"
+    "start": "cnode bin/www.js",
+    "dev": "node bin/www.js",
+    "dev--watch": "node --watch bin/www.js",
+    "dev-local": "node bin/www.js",
+    "dev-local--watch": "node --watch bin/www.js"
   },
   "repository": {
     "type": "git",

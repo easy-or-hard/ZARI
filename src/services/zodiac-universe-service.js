@@ -1,4 +1,4 @@
-import ZodiacUniverseModel from "../models/ZodiacUniverseModel.js";
+import ZodiacUniverseModel from "../models/zodiac-universe-model.js";
 import {ConflictError, NotFoundError} from "./errors/ConflictError.js";
 
 export default new class ZodiacUniverseService {

@@ -1,6 +1,5 @@
-import ParentRoutes from "./ParentRoutes.js";
-import asyncHandler from "express-async-handler";
-import ZodiacUniverseController from "../controllers/zodiacUniverseController.js";
+import ParentRoutes from "./parent-routes.js";
+import ZodiacUniverseController from "../controllers/zodiac-universe-controller.js";
 
 
 export default new class ZodiacUniverseRoute extends ParentRoutes {
