@@ -1,12 +1,12 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import ZodiacUniverseRoutes from "./src/routes/zodiac-universe-routes.js";
-import NotFoundHandler from "./src/exception_handlers/not-found-handler.js";
-import ErrorHandler from "./src/exception_handlers/error-handler.js";
-import SwaggerSpec from "./src/openapis/swagger-spec.js";
-import customMorgan from "./src/configure/custom-morgan.js";
-import customCors from "./src/security/custom-cors.js";
-import customHelmet from "./src/security/custom-helmet.js";
+import ZodiacUniverseRoutes from "./src/MVC/routes/zodiac-universe-routes.js";
+import NotFoundHandler from "./src/utils/exception_handlers/not-found-handler.js";
+import ErrorHandler from "./src/utils/exception_handlers/error-handler.js";
+import SwaggerSpec from "./src/utils/openapis/swagger-spec.js";
+import customMorgan from "./src/utils/configure/custom-morgan.js";
+import customCors from "./src/utils/security/custom-cors.js";
+import customHelmet from "./src/utils/security/custom-helmet.js";
 
 export default new class App {
     static #instance;
@@ -42,9 +42,9 @@ export default new class App {
         this.#express.use(express.urlencoded({extended: false}));
         this.#express.use(express.static('public', staticOptions));
         this.#express.use(cookieParser());
-        // this.#express.use(customMorgan.morgan());
-        // this.#express.use(customCors.cors());
-        // this.#express.use(customHelmet.helmet());
+        this.#express.use(customMorgan());
+        this.#express.use(customCors.cors());
+        this.#express.use(customHelmet.helmet());
     }
 
     #routerInitialize() {

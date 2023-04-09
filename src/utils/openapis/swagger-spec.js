@@ -24,7 +24,7 @@ export default new class SwaggerSpec {
             ],
         },
         definition: {}, // do not use this, instead use swaggerDefinition field
-        apis: ["./src/routes/*.js"]
+        apis: ["./src/MVC/routes/*.js"]
     };
 
     constructor() {

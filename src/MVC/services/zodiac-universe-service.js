@@ -1,4 +1,4 @@
-import ZodiacUniverseModel from "../models/zodiac-universe-model.js";
+import zodiacModel from "../models/zodiac-model.js";
 import {ConflictError, NotFoundError} from "./errors/ConflictError.js";
 
 export default new class ZodiacUniverseService {
@@ -14,26 +14,26 @@ export default new class ZodiacUniverseService {
     /**
      *
      * @param data
-     * @returns {Promise<ZodiacUniverseModel>}
+     * @returns {Promise<ZodiacModel>}
      * @throws ConflictError
      */
     async create(data) {
         const condition = {where: {name: data.name}, group: ['name']};
-        const count = await ZodiacUniverseModel.count(condition);
+        const count = await zodiacModel.count(condition);
         const hasZodiacUniverse = count > 0;
         if (hasZodiacUniverse) {
             throw new ConflictError("Zodiac Universe already exists");
         }
-        return await ZodiacUniverseModel.create(data);
+        return await zodiacModel.create(data);
     }
 
     /**
      *
      * @param {string} name
-     * @returns {Promise<ZodiacUniverseModel>}
+     * @returns {Promise<ZodiacModel>}
      */
     async findByPk(name) {
-        const result = await ZodiacUniverseModel.findByPk(name);
+        const result = await zodiacModel.findByPk(name);
         if (!result) {
             throw new NotFoundError("Zodiac Universe not found");
         }
@@ -46,13 +46,13 @@ export default new class ZodiacUniverseService {
      * @param {number} pageSize
      * @param {string} sortBy
      * @param {'ASC' | 'DESC'} sortOrder
-     * @returns {Promise<ZodiacUniverseModel[]>}
+     * @returns {Promise<ZodiacModel[]>}
      */
     async findAll(page = 1, pageSize = 10, sortBy = 'updatedAt', sortOrder = 'DESC') {
         const offset = (page - 1) * pageSize;
         const limit = pageSize;
         const order = [[sortBy, sortOrder]];
         const options = { offset, limit, order };
-        return await ZodiacUniverseModel.findAll(options);
+        return await zodiacModel.findAll(options);
     }
 }

@@ -10,11 +10,7 @@
     "npm": ">=9.0.0"
   },
   "scripts": {
-    "start": "cnode bin/www.js",
-    "dev": "node bin/www.js",
-    "dev--watch": "node --watch bin/www.js",
-    "dev-local": "node bin/www.js",
-    "dev-local--watch": "node --watch bin/www.js"
+    "start": "node bin/www.js"
   },
   "repository": {
     "type": "git",

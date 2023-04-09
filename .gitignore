@@ -1,4 +1,7 @@
 ### Node template
+# project
+.env
+
 # Logs
 logs
 *.log
