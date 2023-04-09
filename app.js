@@ -42,7 +42,7 @@ export default new class App {
         this.#express.use(express.urlencoded({extended: false}));
         this.#express.use(express.static('public', staticOptions));
         this.#express.use(cookieParser());
-        this.#express.use(customMorgan());
+        this.#express.use(customMorgan.morgan());
         this.#express.use(customCors.cors());
         this.#express.use(customHelmet.helmet());
     }

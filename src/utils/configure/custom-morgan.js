@@ -5,7 +5,7 @@ import morgan from 'morgan';
  * 모르간을 커스텀하기 위한 클래스
  * 모르간은 클래스 기반이 아니기 때문에 상속 받아서 구현하지 않습니다.
  * 또, 모르간의 사용법은 morgan() 이기 때문에, 똑같이 사용할 수 있도록,
- * 클래스를 함수처럼 사용할 수 있도록 생성자에서 리턴을 구현합니다.
+ * instance.morgan() 을 구현합니다.
  */
 export default new class CustomMorgan {
     static #instance;
@@ -15,8 +15,7 @@ export default new class CustomMorgan {
             return this.constructor.#instance;
         }
 
-        this.constructor.#instance = () => morgan(this.#format, this.#options);
-        return this.constructor.#instance;
+        this.constructor.#instance = this;
     }
 
 
@@ -27,5 +26,9 @@ export default new class CustomMorgan {
                 console.log(message);
             }
         }
+    }
+
+    morgan() {
+        return morgan(this.#format, this.#options);
     }
 }
