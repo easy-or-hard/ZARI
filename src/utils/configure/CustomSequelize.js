@@ -9,13 +9,13 @@ export default class CustomSequelize extends Sequelize {
             return CustomSequelize.#instance;
         }
 
-        super(CustomSequelize.#databaseServer);
+        super(CustomSequelize.#dbInfo);
         this.constructor.#instance = this;
 
         this.options.define = CustomSequelize.#options;
     }
 
-    static get #databaseServer() {
+    static get #dbInfo() {
         const options = {
             local: {
                 dialect: 'sqlite',
@@ -45,9 +45,9 @@ export default class CustomSequelize extends Sequelize {
     static get #options() {
         return {
             // timestamps: true,
-            // freezeTableName: true,
-            // underscored: true,
-            // underscoredAll: true
+            freezeTableName: true,
+            underscored: true,
+            underscoredAll: true
         }
     }
 }

@@ -7,6 +7,8 @@ import SwaggerSpec from "./src/utils/openapis/swagger-spec.js";
 import customMorgan from "./src/utils/configure/custom-morgan.js";
 import customCors from "./src/utils/security/custom-cors.js";
 import customHelmet from "./src/utils/security/custom-helmet.js";
+import ZodiacModel from "./src/MVC/models/zodiac-model.js";
+import CommentModel from "./src/MVC/models/comment-model.js";
 
 export default new class App {
     static #instance;
@@ -23,6 +25,7 @@ export default new class App {
         this.#preProcess();
         this.#routerInitialize();
         this.#exceptionHandler();
+        this.#databaseInitialize();
     }
 
     #preProcess() {
@@ -33,9 +36,6 @@ export default new class App {
             index: false,
             maxAge: '1d',
             redirect: false,
-            setHeaders: function (res, path, stat) {
-                res.set('x-timestamp', Date.now());
-            }
         }
 
         this.#express.use(express.json());
@@ -55,6 +55,11 @@ export default new class App {
     #exceptionHandler() {
         this.#express.use(NotFoundHandler.notFound);
         this.#express.use(ErrorHandler.errorHandler);
+    }
+
+    #databaseInitialize() {
+        ZodiacModel.associate();
+        CommentModel.associate();
     }
 
     listen(...args) {

@@ -4,14 +4,9 @@ import CommentModel from "./comment-model.js";
 
 export default class ZodiacModel extends Model {
     static associate() {
-        this.hasMany(CommentModel, {
-            foreignKey: 'zodiac_name',
-            sourceKey: 'name',
-            as: 'comments',
-        });
-        CommentModel.belongsTo(this, {
-            foreignKey: 'zodiac_name',
-            targetKey: 'name',
+        this.belongsToMany(CommentModel, {
+            through: 'foreign_zodiac_comment',
+            foreignKey: 'zodiacName'
         });
     }
 }
@@ -23,9 +18,13 @@ ZodiacModel.init(
             allowNull: false,
             primaryKey: true
         },
+        sex: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        }
     },
     {
         sequelize: new CustomSequelize(),
-        modelName: 'zodiacUniverse',
+        modelName: 'zodiac_universe',
     }
 );

@@ -1,7 +1,15 @@
-import { Model, DataTypes } from 'sequelize';
+import {Model, DataTypes} from 'sequelize';
 import CustomSequelize from '../../utils/configure/CustomSequelize.js';
+import ZodiacModel from "./zodiac-model.js";
 
-export default class CommentModel extends Model {}
+export default class CommentModel extends Model {
+    static associate() {
+        this.belongsToMany(ZodiacModel, {
+            through: 'foreign_zodiac_comment',
+            foreignKey: 'commentId',
+        });
+    }
+}
 
 CommentModel.init(
     {
@@ -12,10 +20,6 @@ CommentModel.init(
         },
         content: {
             type: DataTypes.TEXT,
-            allowNull: false,
-        },
-        zodiac_name: {
-            type: DataTypes.STRING,
             allowNull: false,
         },
     },
