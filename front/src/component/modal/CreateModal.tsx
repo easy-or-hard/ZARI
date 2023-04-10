@@ -63,6 +63,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
   );
   const { value: themeValue, onChange: themeOnChange } = useSelect("green");
   const [isComplete, setIsComplete] = useState(false);
+  
   useEffect(() => {
     const createValue = {
       spaceValue,
@@ -79,7 +80,6 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
       setIsComplete(false);
     }
   }, [selectValue, spaceValue, themeValue]);
-
   // 컨펌모달
   const [confirmIsOpen, setConfirmIsOpen] = useState(false);
 
