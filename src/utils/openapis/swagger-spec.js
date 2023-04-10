@@ -19,12 +19,12 @@ export default new class SwaggerSpec {
             },
             servers: [
                 {
-                    url: `http://localhost:${customProcess.env.PORT}/api`,
+                    url: `${customProcess.env.HOST}:${customProcess.env.PORT}/api`,
                 },
             ],
         },
         definition: {}, // do not use this, instead use swaggerDefinition field
-        apis: ["./src/MVC/routes/*.js"]
+        apis: ["../../MVC/routes/*.js"]
     };
 
     constructor() {
