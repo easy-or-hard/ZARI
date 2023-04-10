@@ -10,7 +10,7 @@ export default new class CustomHelmet {
     }
 
     #options = {
-        contentSecurityPolicy: 'default-src *',
+        contentSecurityPolicy: '*',
     }
     helmet() {
         return helmet(this.#options);
