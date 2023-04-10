@@ -36,6 +36,6 @@ jobs:
         host: ${{ secrets.DEPLOY_SERVER_HOST }}
         username: ${{ secrets.DEPLOY_SERVER_USER }}
         port: ${{ secrets.DEPLOY_SERVER_PORT }}
-        key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
+        password: ${{ secrets.DEPLOY_SERVER_PASSWORD }}
         source: "./"
         target: "/cicdTest"
