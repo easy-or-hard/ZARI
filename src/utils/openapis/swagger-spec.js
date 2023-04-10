@@ -19,7 +19,7 @@ export default new class SwaggerSpec {
             },
             servers: [
                 {
-                    url: `${customProcess.env.HOST}:${customProcess.env.PORT}/api`,
+                    url: `${customProcess.env.HOST}/api`,
                 },
             ],
         },
