@@ -34,8 +34,8 @@ jobs:
       uses: appleboy/scp-action@v0.1.2
       with:
         host: ${{ secrets.DEPLOY_SERVER_HOST }}
-        port: ${{ secrets.DEPLOY_SERVER_PORT }}
         username: ${{ secrets.DEPLOY_SERVER_USER }}
-        password: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
+        port: ${{ secrets.DEPLOY_SERVER_PORT }}
+        key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
         source: "./"
         target: "/cicdTest"
