@@ -34,6 +34,7 @@ jobs:
       uses: appleboy/scp-action@v0.1.2
       with:
         host: ${{ secrets.DEPLOY_SERVER_HOST }}
+        port: ${{ secrets.PORT }}
         username: ${{ secrets.DEPLOY_SERVER_USER }}
         key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
         source: "./"
