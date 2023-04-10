@@ -9,7 +9,7 @@ export default new class CustomCors {
     }
 
     #options = {
-            origin: 'http://localhost:8080',
+            origin: '*',
             optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
             credentials: true, // Access-Control-Allow-Credentials
     }
