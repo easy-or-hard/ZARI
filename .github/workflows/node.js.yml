@@ -22,5 +22,5 @@ jobs:
         username: ${{ secrets.DEPLOY_SERVER_USER }}
         password: ${{ secrets.DEPLOY_SERVER_PASSWORD }}
         port: ${{ secrets.DEPLOY_SERVER_PORT }}
-        source: ""
+        source: "./"
         target: "./cicdTest"
