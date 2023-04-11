@@ -58,4 +58,16 @@ export default new class ZodiacUniverseController {
         const result =  await ZodiacUniverseService.findByPk(name);
         res.status(200).send(result);
     };
+
+    /**
+     * zodiac universe read all with comment
+     * @param {Request} req
+     * @param {Response} res
+     * @param {NextFunction} next
+     * @returns {Promise<void>}
+     */
+    async findAllIncludeComment(req, res, next) {
+        const result = await ZodiacUniverseService.findAllIncludeComment();
+        res.status(200).send(result);
+    }
 }

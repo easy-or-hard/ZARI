@@ -1,6 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import ZodiacUniverseRoutes from "./src/MVC/routes/zodiac-universe-routes.js";
+import ZodiacUniverseRoutes from "./src/MVC/routes/zodiac-universe-route.js";
 import NotFoundHandler from "./src/utils/exception_handlers/not-found-handler.js";
 import ErrorHandler from "./src/utils/exception_handlers/error-handler.js";
 import SwaggerSpec from "./src/utils/openapis/swagger-spec.js";

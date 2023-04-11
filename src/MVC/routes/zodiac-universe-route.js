@@ -81,7 +81,7 @@ export default new class ZodiacUniverseRoute extends ParentRoutes {
     #routeInitialize() {
         this.router.route('/zodiac-universes')
             .post(ZodiacUniverseController.create)
-            .get(ZodiacUniverseController.findAll)
+            .get(ZodiacUniverseController.findAllIncludeComment)
         // .put(this.zodiacUniverseModel.update)
         // .delete(this.zodiacUniverseController.remove);
 
