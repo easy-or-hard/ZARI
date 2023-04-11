@@ -6,7 +6,8 @@ export default class ZodiacModel extends Model {
     static associate() {
         this.belongsToMany(CommentModel, {
             through: 'foreign_zodiac_comment',
-            foreignKey: 'zodiacName'
+            foreignKey: 'zodiacName',
+            onDelete: 'CASCADE',
         });
     }
 }
@@ -18,7 +19,7 @@ ZodiacModel.init(
             allowNull: false,
             primaryKey: true
         },
-        sex: {
+        author: {
             type: DataTypes.STRING,
             allowNull: false,
         }
