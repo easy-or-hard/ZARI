@@ -23,4 +23,4 @@ jobs:
         password: ${{ secrets.DEPLOY_SERVER_PASSWORD }}
         port: ${{ secrets.DEPLOY_SERVER_PORT }}
         source: "./src"
-        target: "./srcTest"
+        target: "./test2"
