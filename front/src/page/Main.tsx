@@ -154,6 +154,7 @@ const Main = () => {
         <br />
         UNIVERSE
       </h2>
+      
       <CircleWrap>
         <div className="puppleCircleWrap">
           <span className="puppleCircle" />
