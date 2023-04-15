@@ -2,6 +2,9 @@
 # project
 .env
 
+# mac
+.DS_Store
+
 # Logs
 logs
 *.log
