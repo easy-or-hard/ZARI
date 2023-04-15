@@ -1,5 +1,5 @@
 import zodiacModel from "../models/zodiac-model.js";
-import {ConflictError, NotFoundError} from "./errors/ConflictError.js";
+import {ConflictError, NotFoundError} from "../../utils/errors/ConflictError.js";
 import CommentModel from "../models/comment-model.js";
 
 export default new class ZodiacUniverseService {
@@ -30,11 +30,16 @@ export default new class ZodiacUniverseService {
 
     /**
      *
-     * @param {string} name
+     * @param {string} identifier
      * @returns {Promise<ZodiacModel>}
      */
-    async findByPk(name) {
-        const result = await zodiacModel.findByPk(name);
+    async findByPk(identifier) {
+        const options = {
+            include: {
+                model: CommentModel
+            }
+        }
+        const result = await zodiacModel.findByPk(identifier, options);
         if (!result) {
             throw new NotFoundError("Zodiac Universe not found");
         }
