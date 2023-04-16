@@ -12,7 +12,7 @@ new CustomSequelize()
     .then(() => {
     console.log('Database is ready');
     app.listen(customProcess.env.PORT, () => {
-        console.log(`Server is ready at http://localhost:${customProcess.env.PORT}`);
+        console.log(`Server is ready at ${customProcess.env.HOST}:${customProcess.env.PORT}`);
     });
 })
     .catch((error) => {

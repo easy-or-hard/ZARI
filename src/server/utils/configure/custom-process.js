@@ -1,10 +1,4 @@
 import dotenv from "dotenv";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from 'url';
-
-const currentFileDir = path.dirname(fileURLToPath(import.meta.url));
-
 
 /**
  * Custom environment configuration class.
@@ -116,18 +110,6 @@ class CustomEnv {
         }
 
         return password;
-    }
-
-    get DB_SSL_CA() {
-        return fs.readFileSync(path.resolve(currentFileDir, '../../ca.crt')).toString();
-    }
-
-    get DB_SSL_KEY() {
-        return fs.readFileSync(path.resolve(currentFileDir, '../../client1.key')).toString();
-    }
-
-    get DB_SSL_CERT() {
-        return fs.readFileSync(path.resolve(currentFileDir, '../../client1.crt')).toString();
     }
 }
 
