@@ -1,15 +1,12 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
 name: scp files
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main" ]
-jobs:
+    branches: [ "main", "develop" ]
 
+jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -23,4 +20,4 @@ jobs:
         password: ${{ secrets.DEPLOY_SERVER_PASSWORD }}
         port: ${{ secrets.DEPLOY_SERVER_PORT }}
         source: "./"
-        target: "./cicdTest"
+        target: "./web/zari/${{ (github.ref == 'refs/heads/main') || (github.event.pull_request.base.ref == 'main') ? 'zari.xiyo.dev' : 'zari-dev.xiyo.dev' }}"
