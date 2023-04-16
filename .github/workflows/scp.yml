@@ -12,6 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+      
+    - name: Set target directory for main branch
+      if: (github.ref == 'refs/heads/main') || (github.event.pull_request.base.ref == 'main')
+      run: echo "TARGET_DIR=./web/zari/zari.xiyo.dev" >> $GITHUB_ENV
+
+    - name: Set target directory for develop branch
+      if: (github.ref == 'refs/heads/develop') || (github.event.pull_request.base.ref == 'develop')
+      run: echo "TARGET_DIR=./web/zari/zari-dev.xiyo.dev" >> $GITHUB_ENV
+
     - name: copy file via ssh password
       uses: appleboy/scp-action@master
       with:
@@ -20,4 +29,4 @@ jobs:
         password: ${{ secrets.DEPLOY_SERVER_PASSWORD }}
         port: ${{ secrets.DEPLOY_SERVER_PORT }}
         source: "./"
-        target: "./web/zari/${{ (github.ref == 'refs/heads/main') || (github.event.pull_request.base.ref == 'main') ? 'zari.xiyo.dev' : 'zari-dev.xiyo.dev' }}"
+        target: ${{ env.TARGET_DIR }}
