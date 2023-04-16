@@ -1,8 +1,9 @@
 import app from "../app.js";
-import customProcess from "../src/utils/configure/custom-process.js";
-import CustomSequelize from '../src/utils/configure/CustomSequelize.js';
+import customProcess from "../src/server/utils/configure/custom-process.js";
+import CustomSequelize from '../src/server/utils/configure/CustomSequelize.js';
 
-import demoData from "../src/demo/demoData.js";
+// todo: remove demo data
+// import demoData from "../src/server/demo/demoData.js";
 
 new CustomSequelize()
     .sync()
