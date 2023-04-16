@@ -1,14 +1,14 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import ZodiacUniverseRoutes from "./src/MVC/routes/zodiac-universe-route.js";
-import NotFoundHandler from "./src/utils/exception_handlers/not-found-handler.js";
-import ErrorHandler from "./src/utils/exception_handlers/error-handler.js";
-import SwaggerSpec from "./src/utils/openapis/swagger-spec.js";
-import customMorgan from "./src/utils/configure/custom-morgan.js";
-import customCors from "./src/utils/security/custom-cors.js";
-import customHelmet from "./src/utils/security/custom-helmet.js";
-import ZodiacModel from "./src/MVC/models/zodiac-model.js";
-import CommentModel from "./src/MVC/models/comment-model.js";
+import ZodiacUniverseRoutes from "./src/server/MVC/routes/zodiac-universe-route.js";
+import NotFoundHandler from "./src/server/utils/exception_handlers/not-found-handler.js";
+import ErrorHandler from "./src/server/utils/exception_handlers/error-handler.js";
+import SwaggerSpec from "./src/server/utils/openapis/swagger-spec.js";
+import customMorgan from "./src/server/utils/configure/custom-morgan.js";
+import customCors from "./src/server/utils/security/custom-cors.js";
+import customHelmet from "./src/server/utils/security/custom-helmet.js";
+import ZodiacModel from "./src/server/MVC/models/zodiac-model.js";
+import CommentModel from "./src/server/MVC/models/comment-model.js";
 
 export default new class App {
     static #instance;
