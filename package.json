@@ -1,5 +1,5 @@
 {
-  "name": "zodiac-universe",
+  "name": "zari",
   "version": "1.0.0",
   "description": "project 001 from team 'easy or hard'",
   "main": "app.js",
@@ -19,9 +19,9 @@
   "author": "easy or hard",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/XIYO/ourProject01/issues"
+    "url": "https://github.com/easy-or-hard/ZARI/issues"
   },
-  "homepage": "https://github.com/XIYO/ourProject01#readme",
+  "homepage": "https://github.com/easy-or-hard/ZARI#readme",
   "dependencies": {
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -32,9 +32,12 @@
     "morgan": "^1.10.0",
     "pg": "^8.10.0",
     "sequelize": "^6.30.0",
-    "sqlite3": "^5.1.6",
+
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.2",
     "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "sqlite3": "^5.1.6"
   }
 }
