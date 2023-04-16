@@ -11,8 +11,6 @@ const currentFileDir = path.dirname(fileURLToPath(import.meta.url));
  * Loads environment variables and provides convenient access to them.
  */
 class CustomEnv {
-    #nodeEnv;
-
     /**
      * CustomEnv constructor.
      * Loads environment variables from the .env file using dotenv and sets the internal nodeEnv variable.
@@ -20,23 +18,14 @@ class CustomEnv {
      */
     constructor() {
         dotenv.config();
-
-        this.#nodeEnv = process.env.NODE_ENV;
-        if (!this.#nodeEnv) {
-            throw new Error('NODE_ENV is not defined, please check .env file');
-        }
     }
 
     /**
      * @returns {string} The node environment defined in the .env file.
-     * @throws {Error} if NODE_ENV is not defined in the .env file.
+     * if NODE_ENV is not defined in the .env file, 'local' is returned.
      */
     get NODE_ENV() {
-        let nodeEnv = process.env.NODE_ENV;
-        if (!nodeEnv) {
-            throw new Error('NODE_ENV is not defined, please check .env file');
-        }
-        return this.#nodeEnv;
+        return process.env.NODE_ENV || 'local';
     }
 
     get HOST() {
