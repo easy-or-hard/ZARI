@@ -2,9 +2,7 @@ import app from "../app.js";
 import customProcess from "../src/server/utils/configure/custom-process.js";
 import CustomSequelize from '../src/server/utils/configure/CustomSequelize.js';
 import customLogger from '../src/server/utils/configure/custom-logger.js';
-
-// todo: remove demo data
-// import demoData from "../src/server/demo/demoData.js";
+import DummyRunner from "../src/dummy/DummyRunner.js";
 
 class WWW {
     constructor() {
@@ -14,8 +12,6 @@ class WWW {
     #init() {
         new CustomSequelize()
             .sync()
-            // .sync({force: true})
-            // .then(demoData.insertDemoData)
             .then(this.#appStart)
             .catch(this.#errorHandler);
     }
@@ -33,3 +29,4 @@ class WWW {
 }
 
 const www = new WWW();
+new DummyRunner().insertDemoData();

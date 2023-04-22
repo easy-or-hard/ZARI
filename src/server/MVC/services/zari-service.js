@@ -1,6 +1,6 @@
-import zodiacModel from "../models/zodiac-model.js";
+import Zari from "../models/Zari.js";
 import {ConflictError, NotFoundError} from "../../utils/errors/ConflictError.js";
-import CommentModel from "../models/comment-model.js";
+import Banzzack from "../models/Banzzack.js";
 
 export default new class ZodiacUniverseService {
     static #instance;
@@ -15,17 +15,17 @@ export default new class ZodiacUniverseService {
     /**
      *
      * @param data
-     * @returns {Promise<ZodiacModel>}
+     * @returns {Promise<Zari>}
      * @throws ConflictError
      */
     async create(data) {
         const condition = {where: {name: data.name}, group: ['name']};
-        const count = await zodiacModel.count(condition);
+        const count = await Zari.count(condition);
         const hasZodiacUniverse = count > 0;
         if (hasZodiacUniverse) {
             throw new ConflictError("Zodiac Universe already exists");
         }
-        return await zodiacModel.create(data);
+        return await Zari.create(data);
     }
 
     /**
@@ -36,10 +36,10 @@ export default new class ZodiacUniverseService {
     async findByPk(identifier) {
         const options = {
             include: {
-                model: CommentModel
+                model: Banzzack
             }
         }
-        const result = await zodiacModel.findByPk(identifier, options);
+        const result = await Zari.findByPk(identifier, options);
         if (!result) {
             throw new NotFoundError("Zodiac Universe not found");
         }
@@ -61,7 +61,7 @@ export default new class ZodiacUniverseService {
             order: [[sortBy, sortOrder]],
             attributes: { exclude: ['createdAt', 'updateAt'] },
         };
-        return await zodiacModel.findAll(options);
+        return await Zari.findAll(options);
     }
 
     async findAllIncludeComment(page = 1, pageSize = 10, sortBy = 'updatedAt', sortOrder = 'DESC') {
@@ -71,11 +71,11 @@ export default new class ZodiacUniverseService {
             order: [[sortBy, sortOrder]],
             attributes: { exclude: ['createdAt', 'updateAt'] },
             include: {
-                model: CommentModel,
+                model: Banzzack,
                 attributes: { exclude: ['createdAt', 'updateAt'] },
                 through: { attributes: [] },
             },
         };
-        return await zodiacModel.findAll(options);
+        return await Zari.findAll(options);
     }
 }

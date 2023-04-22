@@ -1,0 +1,34 @@
+import { Model, DataTypes } from 'sequelize';
+import CustomSequelize from '../../utils/configure/CustomSequelize.js';
+import Byeol from "./Byeol.js";
+import Zari from "./Zari.js";
+
+export default class Banzzack extends Model {
+    static initialize() {
+        super.init(this.#attributes, this.#options);
+    }
+
+    static associate() {
+        this.belongsTo(Byeol);
+        this.belongsTo(Zari);
+    }
+
+    static get #options() {
+        return {
+            sequelize: new CustomSequelize(),
+            modelName: this.name.toLowerCase(),
+        }
+    }
+
+    static get #attributes() {
+        let attributes = {};
+        attributes[this.name.toLowerCase()] = {
+            type: DataTypes.STRING(512),
+            allowNull: false,
+        }
+
+        return attributes;
+    }
+}
+
+Banzzack.initialize();

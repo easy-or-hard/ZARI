@@ -1,26 +1,32 @@
-import ParentRoutes from "./parent-routes.js";
-import ZodiacUniverseController from "../controllers/zodiac-universe-controller.js";
+import ZariController from "../controllers/zari-controller.js";
+import express from "express";
 
+export default new class ZariRoute {
+    static #instance;
+    router= express.Router();
 
-export default new class ZodiacUniverseRoute extends ParentRoutes {
     constructor() {
-        super();
+        if (this.constructor.#instance) {
+            return this.constructor.#instance;
+        }
+        this.constructor.#instance = this;
+
         this.#routeInitialize();
     }
 
     /**
      * @swagger
-     * /zodiac-universes/{name}:
+     * /zari/{id}:
      *   get:
-     *     summary: 조디악 유니버스 객체를 조회한다.
-     *     description: 안녕하세요
+     *     summary: 자리 객체 조회
+     *     description: 자리 소유자, 자리의 반짝을 포함합니다.
      *     parameters:
      *       - in: path
-     *         name: name
+     *         id: 자리의 id
      *         required: true
      *         schema:
      *           type: string
-     *         description: 조디악 유니버스 이름
+     *         description: 자리의 id
      *     responses:
      *       200:
      *         description: A zodiac universe
@@ -33,7 +39,7 @@ export default new class ZodiacUniverseRoute extends ParentRoutes {
      *                   type: string
      *                 description:
      *                   type: string
-     * /zodiac-universes:
+     * /zari:
      *   post:
      *     summary: 새로운 조디악 유니버스 객체를 생성한다.
      *     requestBody:
@@ -79,12 +85,12 @@ export default new class ZodiacUniverseRoute extends ParentRoutes {
      *                     type: string
      */
     #routeInitialize() {
-        this.router.route('/zodiac-universes')
-            .post(ZodiacUniverseController.create)
-            .get(ZodiacUniverseController.findAllIncludeComment)
+        this.router.route('/zari')
+            .post(ZariController.create)
+            .get(ZariController.findAllIncludeComment)
         // .put(this.zodiacUniverseModel.update)
         // .delete(this.zodiacUniverseController.remove);
 
-        this.router.get('/zodiac-universes/:name', ZodiacUniverseController.findByPk);
+        this.router.get('/zari/:id', ZariController.findByPk);
     }
 }

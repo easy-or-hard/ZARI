@@ -32,12 +32,12 @@
     "morgan": "^1.10.0",
     "pg": "^8.10.0",
     "sequelize": "^6.30.0",
-
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.2",
     "winston": "^3.8.2"
   },
   "devDependencies": {
+    "lodash": "^4.17.21",
     "sqlite3": "^5.1.6"
   }
 }
