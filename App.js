@@ -8,7 +8,6 @@ import SwaggerSpec from "./src/server/utils/openapis/swagger-spec.js";
 import customMorgan from "./src/server/utils/configure/custom-morgan.js";
 import customCors from "./src/server/utils/security/custom-cors.js";
 import customHelmet from "./src/server/utils/security/custom-helmet.js";
-import customGitHubPassport from "./src/server/utils/security/OAuth/CustomGithubPassport.js";
 
 export default class App {
     static #instance;
@@ -47,8 +46,6 @@ export default class App {
         this.#express.use(customMorgan.morgan());
         this.#express.use(customCors.cors());
         this.#express.use(customHelmet.helmet());
-        this.#express.use(customGitHubPassport.initialize());
-        this.#express.use(customGitHubPassport.session());
     }
 
     #routerInitialize() {
