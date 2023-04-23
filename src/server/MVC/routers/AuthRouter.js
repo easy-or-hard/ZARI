@@ -1,11 +1,15 @@
 import express from "express";
 import AuthController from "../controllers/AuthController.js";
 import jwt from "jsonwebtoken";
+import CustomJwtPassport from "../../utils/security/auth/CustomJwtPassport.js";
+import CustomGithubPassport from "../../utils/security/auth/CustomGithubPassport.js";
 
 export default class AuthRouter {
     static #instance;
     router= express.Router();
     #controller = new AuthController();
+    #customJwtPassport = new CustomJwtPassport();
+    #customGithubPassport = new CustomGithubPassport();
 
     constructor() {
         if (this.constructor.#instance) {
@@ -20,9 +24,15 @@ export default class AuthRouter {
         this.router.get('/sign-in', this.#controller.signIn);
         this.router.post('/sign-up', this.#controller.signUp);
 
-        this.router.get('/log', this.#controller.log)
-        this.router.post('/login', this.#controller.login)
+        this.router.get('/log', this.#controller.log);
+        this.router.post('/login', this.#controller.login);
 
+        this.router.get('/v2/log', this.#controller.logV2);
+        this.router.post('/v2/login', this.#controller.loginV2);
+        this.router.get('/v2/protected', this.#customJwtPassport.authenticate(), this.#controller.protectedV2);
+
+        this.router.get('/github', this.#customGithubPassport.authenticate());
+        this.router.get('/github/callback', this.#customGithubPassport.authenticate2(), this.#controller.githubCallback);
 
         this.router.get('/dashboard', (req, res) => {
             if (req.session.user) {

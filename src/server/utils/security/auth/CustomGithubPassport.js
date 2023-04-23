@@ -1,9 +1,11 @@
 import passport from 'passport';
-import GitHubStrategy from "passport-github";
+import { Strategy as githubStrategy } from 'passport-github';
+
 import customProcess from "../../configure/custom-process.js";
 
 export default class CustomGithubPassport {
     static #instance;
+    #passport = passport;
 
     constructor() {
         if (this.constructor.#instance) {
@@ -15,7 +17,7 @@ export default class CustomGithubPassport {
     }
 
     #passportInitialize() {
-        passport.use(new GitHubStrategy({
+        passport.use(new githubStrategy({
                 clientID: customProcess.env.GITHUB_CLIENT_ID,
                 clientSecret: customProcess.env.GITHUB_CLIENT_SECRET,
                 callbackURL: customProcess.env.GITHUB_CALLBACK_URL
@@ -27,12 +29,24 @@ export default class CustomGithubPassport {
             })
         );
 
-        passport.serializeUser(function(user, done) {
+        this.#passport.serializeUser((user, done) => {
             done(null, user);
         });
 
-        passport.deserializeUser(function(obj, done) {
-            done(null, obj);
+        this.#passport.deserializeUser((user, done) => {
+            done(null, user);
         });
+    }
+
+    initialize = () => {
+        return this.#passport.initialize({});
+    }
+
+    authenticate = () => {
+        return this.#passport.authenticate('github');
+    }
+
+    authenticate2 = () => {
+        return this.#passport.authenticate('github', { failureRedirect: '/auth' });
     }
 }

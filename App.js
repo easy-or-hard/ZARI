@@ -9,11 +9,15 @@ import customCors from "./src/server/utils/security/custom-cors.js";
 import customHelmet from "./src/server/utils/security/custom-helmet.js";
 import AuthRouter from "./src/server/MVC/routers/AuthRouter.js";
 import session from "express-session";
+import CustomJwtPassport from "./src/server/utils/security/auth/CustomJwtPassport.js";
+import CustomGithubPassport from "./src/server/utils/security/auth/CustomGithubPassport.js";
 
 export default class App {
     static #instance;
 
     #express = express();
+    #customJwtPassport = new CustomJwtPassport();
+    #customGithubPassport = new CustomGithubPassport();
 
     constructor() {
         if (this.constructor.#instance) {
@@ -48,6 +52,8 @@ export default class App {
         this.#express.use(customMorgan.morgan());
         this.#express.use(customCors.cors());
         this.#express.use(customHelmet.helmet());
+        this.#express.use(this.#customJwtPassport.initialize());
+        this.#express.use(this.#customGithubPassport.initialize());
     }
 
     #routerInitialize() {

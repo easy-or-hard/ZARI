@@ -128,6 +128,13 @@ class CustomEnv {
         }
         return process.env.GITHUB_CLIENT_ID;
     }
+
+    get JWT_SECRET_KEY() {
+        if (process.env.JWT_SECRET_KEY === undefined) {
+            throw new Error('JWT_SECRET is not defined, please check .env file');
+        }
+        return process.env.JWT_SECRET_KEY;
+    }
 }
 
 /**
