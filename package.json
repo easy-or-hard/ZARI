@@ -2,7 +2,7 @@
   "name": "zari",
   "version": "1.0.0",
   "description": "project 001 from team 'easy or hard'",
-  "main": "app.js",
+  "main": "App.js",
   "type": "module",
   "target": "es2020",
   "engines": {
@@ -10,7 +10,7 @@
     "npm": ">=9.0.0"
   },
   "scripts": {
-    "start": "node bin/www.js"
+    "start": "node bin/Www.js"
   },
   "repository": {
     "type": "git",
@@ -28,8 +28,13 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",
+    "express-session": "^1.17.3",
     "helmet": "^6.0.1",
     "morgan": "^1.10.0",
+    "passport": "^0.6.0",
+    "passport-github": "^1.1.0",
+    "passport-github2": "^0.1.12",
+    "passport-oauth2": "^1.7.0",
     "pg": "^8.10.0",
     "sequelize": "^6.30.0",
     "swagger-jsdoc": "^6.2.8",
@@ -37,7 +42,9 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
+    "chai": "^4.3.7",
     "lodash": "^4.17.21",
+    "mocha": "^10.2.0",
     "sqlite3": "^5.1.6"
   }
 }

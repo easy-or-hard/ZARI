@@ -1,8 +1,8 @@
-import Zari from "../models/Zari.js";
+import ZariModel from "../models/ZariModel.js";
 import {ConflictError, NotFoundError} from "../../utils/errors/ConflictError.js";
-import Banzzack from "../models/Banzzack.js";
+import BanzzackModel from "../models/BanzzackModel.js";
 
-export default new class ZodiacUniverseService {
+export default class ZariService {
     static #instance;
 
     constructor() {
@@ -15,33 +15,33 @@ export default new class ZodiacUniverseService {
     /**
      *
      * @param data
-     * @returns {Promise<Zari>}
+     * @returns {Promise<ZariModel>}
      * @throws ConflictError
      */
     async create(data) {
-        const condition = {where: {name: data.name}, group: ['name']};
-        const count = await Zari.count(condition);
-        const hasZodiacUniverse = count > 0;
-        if (hasZodiacUniverse) {
+        const condition = {where: {byeol: data.byeol}, group: ['byeol']};
+        const count = await ZariModel.count(condition);
+        const hasInstance = count > 0;
+        if (hasInstance) {
             throw new ConflictError("Zodiac Universe already exists");
         }
-        return await Zari.create(data);
+        return await ZariModel.create(data);
     }
 
     /**
      *
-     * @param {string} identifier
-     * @returns {Promise<ZodiacModel>}
+     * @param identifier
+     * @returns {Promise<ZariModel>}
      */
     async findByPk(identifier) {
         const options = {
             include: {
-                model: Banzzack
+                model: BanzzackModel
             }
         }
-        const result = await Zari.findByPk(identifier, options);
+        const result = await ZariModel.findByPk(identifier, options);
         if (!result) {
-            throw new NotFoundError("Zodiac Universe not found");
+            throw new NotFoundError();
         }
         return result;
     }
@@ -61,7 +61,7 @@ export default new class ZodiacUniverseService {
             order: [[sortBy, sortOrder]],
             attributes: { exclude: ['createdAt', 'updateAt'] },
         };
-        return await Zari.findAll(options);
+        return await ZariModel.findAll(options);
     }
 
     async findAllIncludeComment(page = 1, pageSize = 10, sortBy = 'updatedAt', sortOrder = 'DESC') {
@@ -71,11 +71,11 @@ export default new class ZodiacUniverseService {
             order: [[sortBy, sortOrder]],
             attributes: { exclude: ['createdAt', 'updateAt'] },
             include: {
-                model: Banzzack,
+                model: BanzzackModel,
                 attributes: { exclude: ['createdAt', 'updateAt'] },
                 through: { attributes: [] },
             },
         };
-        return await Zari.findAll(options);
+        return await ZariModel.findAll(options);
     }
 }

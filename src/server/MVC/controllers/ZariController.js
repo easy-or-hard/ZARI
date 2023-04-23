@@ -1,14 +1,15 @@
 import express from "express";
 import asyncHandler from "express-async-handler";
-import ZodiacUniverseService from "../services/zari-service.js";
+import ZariService from "../services/ZariService.js";
 const { Request, Response } = express;
 
-export default new class ZodiacUniverseController {
+export default class ZariController {
     /**
-     * @type {ZodiacUniverseController}
+     * @type {ZariController}
      * @protected
      */
     static #instance;
+    #service = new ZariService();
 
     constructor() {
         if (this.constructor.#instance) {
@@ -28,7 +29,7 @@ export default new class ZodiacUniverseController {
      * @returns {Promise<void>}
      */
     async create(req, res) {
-        const zodiacUniverse = await ZodiacUniverseService.create(req.body);
+        const zodiacUniverse = await this.#service.create(req.body);
         res.status(201).json(zodiacUniverse);
     }
 
@@ -39,7 +40,7 @@ export default new class ZodiacUniverseController {
      * @returns {Promise<void>}
      */
     async findAll(req, res) {
-        const result = await ZodiacUniverseService.findAll();
+        const result = await this.#service.findAll();
         res.status(200).send(result);
     }
 
@@ -52,7 +53,7 @@ export default new class ZodiacUniverseController {
      */
     async findByPk(req, res) {
         const name = req.params.name;
-        const result =  await ZodiacUniverseService.findByPk(name);
+        const result =  await this.#service.findByPk(name);
         res.status(200).send(result);
     };
 
@@ -63,7 +64,7 @@ export default new class ZodiacUniverseController {
      * @returns {Promise<void>}
      */
     async findAllIncludeComment(req, res) {
-        const result = await ZodiacUniverseService.findAllIncludeComment();
+        const result = await this.#service.findAllIncludeComment();
         res.status(200).send(result);
     }
 }

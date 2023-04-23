@@ -1,9 +1,10 @@
-import ZariController from "../controllers/zari-controller.js";
+import ZariController from "../controllers/ZariController.js";
 import express from "express";
 
-export default new class ZariRoute {
+export default class ZariRouter {
     static #instance;
     router= express.Router();
+    #controller = new ZariController();
 
     constructor() {
         if (this.constructor.#instance) {
@@ -86,11 +87,11 @@ export default new class ZariRoute {
      */
     #routeInitialize() {
         this.router.route('/zari')
-            .post(ZariController.create)
-            .get(ZariController.findAllIncludeComment)
+            .post(this.#controller.create)
+            .get(this.#controller.findAllIncludeComment)
         // .put(this.zodiacUniverseModel.update)
         // .delete(this.zodiacUniverseController.remove);
 
-        this.router.get('/zari/:id', ZariController.findByPk);
+        this.router.get('/zari/:id', this.#controller.findByPk);
     }
 }

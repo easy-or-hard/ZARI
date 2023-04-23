@@ -1,17 +1,16 @@
 import express from "express";
+import session from "express-session";
 import cookieParser from "cookie-parser";
-import ZodiacUniverseRoutes from "./src/server/MVC/routes/zari.js";
+import ZariRouter from "./src/server/MVC/routers/ZariRouter.js";
 import NotFoundHandler from "./src/server/utils/exception_handlers/not-found-handler.js";
 import ErrorHandler from "./src/server/utils/exception_handlers/error-handler.js";
 import SwaggerSpec from "./src/server/utils/openapis/swagger-spec.js";
 import customMorgan from "./src/server/utils/configure/custom-morgan.js";
 import customCors from "./src/server/utils/security/custom-cors.js";
 import customHelmet from "./src/server/utils/security/custom-helmet.js";
-import Zari from "./src/server/MVC/models/Zari.js";
-import Banzzack from "./src/server/MVC/models/Banzzack.js";
-import Byeol from "./src/server/MVC/models/Byeol.js";
+import customGitHubPassport from "./src/server/utils/security/OAuth/CustomGithubPassport.js";
 
-export default new class App {
+export default class App {
     static #instance;
 
     #express = express();
@@ -22,11 +21,9 @@ export default new class App {
         }
         this.constructor.#instance = this;
 
-
         this.#preProcess();
         this.#routerInitialize();
         this.#exceptionHandler();
-        this.#databaseInitialize();
     }
 
     #preProcess() {
@@ -38,7 +35,11 @@ export default new class App {
             maxAge: '1d',
             redirect: false,
         }
-
+        this.#express.use(session({
+            secret: 'your-secret-key',
+            resave: false,
+            saveUninitialized: true
+        }));
         this.#express.use(express.json());
         this.#express.use(express.urlencoded({extended: false}));
         this.#express.use(express.static('public', staticOptions));
@@ -46,22 +47,18 @@ export default new class App {
         this.#express.use(customMorgan.morgan());
         this.#express.use(customCors.cors());
         this.#express.use(customHelmet.helmet());
+        this.#express.use(customGitHubPassport.initialize());
+        this.#express.use(customGitHubPassport.session());
     }
 
     #routerInitialize() {
         this.#express.use('/api-docs', SwaggerSpec.server, SwaggerSpec.setup());
-        this.#express.use('/api', ZodiacUniverseRoutes.router);
+        this.#express.use('/api', new ZariRouter().router);
     }
 
     #exceptionHandler() {
         this.#express.use(NotFoundHandler.notFound);
         this.#express.use(ErrorHandler.errorHandler);
-    }
-
-    #databaseInitialize() {
-        Zari.associate();
-        Byeol.associate();
-        Banzzack.associate();
     }
 
     listen(...args) {

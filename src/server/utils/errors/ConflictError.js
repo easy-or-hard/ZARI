@@ -8,7 +8,8 @@ export class ConflictError extends Error {
 
 export class NotFoundError extends Error {
     constructor(message) {
-        super(message);
+        let defaultMessage = message || "Not Found";
+        super(defaultMessage);
         this.name = 'NotFoundError';
         this.statusCode = 404;
     }

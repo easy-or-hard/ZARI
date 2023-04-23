@@ -2,9 +2,10 @@ import _ from 'lodash';
 
 const {sample} = _;
 
-import Zari from "../server/MVC/models/Zari.js";
-import Banzzack from "../server/MVC/models/Banzzack.js";
-import Byeol from "../server/MVC/models/Byeol.js";
+import ByeolModel from "../server/MVC/models/ByeolModel.js";
+import ZariModel from "../server/MVC/models/ZariModel.js";
+import BanzzackModel from "../server/MVC/models/BanzzackModel.js";
+
 
 const dummy = [
     {byeol: '나루토', zari: '호랑이'},
@@ -126,9 +127,9 @@ export default class DummyRunner {
     }
 
     async insertDemoData() {
-        await Byeol.sync({force: true});
-        await Zari.sync({force: true});
-        await Banzzack.sync({force: true});
+        await ByeolModel.sync({force: true});
+        await ZariModel.sync({force: true});
+        await BanzzackModel.sync({force: true});
         const dummyByeolList = await this.createDummyByeolData();
         const dummyZariList = await this.createDummyZariData(dummyByeolList);
         await this.createDummyBanzzackData(dummyByeolList, dummyZariList);
@@ -136,13 +137,10 @@ export default class DummyRunner {
 
 
     async createDummyByeolData() {
-        const createdByeolList = [];
+        let createdByeolList;
 
         try {
-            for (const element of dummy) {
-                const byeol = await Byeol.create({byeol: element.byeol});
-                createdByeolList.push(byeol);
-            }
+            createdByeolList = await ByeolModel.bulkCreate(dummy);
 
             console.log('Dummy data created:', createdByeolList.map(byeol => byeol.toJSON()));
         } catch (error) {
@@ -158,13 +156,14 @@ export default class DummyRunner {
         try {
             for (let i = 0; i < dummyByeolList.length; i++) {
                 const byeol = dummyByeolList[i];
-                const zari = await Zari.create({zari: dummy[i].zari });
-                await zari.setByeol(byeol);
+                const zari = await byeol.createZari({
+                    zari: dummy[i].zari
+                });
                 createdZariList.push(zari);
             }
-            console.log('Zari data associated with Byeol');
+            console.log('ZariModel data associated with ByeolModel');
         } catch (error) {
-            console.error('Error creating and associating Zari data:', error);
+            console.error('Error creating and associating ZariModel data:', error);
         }
 
         return createdZariList;
@@ -177,16 +176,17 @@ export default class DummyRunner {
                     const byeol = sample(dummyByeolList.filter(byeol => byeol.zari !== zari));
                     const greeting = sample(greetings);
 
-                    await Banzzack.create({
+                    let banzzack = await BanzzackModel.create({
                         banzzack: greeting,
-                        byeol: byeol,
-                        // zari: zari,
-                    }, {
-                        include: [Byeol, Zari]
+                        zariId: zari.id,
+                        byeolId: byeol.id
                     });
+
+                    // await banzzack.setByeol(byeol);
+                    // await banzzack.setZari(zari);
                 }
             }
-            console.log('Banzzack data associated with Byeol and Zari');
+            console.log('Banzzack data associated with ByeolModel and ZariModel');
         } catch (error) {
             console.error('Error creating and associating Banzzack data:', error);
         }

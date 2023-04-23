@@ -1,32 +1,29 @@
-import app from "../app.js";
+import App from "../App.js";
 import customProcess from "../src/server/utils/configure/custom-process.js";
 import CustomSequelize from '../src/server/utils/configure/CustomSequelize.js';
 import customLogger from '../src/server/utils/configure/custom-logger.js';
-import DummyRunner from "../src/dummy/DummyRunner.js";
 
-class WWW {
+class Www {
+    app = new App();
     constructor() {
-        this.#init();
-    }
-
-    #init() {
         new CustomSequelize()
             .sync()
             .then(this.#appStart)
             .catch(this.#errorHandler);
     }
 
-    #appStart() {
+    #appStart = () => {
         customLogger.info('Database is ready');
-        app.listen(customProcess.env.PORT, () => {
+        this.app.listen(customProcess.env.PORT, () => {
             customLogger.info(`Server is ready at ${customProcess.env.HOST}:${customProcess.env.PORT}`);
         });
     }
 
-    #errorHandler(error) {
+    #errorHandler = (error) => {
         customLogger.error(error);
     }
 }
 
-const www = new WWW();
-new DummyRunner().insertDemoData();
+const www = new Www();
+
+

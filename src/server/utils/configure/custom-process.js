@@ -18,9 +18,7 @@ class CustomEnv {
      * @returns {string} The node environment defined in the .env file.
      * if NODE_ENV is not defined in the .env file, 'local' is returned.
      */
-    get NODE_ENV() {
-        return process.env.NODE_ENV || 'local';
-    }
+    get NODE_ENV() {return process.env.NODE_ENV || 'local';}
 
     get HOST() {
         let host = process.env.HOST;
@@ -110,6 +108,25 @@ class CustomEnv {
         }
 
         return password;
+    }
+
+    get GITHUB_CALLBACK_URL() {
+        if (process.env.GITHUB_CALLBACK_URL === undefined) {
+            throw new Error('GITHUB_CALLBACK_URL is not defined, please check .env file');
+        }
+        return process.env.GITHUB_CALLBACK_URL;
+    }
+    get GITHUB_CLIENT_SECRET() {
+        if (process.env.GITHUB_CLIENT_SECRET === undefined) {
+            throw new Error('GITHUB_CLIENT_SECRET is not defined, please check .env file');
+        }
+        return process.env.GITHUB_CLIENT_SECRET;
+    }
+    get GITHUB_CLIENT_ID() {
+        if (process.env.GITHUB_CLIENT_ID === undefined) {
+            throw new Error('GITHUB_CLIENT_ID is not defined, please check .env file');
+        }
+        return process.env.GITHUB_CLIENT_ID;
     }
 }
 
