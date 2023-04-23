@@ -1,7 +1,7 @@
 import ByeolModel from "../models/ByeolModel.js";
 import {ConflictError} from "../../utils/errors/ConflictError.js";
 
-export default class SignUpService {
+export default class AuthService {
     static #instance;
     constructor() {
         if (this.constructor.#instance) {

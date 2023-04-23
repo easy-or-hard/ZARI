@@ -1,5 +1,4 @@
 import express from "express";
-import session from "express-session";
 import cookieParser from "cookie-parser";
 import ZariRouter from "./src/server/MVC/routers/ZariRouter.js";
 import NotFoundHandler from "./src/server/utils/exception_handlers/not-found-handler.js";
@@ -8,6 +7,8 @@ import SwaggerSpec from "./src/server/utils/openapis/swagger-spec.js";
 import customMorgan from "./src/server/utils/configure/custom-morgan.js";
 import customCors from "./src/server/utils/security/custom-cors.js";
 import customHelmet from "./src/server/utils/security/custom-helmet.js";
+import AuthRouter from "./src/server/MVC/routers/AuthRouter.js";
+import session from "express-session";
 
 export default class App {
     static #instance;
@@ -33,11 +34,12 @@ export default class App {
             index: false,
             maxAge: '1d',
             redirect: false,
-        }
+        };
         this.#express.use(session({
             secret: 'your-secret-key',
             resave: false,
-            saveUninitialized: true
+            saveUninitialized: false,
+            cookie: { secure: false } // Set to 'true' if you are using HTTPS
         }));
         this.#express.use(express.json());
         this.#express.use(express.urlencoded({extended: false}));
@@ -51,6 +53,7 @@ export default class App {
     #routerInitialize() {
         this.#express.use('/api-docs', SwaggerSpec.server, SwaggerSpec.setup());
         this.#express.use('/api', new ZariRouter().router);
+        this.#express.use('/auth',new AuthRouter().router);
     }
 
     #exceptionHandler() {

@@ -1,9 +1,21 @@
+import passport from 'passport';
 import GitHubStrategy from "passport-github";
 import customProcess from "../../configure/custom-process.js";
 
-export default class CustomGitHubStrategy extends GitHubStrategy {
+export default class CustomGithubPassport {
+    static #instance;
+
     constructor() {
-        super({
+        if (this.constructor.#instance) {
+            return this.constructor.#instance;
+        }
+        this.constructor.#instance = this;
+
+        this.#passportInitialize();
+    }
+
+    #passportInitialize() {
+        passport.use(new GitHubStrategy({
                 clientID: customProcess.env.GITHUB_CLIENT_ID,
                 clientSecret: customProcess.env.GITHUB_CLIENT_SECRET,
                 callbackURL: customProcess.env.GITHUB_CALLBACK_URL
@@ -12,6 +24,15 @@ export default class CustomGitHubStrategy extends GitHubStrategy {
                 // Here, you can handle the user profile and store it in your database if needed
                 // For now, let's just return the profile
                 return done(null, profile);
-            });
+            })
+        );
+
+        passport.serializeUser(function(user, done) {
+            done(null, user);
+        });
+
+        passport.deserializeUser(function(obj, done) {
+            done(null, obj);
+        });
     }
 }
