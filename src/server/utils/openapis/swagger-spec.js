@@ -13,13 +13,13 @@ export default new class SwaggerSpec {
         swaggerDefinition: {
             openapi: "3.0.0",
             info: {
-                title: "Zodiac Universe API",
+                title: "ZARI API",
                 version: "1.0.0",
-                description: "A simple API to manage zodiac universes",
+                description: "A simple API to manage ZARI",
             },
             servers: [
                 {
-                    url: `${customProcess.env.HOST}/api`,
+                    url: '/api',
                 },
             ],
         },

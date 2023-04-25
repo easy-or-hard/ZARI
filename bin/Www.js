@@ -15,7 +15,7 @@ class Www {
     #appStart = () => {
         customLogger.info('Database is ready');
         this.app.listen(customProcess.env.PORT, () => {
-            customLogger.info(`Server is ready at ${customProcess.env.HOST}:${customProcess.env.PORT}`);
+            customLogger.info(`Server is ready at ${customProcess.env.PORT}`);
         });
     }
 

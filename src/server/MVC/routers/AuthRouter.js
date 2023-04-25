@@ -33,6 +33,10 @@ export default class AuthRouter {
 
         this.router.get('/github', this.#customGithubPassport.authenticate());
         this.router.get('/github/callback', this.#customGithubPassport.authenticate2(), this.#controller.githubCallback);
+        this.router.get('/auth/failure', (req, res) => {
+            res.status(401).send('Authentication failed. Please try again.');
+        });
+        
 
         this.router.get('/dashboard', (req, res) => {
             if (req.session.user) {

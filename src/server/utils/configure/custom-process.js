@@ -18,26 +18,14 @@ class CustomEnv {
      * @returns {string} The node environment defined in the .env file.
      * if NODE_ENV is not defined in the .env file, 'local' is returned.
      */
-    get NODE_ENV() {return process.env.NODE_ENV || 'local';}
-
-    get HOST() {
-        let host = process.env.HOST;
-        if (!host) {
-            throw new Error('HOST is not defined, please check .env file');
-        }
-        return host;
-    }
+    get NODE_ENV() { return process.env.NODE_ENV || 'local'; }
 
     /**
      * @returns {number} The port number defined in the .env file or 3000 as the default value.
      * @throws {Error} if the PORT is not defined in the .env file.
      */
     get PORT() {
-        let port = process.env.PORT;
-        if (!port) {
-            throw new Error('PORT is not defined, please check .env file');
-        }
-        return port;
+        return process.env.PORT || 3000;
     }
 
     /**
@@ -45,12 +33,32 @@ class CustomEnv {
      * @throws {Error} if LOGGER_LEVEL is not defined in the .env file.
      */
     get LOGGER_LEVEL() {
-        let level = process.env.LOGGER_LEVEL;
-        if (!level) {
-            throw new Error('LOGGER_LEVEL is not defined, please check .env file');
-        }
+        return process.env.LOGGER_LEVEL || 'debug';
+    }
 
-        return level;
+    get SEQUELIZE_OPTIONS() {
+        switch (this.NODE_ENV) {
+            case 'local':
+                return {
+                    dialect: 'sqlite',
+                    storage: ':memory:'
+                };
+            case 'dev':
+            case 'prod':
+                return {
+                    host: this.DB_HOST,
+                    port: this.DB_PORT,
+                    dialect: this.DB_DIALECT,
+                    username: this.DB_USERNAME,
+                    password: this.DB_PASSWORD,
+                    pool: {
+                        max: 5, // Maximum number of connections in the pool
+                        min: 0, // Minimum number of connections in the pool
+                        acquire: 30000, // The maximum time, in milliseconds, that a connection can be idle before being released
+                        idle: 10000 // The maximum time, in milliseconds, that pool will try to get the connection before throwing an error
+                    }
+                };
+        }
     }
 
     /**
@@ -62,7 +70,6 @@ class CustomEnv {
         if (!host) {
             throw new Error('DB_HOST is not defined, please check .env file');
         }
-
         return host;
     };
 
@@ -130,11 +137,10 @@ class CustomEnv {
     }
 
     get JWT_SECRET_KEY() {
-        if (process.env.JWT_SECRET_KEY === undefined) {
-            throw new Error('JWT_SECRET is not defined, please check .env file');
-        }
-        return process.env.JWT_SECRET_KEY;
+        return process.env.JWT_SECRET_KEY || 'MyFasa, MyMasa, MyBurasa';
     }
+
+    
 }
 
 /**
