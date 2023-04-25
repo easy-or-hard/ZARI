@@ -10,7 +10,8 @@
     "npm": ">=9.0.0"
   },
   "scripts": {
-    "start": "node bin/Www.js"
+    "start": "node bin/Www.js",
+    "start-watch": "node --watch bin/Www.js"
   },
   "repository": {
     "type": "git",
