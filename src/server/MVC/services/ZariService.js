@@ -1,5 +1,5 @@
 import ZariModel from "../models/ZariModel.js";
-import {ConflictError, NotFoundError} from "../../utils/errors/ConflictError.js";
+import {CustomError, NotFoundError} from "../../utils/errors/CustomError.js";
 import BanzzackModel from "../models/BanzzackModel.js";
 
 export default class ZariService {
@@ -16,14 +16,14 @@ export default class ZariService {
      *
      * @param data
      * @returns {Promise<ZariModel>}
-     * @throws ConflictError
+     * @throws CustomError
      */
     async create(data) {
         const condition = {where: {byeol: data.byeol}, group: ['byeol']};
         const count = await ZariModel.count(condition);
         const hasInstance = count > 0;
         if (hasInstance) {
-            throw new ConflictError("Zodiac Universe already exists");
+            throw new CustomError("Zodiac Universe already exists");
         }
         return await ZariModel.create(data);
     }

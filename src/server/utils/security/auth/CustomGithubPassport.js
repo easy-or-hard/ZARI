@@ -2,7 +2,7 @@ import passport from 'passport';
 import {Strategy as githubStrategy} from 'passport-github';
 import jwt from 'jsonwebtoken';
 import CustomProcess from "../../configure/CustomProcess.js";
-import {TokenValidationError} from "../../errors/ConflictError.js";
+import {TokenValidationError} from "../../errors/CustomError.js";
 import CustomLogger from "../../configure/CustomLogger.js";
 
 export default class CustomGithubPassport {
@@ -56,7 +56,7 @@ export default class CustomGithubPassport {
         });
     };
 
-    jwtGenerator = async(req, res, next) => {
+    jwtGenerator = async(req, res) => {
         const token = this.#jwt.sign({user: req.user},
             this.#customProcess.env.JWT_SECRET_KEY, {
             expiresIn: '30d',

@@ -8,14 +8,14 @@ class Www {
     #logger = new CustomLogger();
     #customProcess = new CustomProcess();
 
-    constructor() {
+    appStart = () => {
         new CustomSequelize()
             .sync()
-            .then(this.#appStart)
+            .then(this.#listen)
             .catch(this.#errorHandler);
     }
 
-    #appStart = () => {
+    #listen = () => {
         this.#logger.info('Database is ready');
         this.app.listen(this.#customProcess.env.PORT, () => {
             this.#logger.info(`Server is ready at ${this.#customProcess.env.PORT}`);
@@ -27,6 +27,6 @@ class Www {
     }
 }
 
-const www = new Www();
+new Www().appStart();
 
 

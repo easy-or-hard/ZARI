@@ -1,5 +1,5 @@
 import ByeolModel from "../models/ByeolModel.js";
-import {ConflictError} from "../../utils/errors/ConflictError.js";
+import {CustomError} from "../../utils/errors/CustomError.js";
 
 export default class AuthService {
     static #instance;
@@ -21,7 +21,7 @@ export default class AuthService {
         });
 
         if (!created) {
-            throw new ConflictError("Byeol already exists");
+            throw new CustomError("Byeol already exists");
         }
 
         return instance;

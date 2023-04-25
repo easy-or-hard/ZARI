@@ -3,7 +3,7 @@
 ## 컨벤션
 ### 파일 이름
 - 임포트시에 객체를 바로 생성하는 싱글톤 객체는 kebab-case(ex: zodiac-universe-model.js)
-- 클래스는 camel case, (ex: ConflictError.js)
+- 클래스는 camel case, (ex: CustomError.js)
 - 다른 노드 모듈에 설정값을 추가한 객체는 그 모듈의 앞에 'custom-'을 붙인다.(ex: CustomProcess.js, custom-morgan.js)
 
 ### 프로퍼티와 메소드 컨벤션
