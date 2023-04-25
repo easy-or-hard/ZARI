@@ -1,5 +1,5 @@
 import cors from "cors";
-export default new class CustomCors {
+export default class CustomCors {
     static #instance;
     constructor() {
         if (this.constructor.#instance) {

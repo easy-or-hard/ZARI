@@ -1,9 +1,8 @@
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
-import customProcess from "../configure/custom-process.js";
 
 
-export default new class SwaggerSpec {
+export default class SwaggerSpec {
     static #instance;
     static #options = {
         encoding: 'utf8',
@@ -27,6 +26,9 @@ export default new class SwaggerSpec {
         apis: ["./src/server/MVC/**/*.js"]
     };
 
+    #serve = swaggerUi.serve;
+    #setup = swaggerUi.setup(swaggerJsdoc(this.constructor.#options));
+
     constructor() {
         if (this.constructor.#instance) {
             return this.constructor.#instance;
@@ -34,12 +36,7 @@ export default new class SwaggerSpec {
         this.constructor.#instance = this;
     }
 
-    get server() {
-        return swaggerUi.serve;
-    }
+    get server() {return this.#serve;}
 
-    setup() {
-        const swaggerSpec = swaggerJsdoc(this.constructor.#options);
-        return swaggerUi.setup(swaggerSpec);
-    }
+    get setup() { return this.#setup;}
 }

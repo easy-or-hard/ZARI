@@ -52,7 +52,7 @@ export default class ZariService {
      * @param {number} pageSize
      * @param {string} sortBy
      * @param {'ASC' | 'DESC'} sortOrder
-     * @returns {Promise<ZodiacModel[]>}
+     * @returns {Promise<ZariModel[]>}
      */
     async findAll(page = 1, pageSize = 10, sortBy = 'updatedAt', sortOrder = 'DESC') {
         const options = {

@@ -1,9 +1,10 @@
 import winston from 'winston';
-import customProcess from "./custom-process.js";
+import CustomProcess from "./CustomProcess.js";
 
-export default new class CustomLogger {
+export default class CustomLogger {
     static #instance;
-    #logger = winston.createLogger(this.constructor.#options);
+    #customProcess = new CustomProcess();
+    #logger = winston.createLogger(this.#options);
 
     constructor() {
         if (this.constructor.#instance) {
@@ -13,9 +14,9 @@ export default new class CustomLogger {
         this.constructor.#instance = this;
     }
 
-    static get #options() {
+    get #options() {
         return {
-            level: customProcess.env.LOGGER_LEVEL,
+            level: this.#customProcess.env.LOGGER_LEVEL,
             format: winston.format.combine(
                 winston.format.timestamp(),
                 winston.format.json()

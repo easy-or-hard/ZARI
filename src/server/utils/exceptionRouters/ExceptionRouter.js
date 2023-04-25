@@ -1,8 +1,10 @@
 import express from "express";
+import CustomLogger from "../configure/CustomLogger.js";
 const { Request, Response, NextFunction } = express;
 
-export default new class ErrorHandling {
+export default class ExceptionRouter {
     static #instance;
+    #logger = new CustomLogger();
 
     constructor() {
         if (this.constructor.#instance) {
@@ -19,11 +21,21 @@ export default new class ErrorHandling {
      * @param {NextFunction} next
      */
     errorHandler = (err, req, res, next) => {
-        console.error(err.stack);
+        this.#logger.error(err.stack);
 
-        const statusCode = 500;
+        const statusCode = err.statusCode || 500;
         const message = err.message || 'Internal Server Error';
 
         res.status(statusCode).send(message);
+    }
+
+    /**
+     *
+     * @param {Request} req
+     * @param {Response} res
+     * @param {NextFunction} next
+     */
+    async notFound (req, res, next)  {
+        res.status(404).send('Page not found');
     }
 }

@@ -5,6 +5,16 @@ import dotenv from "dotenv";
  * Loads environment variables and provides convenient access to them.
  */
 class CustomEnv {
+    #nodeEnv;
+    #port;
+    #loggerLevel;
+    #sequelizeOptions;
+    #dbHost;
+    #dbDialect;
+    #dbPort;
+    #dbUsername;
+    #dbPassword;
+
     /**
      * CustomEnv constructor.
      * Loads environment variables from the .env file using dotenv and sets the internal nodeEnv variable.
@@ -13,7 +23,7 @@ class CustomEnv {
     constructor() {
         dotenv.config();
 
-        this.NODE_ENV = process.env.NODE_ENV || 'test';
+        this.#nodeEnv = process.env.NODE_ENV || 'test';
     }
 
     /**
@@ -21,12 +31,16 @@ class CustomEnv {
      * @throws {Error} if the PORT is not defined in the .env file.
      */
     get PORT() {
-        const port = this.#isTest() ? 3000 : process.env.PORT;
-        if (!port) {
+        if (this.#port) {
+            return this.#port;
+        }
+
+        this.#port = this.#isTest() ? 3000 : process.env.PORT;
+        if (!this.#port) {
             throw new Error('PORT is not defined in the .env file.');
         }
 
-        return port;
+        return this.#port;
     }
 
     /**
@@ -34,7 +48,12 @@ class CustomEnv {
      * @throws {Error} if LOGGER_LEVEL is not defined in the .env file.
      */
     get LOGGER_LEVEL() {
-        return process.env.LOGGER_LEVEL || this.#isTest() && 'debug';
+        if (this.#loggerLevel) {
+            return this.#loggerLevel;
+        }
+
+        this.#loggerLevel = process.env.LOGGER_LEVEL || this.#isTest() && 'debug';
+        return this.#loggerLevel;
     }
 
     /**
@@ -42,14 +61,17 @@ class CustomEnv {
      * @constructor
      */
     get SEQUELIZE_OPTIONS() {
-        let options;
+        if (this.#sequelizeOptions) {
+            return this.#sequelizeOptions;
+        }
+
         if (this.#isTest()) {
-            options = {
+            this.#sequelizeOptions = {
                 dialect: 'sqlite',
                 storage: ':memory:'
             }
         } else {
-            options = {
+            this.#sequelizeOptions = {
                 host: this.DB_HOST,
                 port: this.DB_PORT,
                 dialect: this.DB_DIALECT,
@@ -64,8 +86,8 @@ class CustomEnv {
             };
         }
 
-        Object.freeze(options); // Prevents the modification of existing property attributes and values, and prevents the addition of new properties.
-        return options;
+        Object.freeze(this.#sequelizeOptions); // Prevents the modification of existing property attributes and values, and prevents the addition of new properties.
+        return this.#sequelizeOptions;
     }
 
     /**
@@ -73,12 +95,16 @@ class CustomEnv {
      * @constructor
      */
     get DB_HOST() {
-        const dbHost = this.#isTest() ? ':memory:' : process.env.DB_HOST;
-        if (!dbHost) {
+        if (this.#dbHost) {
+            return this.#dbHost;
+        }
+
+        this.#dbHost = this.#isTest() ? ':memory:' : process.env.DB_HOST;
+        if (!this.#dbHost) {
             throw new Error('DB_HOST is not defined, please check .env file');
         }
 
-        return dbHost;
+        return this.#dbHost;
     }
     ;
 
@@ -88,12 +114,16 @@ class CustomEnv {
      * @constructor
      */
     get DB_DIALECT() {
-        const dbDialect = this.#isTest() ? 'sqlite' : process.env.DB_DIALECT;
-        if (!dbDialect) {
+        if (this.#dbDialect) {
+            return this.#dbDialect;
+        }
+
+        this.#dbDialect = this.#isTest() ? 'sqlite' : process.env.DB_DIALECT;
+        if (!this.#dbDialect) {
             throw new Error('DB_DIALECT is not defined, please check .env file');
         }
 
-        return dbDialect;
+        return this.#dbDialect;
     }
 
     /**
@@ -101,30 +131,40 @@ class CustomEnv {
      * @throws {Error} if DB_PORT is not defined in the .env file.
      */
     get DB_PORT() {
-        let port = process.env.DB_PORT;
-        if (!port) {
+        if (this.#dbPort) {
+            return this.#dbPort;
+        }
+        this.#dbPort = process.env.DB_PORT;
+        if (!this.#dbPort) {
             throw new Error('DB_PORT is not defined, please check .env file');
         }
 
-        return port;
+        return this.#dbPort;
     }
 
     get DB_USERNAME() {
-        const username = process.env.DB_USERNAME;
-        if (!username) {
+        if (this.#dbUsername) {
+            return this.#dbUsername;
+        }
+        this.#dbUsername = process.env.DB_USERNAME;
+        if (!this.#dbUsername) {
             throw new Error('DB_USERNAME is not defined, please check .env file');
         }
 
-        return username;
+        return this.#dbUsername;
     }
 
     get DB_PASSWORD() {
-        const password = process.env.DB_PASSWORD;
-        if (!password) {
+        if (this.#dbPassword) {
+            return this.#dbPassword;
+        }
+
+        this.#dbPassword = process.env.DB_PASSWORD;
+        if (!this.#dbPassword) {
             throw new Error('DB_PASSWORD is not defined, please check .env file');
         }
 
-        return password;
+        return this.#dbPassword;
     }
 
     get GITHUB_CALLBACK_URL() {
@@ -154,7 +194,7 @@ class CustomEnv {
 
 
     #isTest() {
-        return this.NODE_ENV === 'test';
+        return this.#nodeEnv === 'test';
     }
 }
 
@@ -162,7 +202,7 @@ class CustomEnv {
  * Singleton CustomProcess class.
  * Provides access to the CustomEnv instance.
  */
-export default new class CustomProcess {
+export default class CustomProcess {
     static #instance;
 
     /**

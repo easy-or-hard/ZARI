@@ -1,11 +1,11 @@
 import Sequelize from 'sequelize';
-import customProcess from "./custom-process.js";
+import CustomProcess from "./CustomProcess.js";
 import {InitializeModels} from "../../MVC/models/InitializeModels.js";
 
 export default class CustomSequelize extends Sequelize {
     static #instance;
 
-    constructor(nodeEnv = customProcess.env.NODE_ENV) {
+    constructor(customProcess = new CustomProcess()) {
         if (CustomSequelize.#instance) {
             return CustomSequelize.#instance;
         }
