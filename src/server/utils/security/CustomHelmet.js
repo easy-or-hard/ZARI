@@ -1,6 +1,6 @@
 import helmet from "helmet";
 
-export default new class CustomHelmet {
+export default class CustomHelmet {
     static #instance;
     constructor() {
         if (this.constructor.#instance) {

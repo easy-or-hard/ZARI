@@ -16,6 +16,7 @@ class CustomEnv {
     #dbUsername;
     #dbPassword;
 
+
     /**
      * CustomEnv constructor.
      * Loads environment variables from the .env file using dotenv and sets the internal nodeEnv variable.
@@ -31,6 +32,39 @@ class CustomEnv {
 
         this.#nodeEnv = process.env.NODE_ENV || 'test';
     }
+
+    get JWT_EXPIRES_IN() {return process.env.JWT_EXPIRES_IN ||'30d';}
+    get JWT_MAX_AGE() {return process.env.JWT_MAX_AGE || 1000 * 60 * 60 * 24 * 30;}
+    get JWT_ISSUER() {return process.env.JWT_ISSUER || 'localhost';}
+    get JWT_TOKEN_NAME() {return process.env.JWT_TOKEN_NAME || 'jwt';}
+
+    // github
+    get GITHUB_CLIENT_ID() {return process.env.GITHUB_CLIENT_ID || new Error('GITHUB_CLIENT_ID is not defined in the .env file.');}
+    get GITHUB_CLIENT_SECRET() {return process.env.GITHUB_CLIENT_SECRET || new Error('GITHUB_CLIENT_SECRET is not defined in the .env file.');}
+    get GITHUB_CALLBACK_URL() {return process.env.GITHUB_CALLBACK_URL || new Error('GITHUB_CALLBACK_URL is not defined in the .env file.');}
+
+    // apple
+    get APPLE_CLIENT_ID() {return process.env.APPLE_CLIENT_ID || new Error('APPLE_CLIENT_ID is not defined in the .env file.');}
+    get APPLE_CLIENT_SECRET() {return process.env.APPLE_CLIENT_SECRET || new Error('APPLE_CLIENT_SECRET is not defined in the .env file.');}
+    get APPLE_CALLBACK_URL() {return process.env.APPLE_CALLBACK_URL || new Error('APPLE_CALLBACK_URL is not defined in the .env file.');}
+
+    // kakao
+    get KAKAO_CLIENT_ID() {return process.env.KAKAO_CLIENT_ID || new Error('KAKAO_CLIENT_ID is not defined in the .env file.');}
+    get KAKAO_CLIENT_SECRET() {return process.env.KAKAO_CLIENT_SECRET || new Error('KAKAO_CLIENT_SECRET is not defined in the .env file.');}
+    get KAKAO_CALLBACK_URL() {return process.env.KAKAO_CALLBACK_URL || new Error('KAKAO_CALLBACK_URL is not defined in the .env file.');}
+
+    // naver
+    get NAVER_CLIENT_ID() {return process.env.NAVER_CLIENT_ID || new Error('NAVER_CLIENT_ID is not defined in the .env file.');}
+    get NAVER_CLIENT_SECRET() {return process.env.NAVER_CLIENT_SECRET || new Error('NAVER_CLIENT_SECRET is not defined in the .env file.');}
+    get NAVER_CALLBACK_URL() {return process.env.NAVER_CALLBACK_URL || new Error('NAVER_CALLBACK_URL is not defined in the .env file.');}
+
+    // google
+    get GOOGLE_CLIENT_ID() {return process.env.GOOGLE_CLIENT_ID || new Error('GOOGLE_CLIENT_ID is not defined in the .env file.');}
+    get GOOGLE_CLIENT_SECRET() {return process.env.GOOGLE_CLIENT_SECRET || new Error('GOOGLE_CLIENT_SECRET is not defined in the .env file.');}
+    get GOOGLE_CALLBACK_URL() {return process.env.GOOGLE_CALLBACK_URL || new Error('GOOGLE_CALLBACK_URL is not defined in the .env file.');}
+
+
+
 
     /**
      * @returns {number} The port number defined in the .env file or 3000 as the default value.
@@ -172,27 +206,6 @@ class CustomEnv {
         }
 
         return this.#dbPassword;
-    }
-
-    get GITHUB_CALLBACK_URL() {
-        if (process.env.GITHUB_CALLBACK_URL === undefined) {
-            throw new Error('GITHUB_CALLBACK_URL is not defined, please check .env file');
-        }
-        return process.env.GITHUB_CALLBACK_URL;
-    }
-
-    get GITHUB_CLIENT_SECRET() {
-        if (process.env.GITHUB_CLIENT_SECRET === undefined) {
-            throw new Error('GITHUB_CLIENT_SECRET is not defined, please check .env file');
-        }
-        return process.env.GITHUB_CLIENT_SECRET;
-    }
-
-    get GITHUB_CLIENT_ID() {
-        if (process.env.GITHUB_CLIENT_ID === undefined) {
-            throw new Error('GITHUB_CLIENT_ID is not defined, please check .env file');
-        }
-        return process.env.GITHUB_CLIENT_ID;
     }
 
     get JWT_SECRET_KEY() {

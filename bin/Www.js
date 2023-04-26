@@ -10,7 +10,7 @@ class Www {
 
     appStart = () => {
         new CustomSequelize()
-            .sync()
+            .sync({force: true})
             .then(this.#listen)
             .catch(this.#errorHandler);
     }

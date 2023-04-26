@@ -18,7 +18,7 @@ export default class SwaggerSpec {
             },
             servers: [
                 {
-                    url: '/api',
+                    url: '/',
                 },
             ],
         },

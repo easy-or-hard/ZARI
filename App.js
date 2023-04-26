@@ -3,21 +3,23 @@ import cookieParser from "cookie-parser";
 import ZariRouter from "./src/server/MVC/routers/ZariRouter.js";
 import ExceptionRouter from "./src/server/utils/exceptionRouters/ExceptionRouter.js";
 import SwaggerSpec from "./src/server/utils/openapis/SwaggerSpec.js";
-import customMorgan from "./src/server/utils/configure/custom-morgan.js";
+import CustomMorgan from "./src/server/utils/configure/CustomMorgan.js";
 import CustomCors from "./src/server/utils/security/CustomCors.js";
-import customHelmet from "./src/server/utils/security/custom-helmet.js";
+import CustomHelmet from "./src/server/utils/security/CustomHelmet.js";
 import AuthRouter from "./src/server/MVC/routers/AuthRouter.js";
-import CustomGithubPassport from "./src/server/utils/security/auth/CustomGithubPassport.js";
+import CustomPassport from "./src/server/utils/security/auth/CustomPassport.js";
 
 export default class App {
     static #instance;
 
     #express = express();
-    #customGithubPassport = new CustomGithubPassport();
+    #customGithubPassport = new CustomPassport();
     #exceptionRouter = new ExceptionRouter();
     #swaggerSpec = new SwaggerSpec();
     #customCors = new CustomCors();
     #authRouter = new AuthRouter();
+    #customMorgan = new CustomMorgan();
+    #customHelmet = new CustomHelmet();
     #zariRouter = new ZariRouter();
 
     constructor() {
@@ -44,11 +46,11 @@ export default class App {
         this.#express.use(express.urlencoded({extended: false}));
         this.#express.use(express.static('public', staticOptions));
         this.#express.use(cookieParser());
-        this.#express.use(customMorgan.morgan());
+        this.#express.use(this.#customMorgan.morgan());
         this.#express.use(this.#customCors.cors());
-        this.#express.use(customHelmet.helmet());
-        this.#express.use(this.#customGithubPassport.initialize());
-        this.#express.use('/api', this.#customGithubPassport.jwtVerify)
+        this.#express.use(this.#customHelmet.helmet());
+        this.#express.use(this.#customGithubPassport.initialize);
+        // this.#express.use('/api', this.#customGithubPassport.jwtVerify)
     }
 
     #businessRouterInitialize() {

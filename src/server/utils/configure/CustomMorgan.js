@@ -7,7 +7,7 @@ import morgan from 'morgan';
  * 또, 모르간의 사용법은 morgan() 이기 때문에, 똑같이 사용할 수 있도록,
  * instance.morgan() 을 구현합니다.
  */
-export default new class CustomMorgan {
+export default class CustomMorgan {
     static #instance;
 
     constructor() {

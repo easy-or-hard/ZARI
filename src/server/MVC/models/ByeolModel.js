@@ -9,11 +9,17 @@ export default class ByeolModel extends Model {
                 byeol: {
                     type: DataTypes.STRING,
                     allowNull: false,
-                    unique: true,
-                    validate: {
-                        len: [2, 8]
-                    }
-                }
+                },
+                providerId: {
+                    type: DataTypes.BIGINT,
+                    allowNull: false,
+                    unique: 'authUnique',
+                },
+                provider: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                    unique: 'authUnique',
+                },
             },
             { sequelize });
     }
