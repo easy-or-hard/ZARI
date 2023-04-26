@@ -1,8 +1,8 @@
 import passport from 'passport';
-import {Strategy as githubStrategy} from 'passport-github';
+import { Strategy as githubStrategy } from 'passport-github';
 import jwt from 'jsonwebtoken';
 import CustomProcess from "../../configure/CustomProcess.js";
-import {TokenValidationError} from "../../errors/CustomError.js";
+import { TokenValidationError } from "../../errors/CustomError.js";
 import CustomLogger from "../../configure/CustomLogger.js";
 
 export default class CustomGithubPassport {
@@ -21,21 +21,21 @@ export default class CustomGithubPassport {
         try {
             this.#passportInitialize();
         } catch (error) {
-            this.#logger.error(error);
+            this.#logger.error('GITHUB OAUTH INITIALIZE ERROR : ', error);
         }
     }
 
     #passportInitialize() {
         this.#passport.use(new githubStrategy({
-                clientID: this.#customProcess.env.GITHUB_CLIENT_ID,
-                clientSecret: this.#customProcess.env.GITHUB_CLIENT_SECRET,
-                callbackURL: this.#customProcess.env.GITHUB_CALLBACK_URL
-            }, (accessToken, refreshToken, profile, done) => {
-                // Here, you can handle the user profile and store it in your database if needed
-                // For now, let's just return the profile
-                this.#logger.log(profile);
-                return done(null, profile);
-            }
+            clientID: this.#customProcess.env.GITHUB_CLIENT_ID,
+            clientSecret: this.#customProcess.env.GITHUB_CLIENT_SECRET,
+            callbackURL: this.#customProcess.env.GITHUB_CALLBACK_URL
+        }, (accessToken, refreshToken, profile, done) => {
+            // Here, you can handle the user profile and store it in your database if needed
+            // For now, let's just return the profile
+            this.#logger.log(profile);
+            return done(null, profile);
+        }
         ));
     }
 
@@ -49,15 +49,24 @@ export default class CustomGithubPassport {
         })
     }
 
-    authenticateMiddleware() {
+    authenticateMiddleware = (req, res, next) => {
         return this.#passport.authenticate('github', {
+            successRedirect: '/',
             failureRedirect: '/auth/failure',
             session: false
-        });
+        }, (err, user, info) => {
+            if (err) {
+                this.#logger.error(err);
+                return next(new Error(err));
+            } else if (!user) {
+                this.#logger.error(user);
+                return next(new Error('User not found'));
+            } else next();
+        })(req, res, next);
     };
 
-    jwtGenerator = async(req, res) => {
-        const token = this.#jwt.sign({user: req.user},
+    jwtGenerator = async (req, res) => {
+        const token = this.#jwt.sign({ user: req.user },
             this.#customProcess.env.JWT_SECRET_KEY, {
             expiresIn: '30d',
             algorithm: 'HS256',
@@ -67,7 +76,7 @@ export default class CustomGithubPassport {
         return res.status(201).send('인증 성공');
     }
 
-    jwtVerify = async(req, res, next) => {
+    jwtVerify = async (req, res, next) => {
         const cookieJwt = req.cookies['jwt'];
 
         if (!cookieJwt) {
