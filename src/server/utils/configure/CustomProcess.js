@@ -5,6 +5,7 @@ import dotenv from "dotenv";
  * Loads environment variables and provides convenient access to them.
  */
 class CustomEnv {
+    static #instance;
     #nodeEnv;
     #port;
     #loggerLevel;
@@ -21,6 +22,11 @@ class CustomEnv {
      * @throws {Error} if NODE_ENV is not defined in the .env file.
      */
     constructor() {
+        if (this.constructor.#instance) {
+            return this.constructor.#instance;
+        }
+        this.constructor.#instance = this;
+
         dotenv.config();
 
         this.#nodeEnv = process.env.NODE_ENV || 'test';
@@ -72,6 +78,7 @@ class CustomEnv {
             }
         } else {
             this.#sequelizeOptions = {
+                logging: false, // 쿼리 로그 출력 옵션, true는 쿼리 로그를 출력한다.
                 host: this.DB_HOST,
                 port: this.DB_PORT,
                 dialect: this.DB_DIALECT,

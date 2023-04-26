@@ -28,19 +28,19 @@ export default class CustomLogger {
     };
 
 
-    log(level, message) {
-        this.#logger.log(level, message);
+    log(...args) {
+        this.#logger.log(...args);
     }
 
-    info(message) {
-        this.#logger.info(message);
+    info(...args) {
+        this.#logger.info(...args);
     }
 
-    error(message) {
-        this.#logger.error(message);
+    error(...args) {
+        this.#logger.error(...args);
     }
 
-    debug(message) {
-        this.#logger.debug(message);
+    debug(...args) {
+        this.#logger.debug(...args);
     }
 }

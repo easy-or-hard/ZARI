@@ -17,7 +17,7 @@ export default class AuthRouter {
 
     #routeInitialize() {
         this.router.get('/github', this.#customGithubPassport.authenticate());
-        this.router.get('/github/callback', this.#customGithubPassport.authenticateMiddleware(), this.#customGithubPassport.jwtGenerator);
+        this.router.get('/github/callback', this.#customGithubPassport.authenticateMiddleware, this.#customGithubPassport.jwtGenerator);
         this.router.get('/failure', (req, res) => {
             res.status(200).send('Authentication failed. Please try again.');
         });
