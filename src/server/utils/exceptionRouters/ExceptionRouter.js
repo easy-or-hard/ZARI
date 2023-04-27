@@ -27,7 +27,7 @@ export default class ExceptionRouter {
      * @param {Request} req
      * @param {Response} res
      */
-    errorHandler = (err, req, res) => {
+    errorHandler = async (err, req, res) => {
         this.#logger.error(err.stack);
 
         const statusCode = err.statusCode || 500;
@@ -41,7 +41,7 @@ export default class ExceptionRouter {
      * @param {Request} req
      * @param {Response} res
      */
-    async notFound(req, res) {
+    notFound = async (req, res) => {
         res.status(404).send('Page not found');
     }
 }

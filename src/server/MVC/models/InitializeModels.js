@@ -1,6 +1,6 @@
-import ByeolModel from "./ByeolModel.js";
-import ZariModel from "./ZariModel.js";
-import BanzzackModel from "./BanzzackModel.js";
+import Byeol from "./Byeol.js";
+import Zari from "./Zari.js";
+import Banzzack from "./Banzzack.js";
 
 export class InitializeModels {
 
@@ -10,14 +10,14 @@ export class InitializeModels {
     }
 
     static #initialize(sequelize) {
-        ByeolModel.initialize(sequelize);
-        ZariModel.initialize(sequelize);
-        BanzzackModel.initialize(sequelize);
+        Byeol.initialize(sequelize);
+        Zari.initialize(sequelize);
+        Banzzack.initialize(sequelize);
     }
 
     static #associate() {
-        ByeolModel.associate();
-        ZariModel.associate();
-        BanzzackModel.associate();
+        Byeol.associate();
+        Zari.associate();
+        Banzzack.associate();
     }
 }

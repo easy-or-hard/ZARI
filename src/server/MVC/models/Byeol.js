@@ -1,8 +1,8 @@
 import {Model, DataTypes} from 'sequelize';
-import BanzzackModel from "./BanzzackModel.js";
-import ZariModel from "./ZariModel.js";
+import Banzzack from "./Banzzack.js";
+import Zari from "./Zari.js";
 
-export default class ByeolModel extends Model {
+export default class Byeol extends Model {
     static initialize(sequelize) {
         super.init(
             {
@@ -25,7 +25,7 @@ export default class ByeolModel extends Model {
     }
 
     static associate() {
-        this.hasOne(ZariModel, {onDelete: 'cascade'});
-        this.hasMany(BanzzackModel, {onDelete: 'cascade'});
+        this.hasOne(Zari, {onDelete: 'cascade'});
+        this.hasMany(Banzzack, {onDelete: 'cascade'});
     }
 }

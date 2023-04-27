@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import ZariModel from '../ZariModel.js';
-import ByeolModel from '../ByeolModel.js';
-import BanzzackModel from "../BanzzackModel.js";
+import ZariModel from '../Zari.js';
+import ByeolModel from '../Byeol.js';
+import BanzzackModel from "../Banzzack.js";
 import CustomSequelize from "../../../utils/configure/CustomSequelize.js";
 
 describe('BanzzackModel', () => {

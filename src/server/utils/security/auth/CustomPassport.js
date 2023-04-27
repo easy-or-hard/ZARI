@@ -53,7 +53,7 @@ export default class CustomPassport {
         return done(null, profile);
     }
 
-    #passportGithubInitialize() {
+    #passportGithubInitialize = () => {
         try {
             this.#passport.use(new githubStrategy({
                 clientID: this.#process.env.GITHUB_CLIENT_ID,
@@ -66,7 +66,7 @@ export default class CustomPassport {
         }
     }
 
-    #passportKakaoInitialize() {
+    #passportKakaoInitialize = () => {
         try {
             this.#passport.use(new kakaoStrategy({
                 clientID: this.#process.env.KAKAO_CLIENT_ID,
@@ -79,7 +79,7 @@ export default class CustomPassport {
         }
     }
 
-    #passportNaverInitialize() {
+    #passportNaverInitialize = () => {
         try {
             this.#passport.use(new naverStrategy({
                 clientID: this.#process.env.NAVER_CLIENT_ID,
@@ -92,7 +92,7 @@ export default class CustomPassport {
         }
     }
 
-    #passportAppleInitialize() {
+    #passportAppleInitialize = () => {
         try {
             this.#passport.use(new appleStrategy({
                 clientID: this.#process.env.APPLE_CLIENT_ID,

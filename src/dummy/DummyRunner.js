@@ -2,46 +2,46 @@ import _ from 'lodash';
 
 const {sample} = _;
 
-import ByeolModel from "../server/MVC/models/ByeolModel.js";
-import ZariModel from "../server/MVC/models/ZariModel.js";
-import BanzzackModel from "../server/MVC/models/BanzzackModel.js";
+import Byeol from "../server/MVC/models/Byeol.js";
+import Zari from "../server/MVC/models/Zari.js";
+import Banzzack from "../server/MVC/models/Banzzack.js";
 
 
 const dummy = [
-    {byeol: '나루토', zari: '호랑이'},
-    {byeol: '사스케', zari: '고양이'},
-    {byeol: '루피', zari: '늑대'},
-    {byeol: '조로', zari: '거북이'},
-    {byeol: '이치고', zari: '토끼'},
-    {byeol: '나미', zari: '사자'},
-    {byeol: '루시', zari: '기린'},
-    {byeol: '에르자', zari: '코끼리'},
-    {byeol: '아스카', zari: '다람쥐'},
-    {byeol: '신지', zari: '펭귄'},
-    {byeol: '쿄스케', zari: '여우'},
-    {byeol: '토루', zari: '늑대구'},
-    {byeol: '유키', zari: '강아지'},
-    {byeol: '미코토', zari: '침팬지'},
-    {byeol: '라키', zari: '팬더'},
-    {byeol: '레이', zari: '두더지'},
-    {byeol: '미사토', zari: '코알라'},
-    {byeol: '타카시', zari: '물소'},
-    {byeol: '히카루', zari: '물범'},
-    {byeol: '하루히', zari: '나무늘보'},
-    {byeol: '리코', zari: '원숭이'},
-    {byeol: '카이', zari: '알파카'},
-    {byeol: '시온', zari: '기린소'},
-    {byeol: '유우', zari: '바다코끼리'},
-    {byeol: '마사', zari: '히포그리프'},
-    {byeol: '코가', zari: '도마뱀'},
-    {byeol: '레나', zari: '수달'},
-    {byeol: '아야', zari: '개미'},
-    {byeol: '마키', zari: '거미'},
-    {byeol: '켄타', zari: '치타'},
-    {byeol: '카논', zari: '비단벌레'},
-    {byeol: '미치루', zari: '참새'},
-    {byeol: '유이', zari: '불나방'},
-    {byeol: '유리코', zari: '사슴'}
+    {byeol: '나루토', zari: '호랑이', provider: 'none', providerId: 1},
+    {byeol: '사스케', zari: '고양이', provider: 'none', providerId: 2},
+    {byeol: '루피', zari: '늑대', provider: 'none', providerId: 3},
+    {byeol: '조로', zari: '거북이', provider: 'none', providerId: 4},
+    {byeol: '이치고', zari: '토끼', provider: 'none', providerId: 5},
+    {byeol: '나미', zari: '사자', provider: 'none', providerId: 6},
+    {byeol: '루시', zari: '기린', provider: 'none', providerId: 7},
+    {byeol: '에르자', zari: '코끼리', provider: 'none', providerId: 8},
+    {byeol: '아스카', zari: '다람쥐', provider: 'none', providerId: 9},
+    {byeol: '신지', zari: '펭귄', provider: 'none', providerId: 10},
+    {byeol: '쿄스케', zari: '여우', provider: 'none', providerId: 11},
+    {byeol: '토루', zari: '늑대구', provider: 'none', providerId: 12},
+    {byeol: '유키', zari: '강아지', provider: 'none', providerId: 13},
+    {byeol: '미코토', zari: '침팬지', provider: 'none', providerId: 14},
+    {byeol: '라키', zari: '팬더', provider: 'none', providerId: 15},
+    {byeol: '레이', zari: '두더지', provider: 'none', providerId: 16},
+    {byeol: '미사토', zari: '코알라', provider: 'none', providerId: 17},
+    {byeol: '타카시', zari: '물소', provider: 'none', providerId: 18},
+    {byeol: '히카루', zari: '물범', provider: 'none', providerId: 19},
+    {byeol: '하루히', zari: '나무늘보', provider: 'none', providerId: 20},
+    {byeol: '리코', zari: '원숭이', provider: 'none', providerId: 21},
+    {byeol: '카이', zari: '알파카', provider: 'none', providerId: 22},
+    {byeol: '시온', zari: '기린소', provider: 'none', providerId: 23},
+    {byeol: '유우', zari: '바다코끼리', provider: 'none', providerId: 24},
+    {byeol: '마사', zari: '히포그리프', provider: 'none', providerId: 25},
+    {byeol: '코가', zari: '도마뱀', provider: 'none', providerId: 26},
+    {byeol: '레나', zari: '수달', provider: 'none', providerId: 27},
+    {byeol: '아야', zari: '개미', provider: 'none', providerId: 28},
+    {byeol: '마키', zari: '거미', provider: 'none', providerId: 29},
+    {byeol: '켄타', zari: '치타', provider: 'none', providerId: 30},
+    {byeol: '카논', zari: '비단벌레', provider: 'none', providerId: 31},
+    {byeol: '미치루', zari: '참새', provider: 'none', providerId: 32},
+    {byeol: '유이', zari: '불나방', provider: 'none', providerId: 33},
+    {byeol: '유리코', zari: '사슴', provider: 'none', providerId: 34}
 ]
 
 const greetings = [
@@ -126,21 +126,21 @@ export default class DummyRunner {
         this.constructor.#instance = this;
     }
 
-    async insertDemoData() {
-        await ByeolModel.sync({force: true});
-        await ZariModel.sync({force: true});
-        await BanzzackModel.sync({force: true});
+    insertDemoData = async () => {
+        await Byeol.sync({force: true});
+        await Zari.sync({force: true});
+        await Banzzack.sync({force: true});
         const dummyByeolList = await this.createDummyByeolData();
         const dummyZariList = await this.createDummyZariData(dummyByeolList);
         await this.createDummyBanzzackData(dummyByeolList, dummyZariList);
     }
 
 
-    async createDummyByeolData() {
+    createDummyByeolData = async () => {
         let createdByeolList;
 
         try {
-            createdByeolList = await ByeolModel.bulkCreate(dummy);
+            createdByeolList = await Byeol.bulkCreate(dummy);
 
             console.log('Dummy data created:', createdByeolList.map(byeol => byeol.toJSON()));
         } catch (error) {
@@ -150,43 +150,41 @@ export default class DummyRunner {
         return createdByeolList;
     }
 
-    async createDummyZariData(dummyByeolList) {
+    createDummyZariData = async (dummyByeolList) => {
         const createdZariList = [];
 
         try {
             for (let i = 0; i < dummyByeolList.length; i++) {
                 const byeol = dummyByeolList[i];
-                const zari = await byeol.createZari({
-                    zari: dummy[i].zari
+                const zari = await Zari.create({
+                    zari: dummy[i].zari,
+                    ByeolId: byeol.id
                 });
                 createdZariList.push(zari);
             }
-            console.log('ZariModel data associated with ByeolModel');
+            console.log('Zari data associated with Byeol');
         } catch (error) {
-            console.error('Error creating and associating ZariModel data:', error);
+            console.error('Error creating and associating Zari data:', error);
         }
 
         return createdZariList;
     }
 
-    async createDummyBanzzackData(dummyByeolList, dummyZariList) {
+    createDummyBanzzackData = async (dummyByeolList, dummyZariList) => {
         try {
             for (const zari of dummyZariList) {
                 for (let i = 0; i < 5; i++) {
                     const byeol = sample(dummyByeolList.filter(byeol => byeol.zari !== zari));
                     const greeting = sample(greetings);
 
-                    let banzzack = await BanzzackModel.create({
+                    await Banzzack.create({
                         banzzack: greeting,
-                        zariId: zari.id,
-                        byeolId: byeol.id
+                        ZariId: zari.id,
+                        ByeolId: byeol.id
                     });
-
-                    // await banzzack.setByeol(byeol);
-                    // await banzzack.setZari(zari);
                 }
             }
-            console.log('Banzzack data associated with ByeolModel and ZariModel');
+            console.log('Banzzack data associated with Byeol and Zari');
         } catch (error) {
             console.error('Error creating and associating Banzzack data:', error);
         }

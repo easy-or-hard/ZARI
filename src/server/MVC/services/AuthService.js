@@ -1,4 +1,4 @@
-import ByeolModel from "../models/ByeolModel.js";
+import Byeol from "../models/Byeol.js";
 
 export default class AuthService {
     static #instance;
@@ -10,25 +10,25 @@ export default class AuthService {
         this.constructor.#instance = this;
     }
 
-    async isSignUpAllowedAndSignUp(profile) {
+    isSignUpAllowedAndSignUp = async profile => {
         const isSignUpAllowed = await this.isSignUpAllowed(profile);
         if (isSignUpAllowed) {
             return await this.signUp(profile);
         }
     }
 
-    async isSignUpAllowed(profile) {
+    isSignUpAllowed = async profile => {
         const condition = {where: {providerId: profile.id, provider: profile.provider}, group: ['providerId', 'provider']};
-        const count = (await ByeolModel.count(condition)).length;
-        return count === 0;
+        const byeolCounts = await Byeol.count(condition);
+        return byeolCounts.length === 0;
     }
 
-    async signUp(profile) {
+    signUp = async profile => {
         const byeol = {
             byeol: profile.displayName,
             provider: profile.provider,
             providerId: profile.id
         }
-        return await ByeolModel.create(byeol);
+        return await Byeol.create(byeol);
     }
 }
