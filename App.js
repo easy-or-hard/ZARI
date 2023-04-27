@@ -15,6 +15,10 @@ export default class App {
      */
     #express;
     /**
+     * @type {CustomExpress}
+     */
+    #customExpress;
+    /**
      * @type {CustomPassport}
      */
     #customGithubPassport;
@@ -49,6 +53,7 @@ export default class App {
 
     constructor(
         express = express(),
+        customExpress = new CustomExpress(),
         customGithubPassport = new CustomPassport(),
         exceptionRouter = new ExceptionRouter(),
         swaggerSpec = new SwaggerSpec(),
@@ -59,6 +64,7 @@ export default class App {
         zariRouter = new ZariRouter()
     ) {
         this.#express = express;
+        this.#customExpress = customExpress;
         this.#customGithubPassport = customGithubPassport;
         this.#exceptionRouter = exceptionRouter;
         this.#swaggerSpec = swaggerSpec;
@@ -67,21 +73,13 @@ export default class App {
         this.#customMorgan = customMorgan;
         this.#customHelmet = customHelmet;
         this.#zariRouter = zariRouter;
-        
+
         this.#preProcessRouterInitialize();
         this.#businessRouterInitialize();
         this.#exceptionRouterInitialize();
     }
 
     #preProcessRouterInitialize() {
-        let staticOptions = {
-            dotfiles: 'ignore',
-            etag: false,
-            extensions: ['htm', 'html'],
-            index: false,
-            maxAge: '1d',
-            redirect: false,
-        };
         this.#express.use(express.json());
         this.#express.use(express.urlencoded({extended: false}));
         this.#express.use(express.static('public', staticOptions));
