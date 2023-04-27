@@ -1,9 +1,27 @@
-import AuthService from "../services/AuthService.js";
 import express from "express";
 import CustomPassport from "../../utils/security/auth/CustomPassport.js";
 import CustomJwt from "../../utils/security/auth/CustomJwt.js";
 import CustomProcess from "../../utils/configure/CustomProcess.js";
 
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     GitHubAuth:
+ *       type: oauth2
+ *       flows:
+ *         authorizationCode:
+ *           authorizationUrl: https://github.com/login/oauth/authorize
+ *           tokenUrl: https://github.com/login/oauth/access_token
+ *           scopes: {}
+ *     KakaoAuth:
+ *       type: oauth2
+ *       flows:
+ *         authorizationCode:
+ *           authorizationUrl: https://kauth.kakao.com/oauth/authorize
+ *           tokenUrl: https://kauth.kakao.com/oauth/token
+ *           scopes: {}
+ */
 export default class AuthController {
     /**
      * @type {AuthController}
@@ -11,68 +29,60 @@ export default class AuthController {
     static #instance;
 
     /**
-     *
      * @type {*|Router}
      */
-    router = express.Router();
-
-    /**
-     * @type {AuthService}
-     */
-    #service;
+    router;
 
     /**
      * @type {CustomPassport}
      */
-    #customPassport = new CustomPassport();
+    #passport;
 
-    #customJwt = new CustomJwt();
-    #customProcess = new CustomProcess();
+    /**
+     * @type {CustomJwt}
+     */
+    #jwt;
 
-    constructor(authService = new AuthService()) {
+    /**
+     * @type {CustomProcess}
+     */
+    #process;
+
+    constructor({
+                    _router = express.Router(),
+                    _passport = new CustomPassport(),
+                    _jwt = new CustomJwt(),
+                    _process = new CustomProcess()
+                } = {}) {
         if (this.constructor.#instance) {
             return this.constructor.#instance;
         }
         this.constructor.#instance = this;
 
-        this.#service = authService;
+        this.router = _router;
+        this.#passport = _passport;
+        this.#jwt = _jwt;
+        this.#process = _process;
+
         this.routerInitialize();
     }
 
     routerInitialize() {
-        this.router.post("/sign-up", this.signUp.bind(this));
-        this.router.post("/sign-in", this.signIn.bind(this));
-        this.router.post("/sign-out", this.signOut.bind(this));
+        this.router.get('/auth/github', this.#passport.authenticate('github').bind(this));
+        this.router.get('/auth/github/callback', this.#passport.authenticateCallback('github').bind(this), this.jwtGenerator.bind(this));
 
-        this.router.get('/github', this.#customPassport.authenticate('github'));
-        this.router.get('/github/callback', this.#customPassport.authenticateCallback('github'), this.jwtGenerator);
-    }
-
-    async signUp(req, res) {
-        const profile = req.user;
-        const result = await this.#service.signIn(profile);
-        res.status(201).json(result);
-    }
-
-    async signIn(req, res) {
-        const profile = req.user;
-        const result = await this.#service.signIn(profile);
-        res.status(200).json(result);
-    }
-
-    async signOut(req, res) {
-        req.clearCookie("jwt");
-        res.status(200);
+        this.router.get('/auth/kakao', this.#passport.authenticate('kakao').bind(this));
+        this.router.get('/auth/kakao/callback', this.#passport.authenticateCallback('kakao').bind(this), this.jwtGenerator.bind(this));
     }
 
     jwtGenerator = async (req, res) => {
-        this.#customJwt.sign(req.user);
+        this.#jwt.sign(req.user);
         return res.redirect('/');
     }
 
     jwtVerifier = async (req, res) => {
-        const token = req.cookies[this.#customProcess.env.JWT_TOKEN_NAME];
-        const result = this.#customJwt.verify(token);
+        const token = req.cookies[this.#process.env.JWT_TOKEN_NAME];
+        const result = this.#jwt.verify(token);
         return res.status(200).json(result);
     }
 }

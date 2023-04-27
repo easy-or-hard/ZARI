@@ -1,4 +1,5 @@
 import morgan from 'morgan';
+import CustomLogger from "./CustomLogger.js";
 
 /**
  * @description
@@ -9,26 +10,31 @@ import morgan from 'morgan';
  */
 export default class CustomMorgan {
     static #instance;
+    #logger;
 
-    constructor() {
+    constructor({
+                    logger = new CustomLogger()
+                } = {}) {
         if (this.constructor.#instance) {
             return this.constructor.#instance;
         }
 
         this.constructor.#instance = this;
+
+        this.#logger = logger;
     }
 
-
-    #format = ':method :url :status :res[content-length] - :response-time ms';
-    #options = {
-        stream: {
-            write: (message) => {
-                console.log(message);
+    get morgan() {
+        const format = ':method :url :status :res[content-length] - :response-time ms';
+        const options = {
+            stream: {
+                write: (...args) => {
+                    this.#logger.info(...args);
+                }
             }
         }
-    }
 
-    morgan() {
-        return morgan(this.#format, this.#options);
+        this.#logger.info('모르간 설정', format, options);
+        return morgan(format, options);
     }
 }

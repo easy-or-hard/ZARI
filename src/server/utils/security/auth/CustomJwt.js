@@ -1,24 +1,37 @@
 import CustomProcess from "../../configure/CustomProcess.js";
 import jwt from "jsonwebtoken";
 import CustomLogger from "../../configure/CustomLogger.js";
-import {TokenValidationError} from "../../errors/CustomError.js";
 
 export default class CustomJwt {
     static #instance;
-    #customProcess = new CustomProcess();
-    #logger = new CustomLogger();
 
-    constructor() {
+    /**
+     *  @type {CustomProcess}
+     */
+    #customProcess;
+
+    /**
+     * @type {CustomLogger}
+     */
+    #logger;
+
+    constructor({
+                    _customProcess = new CustomProcess(),
+                    _logger = new CustomLogger(),
+                } = {}) {
         if (this.constructor.#instance) {
             return this.constructor.#instance;
         }
         this.constructor.#instance = this;
+
+        this.#customProcess = _customProcess;
+        this.#logger = _logger;
     }
 
     /**
      *
      * @param user
-     * @returns {*}
+     * @returns {string} jwtToken
      */
     sign = user => {
         const token = jwt.sign({user},

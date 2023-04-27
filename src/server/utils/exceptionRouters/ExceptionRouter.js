@@ -1,19 +1,24 @@
 import express from "express";
 import CustomLogger from "../configure/CustomLogger.js";
 import * as errors from "../errors/CustomError.js";
-const { Request, Response } = express;
-const { CustomError } = errors;
+
+const {Request, Response} = express;
+const {CustomError} = errors;
 
 
 export default class ExceptionRouter {
     static #instance;
-    #logger = new CustomLogger();
+    #logger;
 
-    constructor() {
+    constructor({
+                    _logger = new CustomLogger(),
+                } = {}) {
         if (this.constructor.#instance) {
             return this.constructor.#instance;
         }
         this.constructor.#instance = this;
+
+        this.#logger = _logger;
     }
 
     /**
@@ -36,7 +41,7 @@ export default class ExceptionRouter {
      * @param {Request} req
      * @param {Response} res
      */
-    async notFound (req, res)  {
+    async notFound(req, res) {
         res.status(404).send('Page not found');
     }
 }

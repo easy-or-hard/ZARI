@@ -1,29 +1,36 @@
 import express from 'express';
+import CustomLogger from "./CustomLogger.js";
 
 export default class CustomExpress {
     static #instance;
     #express;
+    #logger;
 
-    constructor(
-        express = express()
-        ) {
+    constructor({
+                    _express = express(),
+                    _logger = new CustomLogger(),
+                } = {}) {
         if (CustomExpress.#instance) {
             return CustomExpress.#instance;
         }
         CustomExpress.#instance = this;
-        this.#express = express;
+        this.#express = _express;
+        this.#logger = _logger;
     }
 
-    json = () => {
-        this.#express.use(express.json());
+    get json() {
+        this.#logger.info('익스프레스 JSON 설정');
+        return express.json();
     }
 
-    urlencoded = () => {
-        this.#express.use(express.urlencoded({ extended: false }));
+    get urlencoded() {
+        this.#logger.info('익스프레스 URL 인코딩 설정');
+        return express.urlencoded({ extended: false });
     }
 
-    static = () => {
-        let staticOptions = {
+    get static() {
+        const root = 'public';
+        const staticOptions = {
             dotfiles: 'ignore',
             etag: false,
             extensions: ['htm', 'html'],
@@ -31,6 +38,8 @@ export default class CustomExpress {
             maxAge: '1d',
             redirect: false,
         };
-        this.#express.use(express.static('public', staticOptions));
+
+        this.#logger.info('익스프레스 정적 파일 설정', root, staticOptions);
+        return express.static(root, staticOptions);
     }
 }
