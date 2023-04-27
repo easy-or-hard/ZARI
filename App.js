@@ -10,24 +10,64 @@ import AuthRouter from "./src/server/MVC/routers/AuthRouter.js";
 import CustomPassport from "./src/server/utils/security/auth/CustomPassport.js";
 
 export default class App {
-    static #instance;
+    /**
+     * @type {express}
+     */
+    #express;
+    /**
+     * @type {CustomPassport}
+     */
+    #customGithubPassport;
+    /**
+     * @type {ExceptionRouter}
+     */
+    #exceptionRouter;
+    /**
+     * @type {SwaggerSpec}
+     */
+    #swaggerSpec;
+    /**
+     * @type {CustomCors}
+     */
+    #customCors;
+    /**
+     * @type {AuthRouter}
+     */
+    #authRouter;
+    /**
+     * @type {CustomMorgan}
+     */
+    #customMorgan;
+    /**
+     * @type {CustomHelmet}
+     */
+    #customHelmet;
+    /**
+     * @type {ZariRouter}
+     */
+    #zariRouter;
 
-    #express = express();
-    #customGithubPassport = new CustomPassport();
-    #exceptionRouter = new ExceptionRouter();
-    #swaggerSpec = new SwaggerSpec();
-    #customCors = new CustomCors();
-    #authRouter = new AuthRouter();
-    #customMorgan = new CustomMorgan();
-    #customHelmet = new CustomHelmet();
-    #zariRouter = new ZariRouter();
-
-    constructor() {
-        if (this.constructor.#instance) {
-            return this.constructor.#instance;
-        }
-        this.constructor.#instance = this;
-
+    constructor(
+        express = express(),
+        customGithubPassport = new CustomPassport(),
+        exceptionRouter = new ExceptionRouter(),
+        swaggerSpec = new SwaggerSpec(),
+        customCors = new CustomCors(),
+        authRouter = new AuthRouter(),
+        customMorgan = new CustomMorgan(),
+        customHelmet = new CustomHelmet(),
+        zariRouter = new ZariRouter()
+    ) {
+        this.#express = express;
+        this.#customGithubPassport = customGithubPassport;
+        this.#exceptionRouter = exceptionRouter;
+        this.#swaggerSpec = swaggerSpec;
+        this.#customCors = customCors;
+        this.#authRouter = authRouter;
+        this.#customMorgan = customMorgan;
+        this.#customHelmet = customHelmet;
+        this.#zariRouter = zariRouter;
+        
         this.#preProcessRouterInitialize();
         this.#businessRouterInitialize();
         this.#exceptionRouterInitialize();
@@ -50,7 +90,6 @@ export default class App {
         this.#express.use(this.#customCors.cors());
         this.#express.use(this.#customHelmet.helmet());
         this.#express.use(this.#customGithubPassport.initialize);
-        // this.#express.use('/api', this.#customGithubPassport.jwtVerify)
     }
 
     #businessRouterInitialize() {
