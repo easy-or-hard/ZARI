@@ -8,6 +8,7 @@ import CustomHelmet from "./src/server/utils/security/CustomHelmet.js";
 import CustomPassport from "./src/server/utils/security/auth/CustomPassport.js";
 import CustomExpress from "./src/server/utils/configure/CustomExpress.js";
 import AuthController from "./src/server/MVC/controllers/AuthController.js";
+import ByeolController from "./src/server/MVC/controllers/ByeolController.js";
 
 export default class App {
     /**
@@ -55,6 +56,11 @@ export default class App {
      */
     #authController;
 
+    /**
+     * @type {ByeolController}
+     */
+    #byeolController;
+
     constructor({
                     _express = express(),
                     _customExpress = new CustomExpress(),
@@ -65,6 +71,7 @@ export default class App {
                     _customMorgan = new CustomMorgan(),
                     _customHelmet = new CustomHelmet(),
                     _authController = new AuthController(),
+                    _byeolController = new ByeolController(),
                 } = {}) {
         this.#express = _express;
         this.#customExpress = _customExpress;
@@ -75,8 +82,9 @@ export default class App {
         this.#customMorgan = _customMorgan;
         this.#customHelmet = _customHelmet;
         this.#authController = _authController;
+        this.#byeolController = _byeolController;
 
-        this.#test();
+        // this.#test();
         this.#preProcessRouterInitialize();
         this.#businessRouterInitialize();
         this.#exceptionRouterInitialize();
@@ -94,8 +102,9 @@ export default class App {
     }
 
     #businessRouterInitialize() {
-        this.#express.use('/api-docs', this.#swaggerSpec.serve, this.#swaggerSpec.setup);
         this.#express.use(this.#authController.router);
+        this.#express.use(this.#byeolController.router);
+        this.#express.use('/api-docs', this.#swaggerSpec.serve, this.#swaggerSpec.setup);
     }
 
     #exceptionRouterInitialize() {

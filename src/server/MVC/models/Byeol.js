@@ -9,6 +9,7 @@ export default class Byeol extends Model {
                 byeol: {
                     type: DataTypes.STRING,
                     allowNull: false,
+                    unique: true
                 },
                 providerId: {
                     type: DataTypes.BIGINT,

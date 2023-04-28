@@ -32,9 +32,9 @@ class Www {
 
     start = () => {
         new CustomSequelize()
-            // .sync()
-            .sync({force: true})
-            .then(new DummyRunner().insertDemoData)
+            .sync()
+            // .sync({force: true})
+            // .then(new DummyRunner().insertDemoData)
             .then(this.#listen)
             .catch(this.#errorHandler);
     }

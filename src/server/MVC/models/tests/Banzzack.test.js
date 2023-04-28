@@ -16,18 +16,22 @@ describe('BanzzackModel', () => {
     });
 
     it('데이터 생성 및 확인 01', async () => {
-        const byeol = '킹태희';
-        const byeolInstance = await Byeol.create({ byeol });
-        const zari = '묫';
-        const zariInstance = await Zari.create({ zari, byeolId: byeolInstance.id });
+        const byeol = {
+            byeol: '킹태희',
+            providerId: Math.floor(Math.random() * 100000000) + 1,
+            provider: 'test',
+        }
+        const byeolInstance = await Byeol.create(byeol);
+        const zari = `묫${Math.floor(Math.random() * 10000) + 1}`;
+        const zariInstance = await Zari.create({ zari, ByeolId: byeolInstance.id });
         const banzzack = '앙기모띠, 메시지 입니다.';
-        const banzzackInstance = await Banzzack.create({ banzzack, byeolId: byeolInstance.id, zariId: zariInstance.id });
+        const banzzackInstance = await Banzzack.create({ banzzack, ByeolId: byeolInstance.id, ZariId: zariInstance.id });
 
         expect(byeolInstance).to.be.ok;
         expect(zariInstance).to.be.ok;
         expect(banzzackInstance).to.be.ok;
 
-        expect(byeolInstance.byeol).to.be.equal(byeol);
+        expect(byeolInstance.byeol).to.be.equal(byeol.byeol);
         expect(zariInstance.zari).to.be.equal(zari);
         expect(banzzackInstance.banzzack).to.be.equal(banzzack);
     });

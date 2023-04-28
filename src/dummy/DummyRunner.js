@@ -5,6 +5,7 @@ const {sample} = _;
 import Byeol from "../server/MVC/models/Byeol.js";
 import Zari from "../server/MVC/models/Zari.js";
 import Banzzack from "../server/MVC/models/Banzzack.js";
+import Zodiac from "../server/MVC/models/Zodiac.js";
 
 
 const dummy = [
@@ -116,6 +117,93 @@ const greetings = [
     '오늘 하루도 무사히 마무리하시길 바랍니다.'
 ]
 
+const zodiacs = [
+    {
+        zodiac: '물병자리',
+        startMonth: 1,
+        startDay: 20,
+        endMonth: 2,
+        endDay: 18
+    },
+    {
+        zodiac: '물고기자리',
+        startMonth: 2,
+        startDay: 19,
+        endMonth: 3,
+        endDay: 20
+    },
+    {
+        zodiac: '양자리',
+        startMonth: 3,
+        startDay: 21,
+        endMonth: 4,
+        endDay: 19
+    },
+    {
+        zodiac: '황소자리',
+        startMonth: 4,
+        startDay: 20,
+        endMonth: 5,
+        endDay: 20
+    },
+    {
+        zodiac: '쌍둥이자리',
+        startMonth: 5,
+        startDay: 21,
+        endMonth: 6,
+        endDay: 20
+    },
+    {
+        zodiac: '게자리',
+        startMonth: 6,
+        startDay: 21,
+        endMonth: 7,
+        endDay: 22
+    },
+    {
+        zodiac: '사자자리',
+        startMonth: 7,
+        startDay: 23,
+        endMonth: 8,
+        endDay: 22
+    },
+    {
+        zodiac: '처녀자리',
+        startMonth: 8,
+        startDay: 23,
+        endMonth: 9,
+        endDay: 22
+    },
+    {
+        zodiac: '천칭자리',
+        startMonth: 9,
+        startDay: 23,
+        endMonth: 10,
+        endDay: 22
+    },
+    {
+        zodiac: '전갈자리',
+        startMonth: 10,
+        startDay: 23,
+        endMonth: 11,
+        endDay: 21
+    },
+    {
+        zodiac: '사수자리',
+        startMonth: 11,
+        startDay: 22,
+        endMonth: 12,
+        endDay: 21
+    },
+    {
+        zodiac: '염소자리',
+        startMonth: 12,
+        startDay: 22,
+        endMonth: 1,
+        endDay: 19
+    }
+];
+
 export default class DummyRunner {
     static #instance;
 
@@ -130,9 +218,23 @@ export default class DummyRunner {
         await Byeol.sync({force: true});
         await Zari.sync({force: true});
         await Banzzack.sync({force: true});
+        await Zodiac.sync({ force: true });
+        const dummyZodiacList = await this.insertDummyData();
         const dummyByeolList = await this.createDummyByeolData();
-        const dummyZariList = await this.createDummyZariData(dummyByeolList);
+        const dummyZariList = await this.createDummyZariData(dummyByeolList, dummyZodiacList);
         await this.createDummyBanzzackData(dummyByeolList, dummyZariList);
+    }
+
+    insertDummyData = async () => {
+        try {
+            const dummyZodiacList = await Zodiac.bulkCreate(zodiacs);
+
+            console.log('Zodiac dummy data created successfully.');
+
+            return dummyZodiacList;
+        } catch (error) {
+            console.error('Error creating zodiac dummy data:', error);
+        }
     }
 
 
@@ -150,15 +252,16 @@ export default class DummyRunner {
         return createdByeolList;
     }
 
-    createDummyZariData = async (dummyByeolList) => {
+    createDummyZariData = async (dummyByeolList, dummyZodiacList) => {
         const createdZariList = [];
 
         try {
-            for (let i = 0; i < dummyByeolList.length; i++) {
-                const byeol = dummyByeolList[i];
+            for (const element of dummyByeolList) {
+                const byeol = element;
+                const zodiac = sample(dummyZodiacList);
                 const zari = await Zari.create({
-                    zari: dummy[i].zari,
-                    ByeolId: byeol.id
+                    ByeolId: byeol.id,
+                    ZodiacId: zodiac.id
                 });
                 createdZariList.push(zari);
             }

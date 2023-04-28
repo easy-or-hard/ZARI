@@ -15,14 +15,18 @@ describe('ZariModel', () => {
     });
 
     it('데이터 생성 및 확인 01', async () => {
-        const byeol = '킹태희';
-        const byeolInstance = await Byeol.create({ byeol });
-        const zari = '묫';
-        const zariInstance = await Zari.create({ zari, byeolId: byeolInstance.id });
+        const byeol = {
+            byeol: '킹태희',
+            providerId: Math.floor(Math.random() * 100000000) + 1,
+            provider: 'test',
+        }
+        const byeolInstance = await Byeol.create(byeol);
+        const zari = `묫${Math.floor(Math.random() * 10000) + 1}`;
+        const zariInstance = await Zari.create({ zari, ByeolId: byeolInstance.id });
 
         expect(zariInstance).to.be.ok;
         expect(zariInstance.zari).to.be.equal(zari);
-        expect(zariInstance.byeolId).to.be.equal(byeolInstance.id);
+        expect(zariInstance.ByeolId).to.be.equal(byeolInstance.id);
     });
 
     it( '데이터 조회', async () => {

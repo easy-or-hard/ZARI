@@ -6,23 +6,20 @@ import {Strategy as appleStrategy} from 'passport-apple';
 import jwt from 'jsonwebtoken';
 import CustomProcess from "../../configure/CustomProcess.js";
 import CustomLogger from "../../configure/CustomLogger.js";
-import AuthService from "../../../MVC/services/AuthService.js";
 
 export default class CustomPassport {
     static #instance;
-    static #authenticatable = [];
+    static authenticatable = [];
     #passport;
     #jwt;
     #logger;
     #process;
-    #authService;
 
     constructor({
                     _passport = passport,
                     _jwt = jwt,
                     _logger = new CustomLogger(),
                     _process = new CustomProcess(),
-                    _authService = new AuthService()
                 } = {}) {
         if (this.constructor.#instance) {
             return this.constructor.#instance;
@@ -33,25 +30,38 @@ export default class CustomPassport {
         this.#jwt = _jwt;
         this.#logger = _logger;
         this.#process = _process;
-        this.#authService = _authService;
 
         this.#passportGithubInitialize();
         this.#passportKakaoInitialize();
         this.#passportNaverInitialize();
         this.#passportAppleInitialize();
 
-        Object.freeze(CustomPassport.#authenticatable);
-        this.#logger.info(CustomPassport.#authenticatable);
+        Object.freeze(CustomPassport.authenticatable);
+        this.#logger.info(CustomPassport.authenticatable);
     }
 
+    get initialize() {
+        return this.#passport.initialize({});
+    }
+
+    /**
+     * done 이 실행되면 req.user 에 profile 이 저장됩니다.
+     * @param accessToken
+     * @param refreshToken
+     * @param profile
+     * @param done
+     * @returns {Promise<*>}
+     */
     #callback = async (accessToken, refreshToken, profile, done) => {
-        const byeol = await this.#authService.isSignUpAllowedAndSignUp(profile);
-        if (byeol?.id) {
-            profile.byeolId = byeol.id;
-        }
         this.#logger.info(profile);
+        profile.byeol = profile.id;
+        profile.providerId = profile.id;
         return done(null, profile);
     }
+
+    authenticate = (strategy) => this.#passport.authenticate(strategy, {session: false});
+    authenticateCallback = (strategy) =>
+        this.#passport.authenticate(strategy, {session: false});
 
     #passportGithubInitialize = () => {
         try {
@@ -60,7 +70,7 @@ export default class CustomPassport {
                 clientSecret: this.#process.env.GITHUB_CLIENT_SECRET,
                 callbackURL: this.#process.env.GITHUB_CALLBACK_URL
             }, this.#callback.bind(this)));
-            CustomPassport.#authenticatable.push('github');
+            CustomPassport.authenticatable.push('github');
         } catch (e) {
             this.#logger.error(e);
         }
@@ -73,7 +83,7 @@ export default class CustomPassport {
                 clientSecret: this.#process.env.KAKAO_CLIENT_SECRET,
                 callbackURL: this.#process.env.KAKAO_CALLBACK_URL
             }, this.#callback.bind(this)));
-            CustomPassport.#authenticatable.push('kakao');
+            CustomPassport.authenticatable.push('kakao');
         } catch (e) {
             this.#logger.error(e);
         }
@@ -86,7 +96,7 @@ export default class CustomPassport {
                 clientSecret: this.#process.env.NAVER_CLIENT_SECRET,
                 callbackURL: this.#process.env.NAVER_CALLBACK_URL
             }, this.#callback.bind(this)));
-            CustomPassport.#authenticatable.push('naver');
+            CustomPassport.authenticatable.push('naver');
         } catch (e) {
             this.#logger.error(e);
         }
@@ -99,21 +109,10 @@ export default class CustomPassport {
                 clientSecret: this.#process.env.APPLE_CLIENT_SECRET,
                 callbackURL: this.#process.env.APPLE_CALLBACK_URL
             }, this.#callback.bind(this)));
-            CustomPassport.#authenticatable.push('apple');
+            CustomPassport.authenticatable.push('apple');
         } catch (e) {
             this.#logger.error(e);
         }
     }
 
-    get initialize() {
-        return this.#passport.initialize({});
-    }
-
-    authenticate = (strategy) => this.#passport.authenticate(strategy, {session: false});
-    authenticateCallback = (strategy) =>
-        this.#passport.authenticate(strategy, {
-            successRedirect: '/',
-            failureRedirect: '/auth/failure',
-            session: false
-        });
 }

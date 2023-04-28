@@ -45,19 +45,25 @@ export default class CustomJwt {
 
     verify = async jwtToken =>
         new Promise((resolve, reject) => {
-            const callback = (err, decoded) => {
-                if (err) {
-                    this.#logger.error('JWT 인증 실패', err);
-                    reject(new Error(err));
-                } else {
-                    this.#logger.info('JWT 인증 성공', decoded);
-                    resolve(decoded);
-                }
-            };
+            try {
+                const decoded = jwt.verify(jwtToken, this.#customProcess.env.JWT_SECRET_KEY);
+                this.#logger.info('JWT 인증 성공', decoded);
+                return resolve(decoded);
+            } catch (err) {
+                this.#logger.error('JWT 인증 실패', err);
+                return reject(err);
+            }
+        });
 
-            jwt.verify(jwtToken,
-                this.#customProcess.env.JWT_SECRET_KEY,
-                callback
-            );
+    verifyAndGetPayload = async jwtToken =>
+        new Promise((resolve, reject) => {
+            try {
+                const decoded = jwt.verify(jwtToken, this.#customProcess.env.JWT_SECRET_KEY);
+                this.#logger.info('JWT 인증 성공', decoded);
+                return resolve(decoded.user);
+            } catch (err) {
+                this.#logger.error('JWT 인증 실패', err);
+                return reject(err);
+            }
         });
 }

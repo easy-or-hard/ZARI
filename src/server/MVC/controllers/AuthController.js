@@ -2,6 +2,9 @@ import express from "express";
 import CustomPassport from "../../utils/security/auth/CustomPassport.js";
 import CustomJwt from "../../utils/security/auth/CustomJwt.js";
 import CustomProcess from "../../utils/configure/CustomProcess.js";
+import CustomLogger from "../../utils/configure/CustomLogger.js";
+import ByeolService from "../services/ByeolService.js";
+import ByeolController from "./ByeolController.js";
 
 /**
  * @swagger
@@ -48,11 +51,30 @@ export default class AuthController {
      */
     #process;
 
+    /**
+     * @type {CustomLogger}
+     */
+    #logger;
+
+    /**
+     * @type {ByeolController}
+     */
+    #byeolController;
+
+    /**
+     * @type {ByeolService}
+     */
+    #byeolService;
+
+
     constructor({
                     _router = express.Router(),
                     _passport = new CustomPassport(),
                     _jwt = new CustomJwt(),
-                    _process = new CustomProcess()
+                    _process = new CustomProcess(),
+                    _logger = new CustomLogger(),
+                    _byeolController = new ByeolController(),
+                    _byeolService = new ByeolService(),
                 } = {}) {
         if (this.constructor.#instance) {
             return this.constructor.#instance;
@@ -63,26 +85,77 @@ export default class AuthController {
         this.#passport = _passport;
         this.#jwt = _jwt;
         this.#process = _process;
+        this.#logger = _logger;
+        this.#byeolController = _byeolController;
+        this.#byeolService = _byeolService;
 
         this.routerInitialize();
     }
 
     routerInitialize() {
-        this.router.get('/auth/github', this.#passport.authenticate('github').bind(this));
-        this.router.get('/auth/github/callback', this.#passport.authenticateCallback('github').bind(this), this.jwtGenerator.bind(this));
+        this.#logger.info('routerInitialize');
+        this.router.use('/api', this.jwtVerifier);
 
-        this.router.get('/auth/kakao', this.#passport.authenticate('kakao').bind(this));
-        this.router.get('/auth/kakao/callback', this.#passport.authenticateCallback('kakao').bind(this), this.jwtGenerator.bind(this));
+        for (const auth of CustomPassport.authenticatable) {
+            this.router.get(`/auth/${auth}`, this.#passport.authenticate(auth).bind(this));
+            this.router.get(`/auth/${auth}/callback`, this.#passport.authenticateCallback(auth).bind(this), this.jwtGenerator, this.signUpIfNewUser);
+        }
     }
 
-    jwtGenerator = async (req, res) => {
-        this.#jwt.sign(req.user);
-        return res.redirect('/');
+    /**
+     * JWT 생성 미들웨어
+     * @param req
+     * @param res
+     * @param next
+     * @returns {Promise<*>}
+     */
+    jwtGenerator = async (req, res, next) => {
+        this.#logger.info('jwtGenerator');
+        const token = this.#jwt.sign(req.user);
+        res.cookie(this.#process.env.JWT_TOKEN_NAME, token);
+        return next();
     }
 
-    jwtVerifier = async (req, res) => {
-        const token = req.cookies[this.#process.env.JWT_TOKEN_NAME];
-        const result = this.#jwt.verify(token);
-        return res.status(200).json(result);
+
+    /**
+     * JWT 인증 미들웨어
+     * @param req
+     * @param res
+     * @param next
+     * @returns {Promise<*>}
+     */
+    jwtVerifier = async (req, res, next) => {
+        try {
+            const token = req.cookies[this.#process.env.JWT_TOKEN_NAME];
+            const byeol = await this.#jwt.verifyAndGetPayload(token);
+            req.user = byeol;
+            this.#logger.info('jwtVerifier', 'JWT 인증 성공');
+            return next();
+        } catch (err) {
+            this.#logger.info('jwtVerifier', 'JWT 인증 실패');
+            this.#logger.error('jwtVerifier', err);
+            res.clearCookie(this.#process.env.JWT_TOKEN_NAME);
+            this.#logger.info(`${this.#process.env.JWT_TOKEN_NAME} 쿠키 삭제`);
+            return next(err);
+        }
+    }
+
+    /**
+     * 기존에 없던, 새로운 유저라면 회원가입
+     * @param req
+     * @param res
+     * @param next
+     * @returns {Promise<*>}
+     */
+    signUpIfNewUser = async (req, res, next) => {
+        this.#logger.info('signUpIfNewUser');
+        const byeol = req.user;
+        const userExists = await this.#byeolService.userExists(byeol.providerId, byeol.provider);
+        if (!userExists) {
+            await this.#byeolService.create(byeol);
+            return res.redirect('/');
+        }
+
+        return next();
     }
 }

@@ -22,12 +22,12 @@ export default class ExceptionRouter {
     }
 
     /**
-     *
-     * @param { CustomError } err
+     * @param {CustomError} err
      * @param {Request} req
      * @param {Response} res
+     * @param {NextFunction} next
      */
-    errorHandler = async (err, req, res) => {
+    errorHandler = async (err, req, res, next) => {
         this.#logger.error(err.stack);
 
         const statusCode = err.statusCode || 500;

@@ -108,7 +108,7 @@ class CustomEnv {
         if (this.#isTest()) {
             this.#sequelizeOptions = {
                 dialect: 'sqlite',
-                storage: ':memory:'
+                storage: ':memory:',
             }
         } else {
             this.#sequelizeOptions = {
@@ -126,6 +126,7 @@ class CustomEnv {
                 }
             };
         }
+        // Object.assign(this.#sequelizeOptions, {query: { raw: true }});
 
         Object.freeze(this.#sequelizeOptions); // Prevents the modification of existing property attributes and values, and prevents the addition of new properties.
         return this.#sequelizeOptions;

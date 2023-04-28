@@ -9,6 +9,7 @@ describe('BanzzackModel', () => {
 
     before(async () => {
         await sequelize.sync();
+
     });
 
     after(async () => {
