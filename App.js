@@ -9,6 +9,7 @@ import CustomPassport from "./src/server/utils/security/auth/CustomPassport.js";
 import CustomExpress from "./src/server/utils/configure/CustomExpress.js";
 import AuthController from "./src/server/MVC/controllers/AuthController.js";
 import ByeolController from "./src/server/MVC/controllers/ByeolController.js";
+import ZodiacController from "./src/server/MVC/controllers/ZodiacController.js";
 
 export default class App {
     /**
@@ -60,6 +61,7 @@ export default class App {
      * @type {ByeolController}
      */
     #byeolController;
+    #zodiacController;
 
     constructor({
                     _express = express(),
@@ -72,6 +74,7 @@ export default class App {
                     _customHelmet = new CustomHelmet(),
                     _authController = new AuthController(),
                     _byeolController = new ByeolController(),
+                    _zodiacController = new ZodiacController(),
                 } = {}) {
         this.#express = _express;
         this.#customExpress = _customExpress;
@@ -83,6 +86,7 @@ export default class App {
         this.#customHelmet = _customHelmet;
         this.#authController = _authController;
         this.#byeolController = _byeolController;
+        this.#zodiacController = _zodiacController;
 
         // this.#test();
         this.#preProcessRouterInitialize();
@@ -104,6 +108,7 @@ export default class App {
     #businessRouterInitialize() {
         this.#express.use(this.#authController.router);
         this.#express.use(this.#byeolController.router);
+        this.#express.use(this.#zodiacController.router);
         this.#express.use('/api-docs', this.#swaggerSpec.serve, this.#swaggerSpec.setup);
     }
 

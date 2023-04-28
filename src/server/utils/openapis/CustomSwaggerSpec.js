@@ -44,8 +44,13 @@ export default class CustomSwaggerSpec {
             definition: {}, // do not use this, instead use swaggerDefinition field
             apis: ["./src/server/MVC/**/*.js"]
         };
+        const swaggerOptions = {
+            swaggerOptions: {
+                oauth2RedirectUrl: 'http://localhost:3000/auth/github/callback',
+            },
+        };
 
-        this.#logger.info('스웨거 스펙 설정 완료', options);
-        return swaggerUi.setup(swaggerJsdoc(options));
+        this.#logger.info('스웨거 스펙 설정 완료', options, swaggerOptions);
+        return swaggerUi.setup(swaggerJsdoc(options), swaggerOptions);
     }
 }

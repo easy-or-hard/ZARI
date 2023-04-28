@@ -94,7 +94,10 @@ export default class AuthController {
 
     routerInitialize() {
         this.#logger.info('routerInitialize');
-        this.router.use('/api', this.jwtVerifier);
+        this.router.post('/api', this.jwtVerifier);
+        this.router.put('/api', this.jwtVerifier);
+        this.router.delete('/api', this.jwtVerifier);
+
 
         for (const auth of CustomPassport.authenticatable) {
             this.router.get(`/auth/${auth}`, this.#passport.authenticate(auth).bind(this));
@@ -104,24 +107,26 @@ export default class AuthController {
 
     /**
      * JWT 생성 미들웨어
-     * @param req
-     * @param res
-     * @param next
+     * @async
+     * @param {Request} req
+     * @param {Response} res
+     * @param {NextFunction} next
      * @returns {Promise<*>}
      */
     jwtGenerator = async (req, res, next) => {
         this.#logger.info('jwtGenerator');
         const token = this.#jwt.sign(req.user);
-        res.cookie(this.#process.env.JWT_TOKEN_NAME, token);
+        res.cookie(this.#process.env.JWT_TOKEN_NAME, token, { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
         return next();
     }
 
 
     /**
      * JWT 인증 미들웨어
-     * @param req
-     * @param res
-     * @param next
+     * @async
+     * @param {Request} req
+     * @param {Response} res
+     * @param {NextFunction} next
      * @returns {Promise<*>}
      */
     jwtVerifier = async (req, res, next) => {
@@ -142,9 +147,10 @@ export default class AuthController {
 
     /**
      * 기존에 없던, 새로운 유저라면 회원가입
-     * @param req
-     * @param res
-     * @param next
+     * @async
+     * @param {Request} req
+     * @param {Response} res
+     * @param {NextFunction} next
      * @returns {Promise<*>}
      */
     signUpIfNewUser = async (req, res, next) => {

@@ -14,9 +14,14 @@ describe('ByeolModel', () => {
         await sequelize.close();
     });
 
-    it('별자리 조회', async () => {
+    it('황도궁 목록 조회', async () => {
         const instances = await zodiacService.readAll();
         expect(instances).to.be.ok;
+    });
+
+    it('단일 황도궁 조회', async () => {
+        const instance = await zodiacService.readOne(1);
+        expect(instance).to.be.ok;
     });
 
 });
