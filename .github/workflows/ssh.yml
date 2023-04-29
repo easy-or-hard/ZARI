@@ -30,6 +30,5 @@ jobs:
         REMOTE_USER: ${{ secrets.DEPLOY_SERVER_USER }}
         SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
         REMOTE_PORT: ${{ secrets.DEPLOY_SERVER_PORT }}
-        SOURCE: "./"
         TARGET: ${{ env.TARGET_DIR }}
-        ARGS: '-avz --delete'
+        ARGS: '-avz --delete --exclude ".env" --exclude "node_modules"'
