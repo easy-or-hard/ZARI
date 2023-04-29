@@ -123,7 +123,7 @@ export default class AuthController {
             secure: true,
             maxAge: 1000 * 60 * 60 * 24 * 7
         });
-        return res.status(200).send('JWT 생성 성공');
+        return res.redirect('/');
     }
 
     /**
