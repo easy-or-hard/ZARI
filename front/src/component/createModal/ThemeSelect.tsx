@@ -1,12 +1,6 @@
 import styled from "styled-components";
 import check from "../../image/check.png";
 import { useDispatch } from "react-redux";
-import {
-  backgroundToGreen,
-  backgroundToOrange,
-  backgroundToPastel,
-  backgroundToPupple,
-} from "../../redux/actions/backgroundGd";
 import Theme from "../../dummyData/Theme";
 
 interface ThemeProps {
@@ -63,37 +57,8 @@ const ThemeList = styled.li<ListProps>`
 const ThemeSelect: React.FC<ThemeProps> = ({ value, onChange }) => {
   const dispatch = useDispatch();
 
-  const handlePupple = () => {
-    dispatch(backgroundToPupple());
-  };
-  const handlePastel = () => {
-    dispatch(backgroundToPastel());
-  };
-  const handleOrange = () => {
-    dispatch(backgroundToOrange());
-  };
-  const handleGreen = () => {
-    dispatch(backgroundToGreen());
-  };
-
   const ThemeWithHandlers = Theme.map((theme) => {
     let handler;
-    switch (theme.value) {
-      case "puple":
-        handler = handlePupple;
-        break;
-      case "pastel":
-        handler = handlePastel;
-        break;
-      case "orange":
-        handler = handleOrange;
-        break;
-      case "green":
-        handler = handleGreen;
-        break;
-      default:
-        handler = () => {};
-    }
     return {
       ...theme,
       onChange: handler,
@@ -112,10 +77,10 @@ const ThemeSelect: React.FC<ThemeProps> = ({ value, onChange }) => {
             value={item.value}
             color={item.color}
             select={item.value === value ? true : false}
-            onClick={() => {
-              onChange(item.value);
-              item.onChange();
-            }}
+            // onClick={() => {
+            //   onChange(item.value);
+            //   item.onChange();
+            // }}
           />
         ))}
       </ul>

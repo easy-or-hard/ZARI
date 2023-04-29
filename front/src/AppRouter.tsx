@@ -1,5 +1,4 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import backgroundDefalut from "./image/backgroundDefault.png";
 import styled from "styled-components";
 import Main from "./page/Main";
 import { RootState } from "./redux/reducers/rootReducer";
@@ -12,7 +11,7 @@ import useToggle from "./util/useToggle";
 import { alertHandler, confirmHandler } from "./redux/actions/modalAction";
 
 interface StyledContainerProps {
-  readonly background: string;
+  readonly background?: string;
   readonly backgroundColor: string;
 }
 
@@ -69,10 +68,7 @@ const AppRouter = () => {
 
   return (
     <Container>
-      <Background
-        background={backgroundDefalut}
-        backgroundColor={backgroundColor}
-      />
+      <Background backgroundColor={backgroundColor} />
       <Routes>
         <Route path="/" element={<Main />}></Route>
       </Routes>
@@ -99,7 +95,7 @@ const AppRouter = () => {
   );
 };
 
-const Container = styled.section`
+const Container = styled.main`
   width: 100%;
   max-width: 50rem;
   position: relative;
@@ -111,8 +107,7 @@ const Background = styled.div<StyledContainerProps>`
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url(${(props) => props.background}),
-    var(--${(props) => props.backgroundColor}-gd);
+  background-image: var(--${(props) => props.backgroundColor}-gd);
   background-position: center center;
   background-size: cover;
   background-blend-mode: multiply;

@@ -27,6 +27,7 @@ function App() {
 const Container = styled.div`
   display: flex;
   justify-content: center;
+  overflow: hidden;
 `;
 
 export default App;

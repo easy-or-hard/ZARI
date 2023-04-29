@@ -8,16 +8,8 @@ type ButtonProps = {
 };
 const Button = (props: ButtonProps) => {
   const { type, text, onClick, disabled } = props;
-  console.log(onClick);
   return (
-    <ButtonWrap
-      type={type}
-      onClick={() => {
-        onClick && onClick();
-        console.log("test");
-      }}
-      disabled={disabled}
-    >
+    <ButtonWrap type={type} onClick={onClick} disabled={disabled}>
       {text}
     </ButtonWrap>
   );

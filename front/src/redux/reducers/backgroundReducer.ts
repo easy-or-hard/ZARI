@@ -1,22 +1,15 @@
 import {
+  BACKGROUND_CHANGE,
   BackgroundAction,
-  BACKGROUND_GD_TYPE_GREEN,
-  BACKGROUND_GD_TYPE_ORANGE,
-  BACKGROUND_GD_TYPE_PASTEL,
-  BACKGROUND_GD_TYPE_PUPPLE,
-} from "../actions/backgroundGd";
+} from "../actions/backgroundAction";
 
-
-export const backgroundReducer = (state:string = "green", action: BackgroundAction) => {
+export const backgroundReducer = (
+  state: string = "default",
+  action: BackgroundAction
+) => {
   switch (action.type) {
-    case BACKGROUND_GD_TYPE_GREEN:
-      return (state = "green");
-    case BACKGROUND_GD_TYPE_ORANGE:
-      return (state = "orange");
-    case BACKGROUND_GD_TYPE_PASTEL:
-      return (state = "pastel");
-    case BACKGROUND_GD_TYPE_PUPPLE:
-      return (state = "pupple");
+    case BACKGROUND_CHANGE:
+      return (state = action.payload);
     default:
       return state;
   }
