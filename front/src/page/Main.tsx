@@ -1,13 +1,63 @@
 import styled from "styled-components";
-import Button from "../component/common/Button";
 import centerStar from "../image/centerStar.png";
 import Star from "../image/Star.png";
 import CreateModal from "../component/modal/CreateModal";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 interface BackgroundToString {
   readonly background: string;
 }
+
+const StarImg = styled.div<BackgroundToString>`
+  position: absolute;
+  width: 95%;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 95%;
+  background-image: url(${(props) => props.background});
+  background-size: cover;
+  background-position: center center;
+`;
+
+const Main = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleIsOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <MainWrap>
+      <StarImg background={Star} />
+      <h2>
+        CREATE YOUR
+        <br />
+        UNIVERSE
+      </h2>
+
+      <CircleWrap>
+        <div className="puppleCircleWrap">
+          <span className="puppleCircle" />
+        </div>
+        <div className="greenCircleWrap">
+          <span className="greenCircle" />
+        </div>
+        <div className="blueCircleWrap">
+          <span className="blueCircle" />
+        </div>
+        <div className="whiteCircleWrap">
+          <span className="whiteCircle" />
+        </div>
+        <div className="yellowCircleWrap">
+          <span className="yellowCircle" />
+        </div>
+      </CircleWrap>
+      {/* <Button text={"나의 우주 만들기"} onClick={() => handleIsOpen()} /> */}
+      <CreateModal handleClose={() => setIsOpen(false)} isOpen={isOpen} />
+    </MainWrap>
+  );
+};
 
 const MainWrap = styled.article`
   text-align: center;
@@ -23,7 +73,7 @@ const MainWrap = styled.article`
     line-height: 3rem;
     margin-bottom: 3rem;
   }
-  >button {
+  > button {
     margin-top: 8rem;
     position: relative;
   }
@@ -127,55 +177,4 @@ const CircleWrap = styled.div`
     }
   }
 `;
-
-const StarImg = styled.div<BackgroundToString>`
-  position: absolute;
-  width: 95%;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 95%;
-  background-image: url(${(props) => props.background});
-  background-size: cover;
-  background-position: center center;
-`;
-
-const Main = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleIsOpen = () => {
-    setIsOpen(!isOpen);
-  };
-
-  return (
-    <MainWrap>
-      <StarImg background={Star} />
-      <h2>
-        CREATE YOUR
-        <br />
-        UNIVERSE
-      </h2>
-      
-      <CircleWrap>
-        <div className="puppleCircleWrap">
-          <span className="puppleCircle" />
-        </div>
-        <div className="greenCircleWrap">
-          <span className="greenCircle" />
-        </div>
-        <div className="blueCircleWrap">
-          <span className="blueCircle" />
-        </div>
-        <div className="whiteCircleWrap">
-          <span className="whiteCircle" />
-        </div>
-        <div className="yellowCircleWrap">
-          <span className="yellowCircle" />
-        </div>
-      </CircleWrap>
-      <Button text={"나의 우주 만들기"} onClick={() => handleIsOpen()} />
-      <CreateModal handleClose={() => setIsOpen(false)} isOpen={isOpen} />
-    </MainWrap>
-  );
-};
-
 export default Main;

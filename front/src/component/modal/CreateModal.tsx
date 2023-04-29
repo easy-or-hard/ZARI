@@ -8,7 +8,6 @@ import useSelect from "../../util/useSelect";
 import ThemeSelect from "../createModal/ThemeSelect";
 import { useEffect, useState } from "react";
 import CompleteButton from "../common/CompleteButtom";
-import ConfirmModal from "../createModal/ConfirmModal";
 
 interface CreateModalProps {
   handleClose?: () => void;
@@ -115,10 +114,10 @@ const CreateModal: React.FC<CreateModalProps> = ({ handleClose, isOpen }) => {
           onClick={() => handleConfirmIsOpen()}
           isComplete={isComplete}
         />
-        <ConfirmModal
+        {/* <ConfirmModal
           handleClose={() => setConfirmIsOpen(false)}
           isOpen={confirmIsOpen}
-        />
+        /> */}
       </form>
     </CreateModalWrap>
   );
