@@ -54,7 +54,7 @@ export default class CustomPassport {
      */
     #callback = async (accessToken, refreshToken, profile, done) => {
         this.#logger.info(profile);
-        profile.byeol = profile.id;
+        profile.name = profile.displayName;
         profile.providerId = profile.id;
         return done(null, profile);
     }

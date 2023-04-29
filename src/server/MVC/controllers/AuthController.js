@@ -5,6 +5,8 @@ import CustomProcess from "../../utils/configure/CustomProcess.js";
 import CustomLogger from "../../utils/configure/CustomLogger.js";
 import ByeolService from "../services/ByeolService.js";
 import ByeolController from "./ByeolController.js";
+import Byeol from "../models/Byeol.js";
+import {NotVaildatedAccessError} from "../../utils/errors/CustomError.js";
 
 /**
  * @swagger
@@ -55,6 +57,10 @@ export default class AuthController {
     #byeolController;
 
     /**
+     * @type {Byeol}
+     */
+    #byeolModel;
+    /**
      * @type {ByeolService}
      */
     #byeolService;
@@ -67,6 +73,7 @@ export default class AuthController {
                     _process = new CustomProcess(),
                     _logger = new CustomLogger(),
                     _byeolController = new ByeolController(),
+                    _byeolModel = Byeol,
                     _byeolService = new ByeolService(),
                 } = {}) {
         if (this.constructor.#instance) {
@@ -80,6 +87,7 @@ export default class AuthController {
         this.#process = _process;
         this.#logger = _logger;
         this.#byeolController = _byeolController;
+        this.#byeolModel = _byeolModel;
         this.#byeolService = _byeolService;
 
         this.routerInitialize();
@@ -88,14 +96,14 @@ export default class AuthController {
     routerInitialize() {
         this.#logger.info('routerInitialize');
         this.router.get('/api/byeol', this.jwtVerifier); // 세션에 유저 정보를 넣어주고, 읽을 때 바로 자신의 별 정보를 가져올 수 있도록 한다.
-        this.router.post('/api', this.jwtVerifier);
-        this.router.put('/api', this.jwtVerifier);
-        this.router.delete('/api', this.jwtVerifier);
 
+        this.router.post('*', this.jwtVerifier);
+        this.router.put('*', this.jwtVerifier);
+        this.router.delete('*', this.jwtVerifier);
 
         for (const auth of CustomPassport.authenticatable) {
             this.router.get(`/auth/${auth}`, this.#passport.authenticate(auth).bind(this));
-            this.router.get(`/auth/${auth}/callback`, this.#passport.authenticateCallback(auth).bind(this), this.jwtGenerator, this.signUpIfNewUser);
+            this.router.get(`/auth/${auth}/callback`, this.#passport.authenticateCallback(auth).bind(this), this.signUpIfNewUser, this.jwtGenerator);
         }
     }
 
@@ -110,10 +118,13 @@ export default class AuthController {
     jwtGenerator = async (req, res, next) => {
         this.#logger.info('jwtGenerator');
         const token = this.#jwt.sign(req.user);
-        res.cookie(this.#process.env.JWT_TOKEN_NAME, token, { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
+        res.cookie(this.#process.env.JWT_TOKEN_NAME, token, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 1000 * 60 * 60 * 24 * 7
+        });
         return next();
     }
-
 
     /**
      * JWT 인증 미들웨어
@@ -134,7 +145,7 @@ export default class AuthController {
             this.#logger.error('jwtVerifier', err);
             res.clearCookie(this.#process.env.JWT_TOKEN_NAME);
             this.#logger.info(`${this.#process.env.JWT_TOKEN_NAME} 쿠키 삭제`);
-            return next(err);
+            return next(new NotVaildatedAccessError());
         }
     }
 
@@ -150,10 +161,21 @@ export default class AuthController {
         this.#logger.info('signUpIfNewUser');
         const byeol = req.user;
         const userExists = await this.#byeolService.userExists(byeol.providerId, byeol.provider);
+        let byeolInstance;
         if (!userExists) {
-            await this.#byeolService.create(byeol);
-            return res.redirect('/');
+            byeolInstance = await this.#byeolService.create(byeol);
+        } else {
+            const condition = {
+                where: {
+                    providerId: byeol.providerId,
+                    provider: byeol.provider,
+                }
+            }
+            byeolInstance = await this.#byeolModel.findOne(condition);
         }
+
+        // passport가 넣어준 profile 객체의 id를 내 데이터베이스의 id로 넣어준다.
+        req.user.id = byeolInstance.id;
 
         return next();
     }

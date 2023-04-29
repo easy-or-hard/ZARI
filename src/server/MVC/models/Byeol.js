@@ -23,14 +23,13 @@ export default class Byeol extends Model {
                 },
                 zodiacId: {
                     type: DataTypes.INTEGER,
-                    allowNull: false
                 }
             },
-            { sequelize });
+            {sequelize});
     }
 
     static associate() {
-        this.belongsTo(Zodiac, {foreignKey: 'zodiacId'})
-        this.hasMany(Banzzack, {onDelete: 'cascade'});
+        this.belongsTo(Zodiac, {as: 'zodiac', foreignKey: 'zodiacId'})
+        this.hasMany(Banzzack, {as: 'banzzackList', onDelete: 'cascade'});
     }
 }

@@ -31,6 +31,6 @@ export default class Zodiac extends Model {
     }
 
     static associate() {
-        this.hasMany(Byeol, {foreignKey: 'zodiacId'});
+        this.hasMany(Byeol, {as: 'byeol', foreignKey: 'zodiacId'});
     }
 }

@@ -47,4 +47,18 @@ export default class ZariService {
         this.#logger.info(`ZariService.readOne`);
         return await this.#zodiac.findByPk(id);
     }
+
+    /**
+     * 황도궁 ID를 검증합니다.
+     * @param zodiacId
+     * @returns {Promise<boolean>}
+     */
+
+    validateZodiacId = async (zodiacId) => {
+        this.#logger.info(`ZariService.validateZodiacId - zodiacId: ${zodiacId}`);
+        const instance = await this.readOne(zodiacId);
+        if (!instance) {
+            new Error(`Zodiac ID ${zodiacId} is not exist`);
+        }
+    }
 }
