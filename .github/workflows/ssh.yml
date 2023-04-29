@@ -1,4 +1,4 @@
-name: scp files
+name: ssh deploy
 
 on:
   push:
@@ -23,8 +23,8 @@ jobs:
       if: (github.ref == 'refs/heads/develop') || (github.event.pull_request.base.ref == 'develop')
       run: echo "TARGET_DIR=./web/zari/zari-dev.xiyo.dev" >> $GITHUB_ENV
 
-    - name: copy file via ssh password
-      uses: appleboy/scp-action@master
+    - name: deploy via ssh
+      uses: easingthemes/ssh-deploy@v2.1.3
       with:
         host: ${{ secrets.DEPLOY_SERVER_HOST }}
         username: ${{ secrets.DEPLOY_SERVER_USER }}
@@ -32,3 +32,4 @@ jobs:
         port: ${{ secrets.DEPLOY_SERVER_PORT }}
         source: "./"
         target: ${{ env.TARGET_DIR }}
+        flags: '-avz --delete'

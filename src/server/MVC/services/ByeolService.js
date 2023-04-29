@@ -95,6 +95,11 @@ export default class ByeolService {
         return await this.#byeolModel.findByPk(id, options);
     }
 
+    readByByeolName = async (name) => {
+        this.#logger.info(`ByeolService.readByByeolName: name: ${name}`);
+        return await this.#byeolModel.findOne({where: {name}});
+    }
+
     /**
      * @returns {Promise<Byeol[]>}
      */

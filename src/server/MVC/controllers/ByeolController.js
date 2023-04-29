@@ -196,6 +196,34 @@ export default class ByeolController {
 
         /**
          * @swagger
+         * /api/byeol/{name}:
+         *   get:
+         *     summary: 별 이름으로 별 조회
+         *     description: 입력된 별 이름을 이용하여 별을 조회합니다.
+         *     tags:
+         *       - Byeol
+         *     parameters:
+         *       - in: path
+         *         name: name
+         *         required: true
+         *         description: 조회할 별의 이름
+         *         schema:
+         *           type: string
+         *     responses:
+         *       200:
+         *         description: 조회된 별 정보
+         *         content:
+         *           application/json:
+         *             schema:
+         *               $ref: '#/components/schemas/Byeol'
+         *       404:
+         *         description: 조회된 별이 없음
+         *       500:
+         *         description: 서버 에러
+         */
+        this.router.get('/api/byeol/:name', this.readByByeolName);
+        /**
+         * @swagger
          * /api/byeol/is-can-use-name/{name}:
          *   get:
          *     summary: 별의 이름을 사용할 수 있는지 확인합니다.
@@ -220,7 +248,7 @@ export default class ByeolController {
          * @swagger
          * /api/byeol/zodiac:
          *   put:
-         *     summary: 별의 별자리를 선택합니다. 되돌릴 수 없습니다.
+         *     summary: 별의 별자리를 선택합니다. 최초 한 번만 설정가능하며, 수정할 수 없습니다.
          *     description: 인증된 사용자의 별의 별자리를 선택합니다.
          *     tags:
          *       - Byeol
@@ -315,6 +343,12 @@ export default class ByeolController {
     read = async (req, res, next) => {
         const user = req.user;
         const byeol = await this.#byeolService.read(user);
+        return res.json(byeol);
+    }
+
+    readByByeolName = async (req, res, next) => {
+        const {name} = req.params;
+        const byeol = await this.#byeolService.readByByeolName(name);
         return res.json(byeol);
     }
 
