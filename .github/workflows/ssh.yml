@@ -28,7 +28,7 @@ jobs:
       with:
         REMOTE_HOST: ${{ secrets.DEPLOY_SERVER_HOST }}
         REMOTE_USER: ${{ secrets.DEPLOY_SERVER_USER }}
-        SSH_PRIVATE_KEY: ${{ DEPLOY_SERVER_SSH_KEY }}
+        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
         REMOTE_PORT: ${{ secrets.DEPLOY_SERVER_PORT }}
         source: "./"
         target: ${{ env.TARGET_DIR }}
