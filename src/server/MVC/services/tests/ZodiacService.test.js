@@ -1,13 +1,16 @@
 import {expect, assert} from 'chai';
 import CustomSequelize from "../../../utils/configure/CustomSequelize.js";
 import ZodiacService from "../ZodiacService.js";
+import Zodiac from "../../models/Zodiac.js";
+import DummyData from "../../../../dummy/DummyData.js";
 describe('ByeolModel', () => {
     const sequelize = new CustomSequelize();
     const zodiacService = new ZodiacService();
-    let byeolId;
+    let zodiacList;
 
     before(async () => {
         await sequelize.sync();
+        zodiacList = await Zodiac.bulkCreate(DummyData.dummyZodiacList);
     });
 
     after(async () => {
@@ -20,7 +23,9 @@ describe('ByeolModel', () => {
     });
 
     it('단일 황도궁 조회', async () => {
-        const instance = await zodiacService.readOne(1);
+        let temp; // 테스트 사용시 임시로 넣을 값, 없으면 1
+        const zodiacId = temp || 1;
+        const instance = await zodiacService.readOne(zodiacId);
         expect(instance).to.be.ok;
     });
 

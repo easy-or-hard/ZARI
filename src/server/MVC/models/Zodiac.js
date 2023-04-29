@@ -1,11 +1,11 @@
 import {DataTypes, Model} from "sequelize";
-import Zari from "./Zari.js";
+import Byeol from "./Byeol.js";
 
 export default class Zodiac extends Model {
     static initialize(sequelize) {
         super.init(
             {
-                zodiac: {
+                name: {
                     type: DataTypes.STRING,
                     allowNull: false,
                     unique: true,
@@ -31,6 +31,6 @@ export default class Zodiac extends Model {
     }
 
     static associate() {
-        this.hasMany(Zari);
+        this.hasMany(Byeol, {foreignKey: 'zodiacId'});
     }
 }

@@ -1,6 +1,6 @@
 import Byeol from "../models/Byeol.js";
 import CustomLogger from "../../utils/configure/CustomLogger.js";
-import Zari from "../models/Zari.js";
+import Banzzack from "../models/Banzzack.js";
 
 export default class ByeolService {
     static #instance;
@@ -28,18 +28,20 @@ export default class ByeolService {
 
     /**
      *
-     * @param byeol
+     * @param name
      * @param providerId
      * @param provider
+     * @param zodiacId
      * @returns {Promise<Byeol>}
      */
     create = async ({
-                        byeol,
+                        name,
                         providerId,
-                        provider
+                        provider,
+                        zodiacId
                     } = {}) => {
-        this.#logger.info(`ByeolService.create: byeol: ${byeol}, providerId: ${providerId}, provider: ${provider}`);
-        return await this.#model.create({byeol, providerId, provider});
+        this.#logger.info(`ByeolService.create: byeol: ${name}, providerId: ${providerId}, provider: ${provider}, zodiacId: ${zodiacId}`);
+        return await this.#model.create({name, providerId, provider, zodiacId});
     }
 
     /**
@@ -47,9 +49,19 @@ export default class ByeolService {
      * @param id
      * @returns {Promise<Byeol>}
      */
-    read = async id => {
+    read = async ({id}) => {
         this.#logger.info(`ByeolService.read: id: ${id}`);
-        return await this.#model.findByPk(id);
+        const options = {
+            include: [
+                {
+                    model: Zari,
+                    include: [
+                        {model: Banzzack}
+                    ]
+                },
+            ]
+        };
+        return await this.#model.findByPk(id, options);
     }
 
     /**
@@ -66,9 +78,21 @@ export default class ByeolService {
         });
     }
 
-    update = async () => {
-        throw new Error('Not implemented');
-        // return await this.#model.update(body);
+    /**
+     * 별의 byeol(이름)을 바꿉니다.
+     * @param {Int} id - 사용자 객체
+     * @param {string} byeol - 요청 본문
+     * @returns {Promise<*>}
+     */
+    update = async ({id}, {byeol}) => {
+        this.#logger.info(`ByeolService.update: id: ${id}, byeol: ${byeol}`);
+        const oldInstanceCount = await this.#model.count({where: {byeol}});
+        if (oldInstanceCount > 0) {
+            throw new Error('이미 존재하는 별입니다.');
+        }
+
+        const instance = await this.#model.findByPk(id);
+        return await instance.update({byeol});
     }
 
     delete = async () => {

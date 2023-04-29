@@ -1,45 +1,46 @@
 import {expect, assert} from 'chai';
 import ByeolService from "../ByeolService.js";
 import CustomSequelize from "../../../utils/configure/CustomSequelize.js";
+import Zodiac from "../../models/Zodiac.js";
+import DummyData from "../../../../dummy/DummyData.js";
+import _ from 'lodash';
+const {sample} = _;
 describe('ByeolModel', () => {
     const sequelize = new CustomSequelize();
     const byeolService = new ByeolService();
     let byeolId;
+    let zodiacList;
 
     before(async () => {
         await sequelize.sync();
-        const byeol = {
-            byeol: '킹태희',
-            providerId: Math.floor(Math.random() * 100000000) + 1,
-            provider: 'test',
-        }
-        const instance = await byeolService.create(byeol);
-        byeolId = instance.id;
+        zodiacList = await Zodiac.bulkCreate(DummyData.dummyZodiacList);
     });
 
     after(async () => {
         await sequelize.close();
     });
 
-
     it('별 생성 및 확인', async () => {
         const byeol = {
-            byeol: '킹태희',
+            name: '킹태희',
             providerId: Math.floor(Math.random() * 100000000) + 1,
             provider: 'test',
+            zodiacId: sample(zodiacList).id
         }
         const instance = await byeolService.create(byeol);
 
         expect(instance).to.be.ok;
-        expect(instance.byeol).to.be.equal(byeol.byeol);
+        expect(instance.name).to.be.equal(byeol.name);
         assert.equal(instance.providerId, byeol.providerId, '데이터가 같다.');
     });
 
 
     it( '별 조회', async () => {
-        const instances = await byeolService.read(byeolId);
+        const temp = 1;
+        const tempId = temp || byeolId;
+        const instances = await byeolService.read(tempId);
         expect(instances).to.be.ok;
-        expect(instances.id).to.be.equal(byeolId);
+        expect(instances.id).to.be.equal(tempId);
     });
 
     it('자리를 포함한 별 조회', async () => {

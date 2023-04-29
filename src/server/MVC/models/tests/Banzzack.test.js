@@ -1,14 +1,24 @@
-import { expect } from 'chai';
-import Zari from '../Zari.js';
+import {expect} from 'chai';
 import Byeol from '../Byeol.js';
 import Banzzack from "../Banzzack.js";
 import CustomSequelize from "../../../utils/configure/CustomSequelize.js";
+import DummyData from "../../../../dummy/DummyData.js";
+import _ from 'lodash';
+import Zodiac from "../Zodiac.js";
+const {sample} = _;
 
-describe('BanzzackModel', () => {
-    const sequelize = new CustomSequelize('local');
+describe('Banzzack', () => {
+    const sequelize = new CustomSequelize();
+    let zodiacList;
 
     before(async () => {
         await sequelize.sync();
+        zodiacList = await Zodiac.bulkCreate(DummyData.dummyZodiacList);
+        const dummyByeolList = DummyData.dummyByeolList.map((byeol, index) => {
+            byeol.zodiacId = sample(zodiacList).id;
+            return byeol;
+        });
+        const byeolList = await Byeol.bulkCreate(dummyByeolList);
     });
 
     after(async () => {
@@ -16,24 +26,15 @@ describe('BanzzackModel', () => {
     });
 
     it('데이터 생성 및 확인 01', async () => {
-        const byeol = {
-            byeol: '킹태희',
-            providerId: Math.floor(Math.random() * 100000000) + 1,
-            provider: 'test',
-        }
-        const byeolInstance = await Byeol.create(byeol);
-        const zari = `묫${Math.floor(Math.random() * 10000) + 1}`;
-        const zariInstance = await Zari.create({ zari, ByeolId: byeolInstance.id });
-        const banzzack = '앙기모띠, 메시지 입니다.';
-        const banzzackInstance = await Banzzack.create({ banzzack, ByeolId: byeolInstance.id, ZariId: zariInstance.id });
+        const byeolList = await Byeol.findAll();
+        const byeol = sample(byeolList);
+        const message = DummyData.randomGreeting;
+        const banzzackInstance = await Banzzack.create({ message: message, byeolId: byeol.id});
 
-        expect(byeolInstance).to.be.ok;
-        expect(zariInstance).to.be.ok;
         expect(banzzackInstance).to.be.ok;
 
-        expect(byeolInstance.byeol).to.be.equal(byeol.byeol);
-        expect(zariInstance.zari).to.be.equal(zari);
-        expect(banzzackInstance.banzzack).to.be.equal(banzzack);
+        expect(banzzackInstance.byeolId).to.be.equal(byeol.id);
+        expect(banzzackInstance.message).to.be.equal(message);
     });
 
     it( '데이터 조회', async () => {

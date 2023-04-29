@@ -2,7 +2,6 @@ import App from "../App.js";
 import CustomProcess from "../src/server/utils/configure/CustomProcess.js";
 import CustomSequelize from '../src/server/utils/configure/CustomSequelize.js';
 import CustomLogger from '../src/server/utils/configure/CustomLogger.js';
-import DummyRunner from "../src/dummy/DummyRunner.js";
 
 class Www {
     /**
@@ -32,9 +31,7 @@ class Www {
 
     start = () => {
         new CustomSequelize()
-            .sync()
-            // .sync({force: true})
-            // .then(new DummyRunner().insertDemoData)
+            .sync({force: false})
             .then(this.#listen)
             .catch(this.#errorHandler);
     }

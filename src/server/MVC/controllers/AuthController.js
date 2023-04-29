@@ -17,13 +17,6 @@ import ByeolController from "./ByeolController.js";
  *           authorizationUrl: https://github.com/login/oauth/authorize
  *           tokenUrl: https://github.com/login/oauth/access_token
  *           scopes: {}
- *     KakaoAuth:
- *       type: oauth2
- *       flows:
- *         authorizationCode:
- *           authorizationUrl: https://kauth.kakao.com/oauth/authorize
- *           tokenUrl: https://kauth.kakao.com/oauth/token
- *           scopes: {}
  */
 export default class AuthController {
     /**
@@ -94,6 +87,7 @@ export default class AuthController {
 
     routerInitialize() {
         this.#logger.info('routerInitialize');
+        this.router.get('/api/byeol', this.jwtVerifier); // 세션에 유저 정보를 넣어주고, 읽을 때 바로 자신의 별 정보를 가져올 수 있도록 한다.
         this.router.post('/api', this.jwtVerifier);
         this.router.put('/api', this.jwtVerifier);
         this.router.delete('/api', this.jwtVerifier);
@@ -132,8 +126,7 @@ export default class AuthController {
     jwtVerifier = async (req, res, next) => {
         try {
             const token = req.cookies[this.#process.env.JWT_TOKEN_NAME];
-            const byeol = await this.#jwt.verifyAndGetPayload(token);
-            req.user = byeol;
+            req.user = await this.#jwt.verifyAndGetPayload(token);
             this.#logger.info('jwtVerifier', 'JWT 인증 성공');
             return next();
         } catch (err) {

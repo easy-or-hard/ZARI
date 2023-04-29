@@ -1,18 +1,13 @@
 import {expect, assert} from 'chai';
-import Byeol from '../Byeol.js';
 import CustomSequelize from "../../../utils/configure/CustomSequelize.js";
 import DummyData from "../../../../dummy/DummyData.js";
 import Zodiac from "../Zodiac.js";
-import _ from 'lodash';
-const {sample} = _;
 
-describe('Byeol', () => {
+describe('Zodiac', () => {
     const sequelize = new CustomSequelize();
-    let zodiacList;
 
     before(async () => {
         await sequelize.sync();
-        zodiacList = await Zodiac.bulkCreate(DummyData.dummyZodiacList);
     });
 
     after(async () => {
@@ -20,17 +15,12 @@ describe('Byeol', () => {
     });
 
     it('데이터 생성 및 확인', async () => {
-        const dummyByeolList = DummyData.dummyByeolList.map((byeol, index) => {
-            byeol.zodiacId = sample(zodiacList).id;
-            return byeol;
-        });
-        const byeolList = await Byeol.bulkCreate(dummyByeolList);
-
-        expect(byeolList).to.be.ok;
+        const zodiacList = await Zodiac.bulkCreate(DummyData.dummyZodiacList);
+        expect(zodiacList).to.be.ok;
     });
 
     it('데이터 조회', async () => {
-        const instances = await Byeol.findAll();
+        const instances = await Zodiac.findAll();
         expect(instances).to.be.ok;
     });
 });
