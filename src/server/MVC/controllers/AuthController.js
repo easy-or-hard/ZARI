@@ -121,9 +121,12 @@ export default class AuthController {
         res.cookie(this.#process.env.JWT_TOKEN_NAME, token, {
             httpOnly: true,
             secure: true,
-            maxAge: 1000 * 60 * 60 * 24 * 7
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+            sameSite: 'strict',
         });
-        return res.redirect('/');
+        return res.status(200).json({
+            message: '인증이 성공했습니다. 창을 닫으셔도 됩니다.'
+        });
     }
 
     /**
