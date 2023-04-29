@@ -1,18 +1,26 @@
 export default class Temp {
     static generateRandomKoreanName() {
-        const syllables = [
-            '가', '나', '다', '라', '마', '바', '사', '아', '자', '차', '카', '타', '파', '하',
-            '악', '넉', '덕', '륵', '묵', '북', '삭', '억', '적', '척', '칙', '탁', '팍', '학',
-            '앙', '넝', '덩', '렁', '뭉', '봉', '송', '양', '정', '청', '켱', '통', '퐁', '홍'
+        const familyNames = [
+            '김', '이', '박', '최', '정', '강', '조', '윤', '장', '임',
+            '오', '한', '신', '서', '권', '황', '안', '송', '류', '홍'
         ];
 
-        const nameLength = Math.floor(Math.random() * 5) + 4; // Random length between 4 and 8
-        let name = '';
+        const givenNameFirstSyllables = [
+            '민', '지', '수', '영', '재', '윤', '현', '선', '주', '희',
+            '태', '종', '준', '유', '진', '은', '찬', '호', '원', '철'
+        ];
 
-        for (let i = 0; i < nameLength; i++) {
-            name += syllables[Math.floor(Math.random() * syllables.length)];
-        }
+        const givenNameSecondSyllables = [
+            '후', '영', '원', '준', '현', '희', '수', '진', '철', '우',
+            '성', '민', '지', '찬', '윤', '은', '호', '예', '하', '태'
+        ];
 
-        return name;
+        const familyName = familyNames[Math.floor(Math.random() * familyNames.length)];
+        const givenNameFirst = givenNameFirstSyllables[Math.floor(Math.random() * givenNameFirstSyllables.length)];
+        const givenNameSecond = givenNameSecondSyllables[Math.floor(Math.random() * givenNameSecondSyllables.length)];
+
+        const randomNumber = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+
+        return familyName + givenNameFirst + givenNameSecond + randomNumber;
     }
 }
