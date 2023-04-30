@@ -11,23 +11,29 @@ import Zodiac from "./Zodiac.js";
  *       properties:
  *         id:
  *           type: integer
+ *           description: 별 ID
  *           example: 1
  *         byeol:
  *           type: string
+ *           description: 별 이름
  *           example: "느와르킹태희"
  *         providerId:
  *           type: integer
- *           example:
+ *           description: 제공자 ID
+ *           example: 123456789
  *         provider:
  *           type: string
+ *           description: 제공자
  *           example: "github"
  *         createdAt:
  *           type: string
  *           format: date-time
+ *           description: 레코드 생성 일시
  *           example: "2023-04-28T08:28:22.086Z"
  *         updatedAt:
  *           type: string
  *           format: date-time
+ *           description: 레코드 수정 일시
  *           example: "2023-04-28T08:28:22.086Z"
  */
 export default class Byeol extends Model {
