@@ -9,7 +9,7 @@ import CustomLogger from "../../configure/CustomLogger.js";
 
 export default class CustomPassport {
     static #instance;
-    static authenticatable = [];
+    static authPossibleList = [];
     #passport;
     #jwt;
     #logger;
@@ -36,8 +36,8 @@ export default class CustomPassport {
         this.#passportNaverInitialize();
         this.#passportAppleInitialize();
 
-        Object.freeze(CustomPassport.authenticatable);
-        this.#logger.info(CustomPassport.authenticatable);
+        Object.freeze(CustomPassport.authPossibleList);
+        this.#logger.info(CustomPassport.authPossibleList);
     }
 
     get initialize() {
@@ -70,7 +70,7 @@ export default class CustomPassport {
                 clientSecret: this.#process.env.GITHUB_CLIENT_SECRET,
                 callbackURL: this.#process.env.GITHUB_CALLBACK_URL
             }, this.#callback.bind(this)));
-            CustomPassport.authenticatable.push('github');
+            CustomPassport.authPossibleList.push('github');
         } catch (e) {
             this.#logger.error(e);
         }
@@ -83,7 +83,7 @@ export default class CustomPassport {
                 clientSecret: this.#process.env.KAKAO_CLIENT_SECRET,
                 callbackURL: this.#process.env.KAKAO_CALLBACK_URL
             }, this.#callback.bind(this)));
-            CustomPassport.authenticatable.push('kakao');
+            CustomPassport.authPossibleList.push('kakao');
         } catch (e) {
             this.#logger.error(e);
         }
@@ -96,7 +96,7 @@ export default class CustomPassport {
                 clientSecret: this.#process.env.NAVER_CLIENT_SECRET,
                 callbackURL: this.#process.env.NAVER_CALLBACK_URL
             }, this.#callback.bind(this)));
-            CustomPassport.authenticatable.push('naver');
+            CustomPassport.authPossibleList.push('naver');
         } catch (e) {
             this.#logger.error(e);
         }
@@ -109,7 +109,7 @@ export default class CustomPassport {
                 clientSecret: this.#process.env.APPLE_CLIENT_SECRET,
                 callbackURL: this.#process.env.APPLE_CALLBACK_URL
             }, this.#callback.bind(this)));
-            CustomPassport.authenticatable.push('apple');
+            CustomPassport.authPossibleList.push('apple');
         } catch (e) {
             this.#logger.error(e);
         }

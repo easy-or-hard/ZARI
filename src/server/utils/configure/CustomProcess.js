@@ -39,29 +39,29 @@ class CustomEnv {
     get JWT_TOKEN_NAME() {return process.env.JWT_TOKEN_NAME || 'jwt';}
 
     // github
-    get GITHUB_CLIENT_ID() {return process.env.GITHUB_CLIENT_ID || new Error('GITHUB_CLIENT_ID is not defined in the .env file.');}
-    get GITHUB_CLIENT_SECRET() {return process.env.GITHUB_CLIENT_SECRET || new Error('GITHUB_CLIENT_SECRET is not defined in the .env file.');}
-    get GITHUB_CALLBACK_URL() {return process.env.GITHUB_CALLBACK_URL || new Error('GITHUB_CALLBACK_URL is not defined in the .env file.');}
+    get GITHUB_CLIENT_ID() {try {return process.env.GITHUB_CLIENT_ID} catch (e) {throw new Error('GITHUB_CLIENT_ID is not defined in the .env file.');}}
+    get GITHUB_CLIENT_SECRET() {try { return process.env.GITHUB_CLIENT_SECRET} catch (e) {throw new Error('GITHUB_CLIENT_SECRET is not defined in the .env file.');}}
+    get GITHUB_CALLBACK_URL() {try { return process.env.GITHUB_CALLBACK_URL} catch (e) {throw new Error('GITHUB_CALLBACK_URL is not defined in the .env file.');}}
 
     // apple
-    get APPLE_CLIENT_ID() {return process.env.APPLE_CLIENT_ID || new Error('APPLE_CLIENT_ID is not defined in the .env file.');}
-    get APPLE_CLIENT_SECRET() {return process.env.APPLE_CLIENT_SECRET || new Error('APPLE_CLIENT_SECRET is not defined in the .env file.');}
-    get APPLE_CALLBACK_URL() {return process.env.APPLE_CALLBACK_URL || new Error('APPLE_CALLBACK_URL is not defined in the .env file.');}
+    get APPLE_CLIENT_ID() {try { return process.env.APPLE_CLIENT_ID} catch (e) {throw new Error('APPLE_CLIENT_ID is not defined in the .env file.');}}
+    get APPLE_CLIENT_SECRET() {try { return process.env.APPLE_CLIENT_SECRET} catch (e) {throw new Error('APPLE_CLIENT_SECRET is not defined in the .env file.');}}
+    get APPLE_CALLBACK_URL() {try { return process.env.APPLE_CALLBACK_URL} catch (e) {throw new Error('APPLE_CALLBACK_URL is not defined in the .env file.');}}
 
     // kakao
-    get KAKAO_CLIENT_ID() {return process.env.KAKAO_CLIENT_ID || new Error('KAKAO_CLIENT_ID is not defined in the .env file.');}
-    get KAKAO_CLIENT_SECRET() {return process.env.KAKAO_CLIENT_SECRET || new Error('KAKAO_CLIENT_SECRET is not defined in the .env file.');}
-    get KAKAO_CALLBACK_URL() {return process.env.KAKAO_CALLBACK_URL || new Error('KAKAO_CALLBACK_URL is not defined in the .env file.');}
+    get KAKAO_CLIENT_ID() {try { return process.env.KAKAO_CLIENT_ID} catch (e) {throw new Error('KAKAO_CLIENT_ID is not defined in the .env file.');}}
+    get KAKAO_CLIENT_SECRET() {try { return process.env.KAKAO_CLIENT_SECRET} catch (e) {throw new Error('KAKAO_CLIENT_SECRET is not defined in the .env file.');}}
+    get KAKAO_CALLBACK_URL() {try { return process.env.KAKAO_CALLBACK_URL} catch (e) {throw new Error('KAKAO_CALLBACK_URL is not defined in the .env file.');}}
 
     // naver
-    get NAVER_CLIENT_ID() {return process.env.NAVER_CLIENT_ID || new Error('NAVER_CLIENT_ID is not defined in the .env file.');}
-    get NAVER_CLIENT_SECRET() {return process.env.NAVER_CLIENT_SECRET || new Error('NAVER_CLIENT_SECRET is not defined in the .env file.');}
-    get NAVER_CALLBACK_URL() {return process.env.NAVER_CALLBACK_URL || new Error('NAVER_CALLBACK_URL is not defined in the .env file.');}
+    get NAVER_CLIENT_ID() {try { return process.env.NAVER_CLIENT_ID} catch (e) {throw new Error('NAVER_CLIENT_ID is not defined in the .env file.');}}
+    get NAVER_CLIENT_SECRET() {try { return process.env.NAVER_CLIENT_SECRET} catch (e) {throw new Error('NAVER_CLIENT_SECRET is not defined in the .env file.');}}
+    get NAVER_CALLBACK_URL() {try { return process.env.NAVER_CALLBACK_URL} catch (e) {throw new Error('NAVER_CALLBACK_URL is not defined in the .env file.');}}
 
     // google
-    get GOOGLE_CLIENT_ID() {return process.env.GOOGLE_CLIENT_ID || new Error('GOOGLE_CLIENT_ID is not defined in the .env file.');}
-    get GOOGLE_CLIENT_SECRET() {return process.env.GOOGLE_CLIENT_SECRET || new Error('GOOGLE_CLIENT_SECRET is not defined in the .env file.');}
-    get GOOGLE_CALLBACK_URL() {return process.env.GOOGLE_CALLBACK_URL || new Error('GOOGLE_CALLBACK_URL is not defined in the .env file.');}
+    get GOOGLE_CLIENT_ID() {try { return process.env.GOOGLE_CLIENT_ID} catch (e) {throw new Error('GOOGLE_CLIENT_ID is not defined in the .env file.');}}
+    get GOOGLE_CLIENT_SECRET() {try { return process.env.GOOGLE_CLIENT_SECRET} catch (e) {throw new Error('GOOGLE_CLIENT_SECRET is not defined in the .env file.');}}
+    get GOOGLE_CALLBACK_URL() {try { return process.env.GOOGLE_CALLBACK_URL} catch (e) {throw new Error('GOOGLE_CALLBACK_URL is not defined in the .env file.');}}
 
 
 

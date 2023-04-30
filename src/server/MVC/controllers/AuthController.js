@@ -96,29 +96,54 @@ export default class AuthController {
 
     routerInitialize() {
         this.#logger.info('routerInitialize');
-        this.router.get('/api/byeol', this.jwtVerifier); // 세션에 유저 정보를 넣어주고, 읽을 때 바로 자신의 별 정보를 가져올 수 있도록 한다.
+
+        /**
+         * @swagger
+         * /api/auth:
+         *   get:
+         *     summary: 가능한 인증 목록 반환
+         *     tags: [Auth]
+         *     description: 사용 가능한 인증 제공자 목록을 반환합니다. http://현재사용중인도메인/auth/github 로 접속하면 로그인 페이지로 리다이렉트 됩니다. 새 창의 접속하세요.
+         *     responses:
+         *       200:
+         *         description: 사용 가능한 인증 제공자 목록을 반환.
+         *         content:
+         *           application/json:
+         *             schema:
+         *               type: object
+         *               additionalProperties:
+         *                 type: string
+         *               example:
+         *                 google: "/auth/google"
+         *                 github: "/auth/github"
+         */
+        this.router.get('/api/auth', this.authPossible);
+
+        /**
+         * 특별히 이 GET 메소드만 인증을 합니다. 나머지 GET은 인증을 하지 않습니다.
+         * 더 나이스한 디자인이 있으면 바꿔주세요.
+         */
+        this.router.get('/api/byeol', this.jwtVerifier);
+
 
         this.router.post('*', this.jwtVerifier);
         this.router.put('*', this.jwtVerifier);
         this.router.delete('*', this.jwtVerifier);
 
-        for (const auth of CustomPassport.authenticatable) {
+        for (const auth of CustomPassport.authPossibleList) {
             this.router.get(`/auth/${auth}`, this.#passport.authenticate(auth).bind(this));
             this.router.get(`/auth/${auth}/callback`, this.#passport.authenticateCallback(auth).bind(this), this.signUpIfNewUser, this.jwtGenerator);
         }
-        /**
-         * @swagger
-         * /auth/github:
-         *   get:
-         *     summary: GitHub OAuth2 인증 엔드포인트
-         *     tags: [Auth]
-         *     description: http://현재사용중인도메인/auth/github 로 접속하면 GitHub 로그인 페이지로 리다이렉트 됩니다. 새 창의 주소창에서 접속하세요.
-         *     security:
-         *       - GitHubAuth: []
-         *     responses:
-         *       302:
-         *         description: 인증 성공, OAuth 콜백으로 리다이렉트.
-         */
+    }
+
+    authPossible = async (req, res, next) => {
+        this.#logger.info('authPossible');
+        const authList = CustomPassport.authPossibleList;
+        const supportedAuthList = {};
+        for (const auth of authList) {
+            supportedAuthList[auth] = `/auth/${auth}`
+        }
+        return res.json(supportedAuthList);
     }
 
     /**
