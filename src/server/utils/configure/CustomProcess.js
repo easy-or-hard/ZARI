@@ -22,7 +22,7 @@ class CustomEnv {
      * Loads environment variables from the .env file using dotenv and sets the internal nodeEnv variable.
      * @throws {Error} if NODE_ENV is not defined in the .env file.
      */
-    constructor() {
+    constructor(env) {
         if (this.constructor.#instance) {
             return this.constructor.#instance;
         }
@@ -30,7 +30,7 @@ class CustomEnv {
 
         dotenv.config();
 
-        this.#nodeEnv = process.env.NODE_ENV || 'test';
+        this.#nodeEnv = env || process.env.NODE_ENV;
     }
 
     get JWT_EXPIRES_IN() {return process.env.JWT_EXPIRES_IN ||'30d';}
@@ -230,13 +230,13 @@ export default class CustomProcess {
      * CustomProcess constructor.
      * Ensures that only one instance of CustomProcess is created.
      */
-    constructor() {
+    constructor(env) {
         if (this.constructor.#instance) {
             return this.constructor.#instance;
         }
         this.constructor.#instance = this;
 
-        this.env = new CustomEnv();
+        this.env = new CustomEnv(env);
     }
 }
 

@@ -6,7 +6,7 @@ import CustomLogger from "../../utils/configure/CustomLogger.js";
 import ByeolService from "../services/ByeolService.js";
 import ByeolController from "./ByeolController.js";
 import Byeol from "../models/Byeol.js";
-import {NotVaildatedAccessError} from "../../utils/errors/CustomError.js";
+import {UnauthorizedError} from "../../utils/errors/CustomError.js";
 
 /**
  * @swagger
@@ -14,6 +14,7 @@ import {NotVaildatedAccessError} from "../../utils/errors/CustomError.js";
  *   securitySchemes:
  *     GitHubAuth:
  *       type: oauth2
+ *       description: 깃허브 인증 입니다. 따로 키 넣는건 귀찮으니까, {사용중인도메인}/auth/github 로 접속하면 SIGN-IN 상태가 됩니다. 정확히는 어떻게 사용하는건지 몰루...;; ㅎㅎ
  *       flows:
  *         authorizationCode:
  *           authorizationUrl: https://github.com/login/oauth/authorize
@@ -105,6 +106,19 @@ export default class AuthController {
             this.router.get(`/auth/${auth}`, this.#passport.authenticate(auth).bind(this));
             this.router.get(`/auth/${auth}/callback`, this.#passport.authenticateCallback(auth).bind(this), this.signUpIfNewUser, this.jwtGenerator);
         }
+        /**
+         * @swagger
+         * /auth/github:
+         *   get:
+         *     summary: GitHub OAuth2 인증 엔드포인트
+         *     tags: [Auth]
+         *     description: http://현재사용중인도메인/auth/github 로 접속하면 GitHub 로그인 페이지로 리다이렉트 됩니다. 새 창의 주소창에서 접속하세요.
+         *     security:
+         *       - GitHubAuth: []
+         *     responses:
+         *       302:
+         *         description: 인증 성공, OAuth 콜백으로 리다이렉트.
+         */
     }
 
     /**
@@ -148,7 +162,7 @@ export default class AuthController {
             this.#logger.error('jwtVerifier', err);
             res.clearCookie(this.#process.env.JWT_TOKEN_NAME);
             this.#logger.info(`${this.#process.env.JWT_TOKEN_NAME} 쿠키 삭제`);
-            return next(new NotVaildatedAccessError());
+            return next(new UnauthorizedError());
         }
     }
 

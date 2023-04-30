@@ -4,10 +4,12 @@ import CustomSequelize from "../../../utils/configure/CustomSequelize.js";
 import DummyData from "../../../../dummy/DummyData.js";
 import Zodiac from "../Zodiac.js";
 import _ from 'lodash';
+import CustomProcess from "../../../utils/configure/CustomProcess.js";
 const {sample} = _;
 
 describe('Byeol', () => {
-    const sequelize = new CustomSequelize();
+    const process = new CustomProcess('test')
+    const sequelize = new CustomSequelize(process);
     let zodiacList;
 
     before(async () => {

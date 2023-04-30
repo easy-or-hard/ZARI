@@ -1,5 +1,6 @@
 import Zodiac from "../models/Zodiac.js";
 import CustomLogger from "../../utils/configure/CustomLogger.js";
+import {IdRequiredError} from "../../utils/errors/CustomError.js";
 
 export default class ZariService {
     static #instance;
@@ -49,16 +50,26 @@ export default class ZariService {
     }
 
     /**
-     * 황도궁 ID를 검증합니다.
+     * 입력 ID가 없거나, 검색 결과가 존재하지 않는다면 오류를 발생시킵니다.
      * @param zodiacId
      * @returns {Promise<boolean>}
      */
 
     validateZodiacId = async (zodiacId) => {
         this.#logger.info(`ZariService.validateZodiacId - zodiacId: ${zodiacId}`);
-        const instance = await this.readOne(zodiacId);
-        if (!instance) {
-            new Error(`Zodiac ID ${zodiacId} is not exist`);
+
+        if (!zodiacId) {
+            throw new IdRequiredError();
+        }
+
+        const condition = {
+            where: {
+                id: zodiacId
+            }
+        }
+        const count = await this.#zodiac.count(condition);
+        if (count > 0) {
+            throw new Error(`Zodiac ID ${zodiacId} is not exist`);
         }
     }
 }

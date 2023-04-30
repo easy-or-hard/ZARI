@@ -2,7 +2,12 @@ import Byeol from "../models/Byeol.js";
 import CustomLogger from "../../utils/configure/CustomLogger.js";
 import Banzzack from "../models/Banzzack.js";
 import Temp from "../../utils/naming/Temp.js";
-import {CanNotChangeZodiacError, NameAlreadyExistsError, NameRequiredError} from "../../utils/errors/CustomError.js";
+import {
+    ByeolIdAlreadyExistsError,
+    CanNotChangeZodiacError, IdRequiredError,
+    NameAlreadyExistsError,
+    NameRequiredError
+} from "../../utils/errors/CustomError.js";
 import Zodiac from "../models/Zodiac.js";
 import ZodiacService from "./ZodiacService.js";
 
@@ -51,35 +56,30 @@ export default class ByeolService {
         // providerId, provider, displayName 은 passport가 Oauth 통신후 나오는 값 입니다.
         // byeol 컨트롤러에서 이 메소드를 실행할 경우에는 displayName은 없습니다.
         const {name, providerId, provider, zodiac} = byeol;
-        let isCanUseName = true;
+        let makeName = true;
         let tempName = name;
 
-        while (isCanUseName) {
-            isCanUseName = await this.isCanUseName(tempName);
-            if (isCanUseName) {
-                break;
+        while (makeName) {
+            try {
+                await this.validateName(tempName);
+                makeName = false;
+            } catch (e) {
+                tempName = Temp.generateRandomKoreanName();
             }
-            tempName = Temp.generateRandomKoreanName();
         }
 
         return await this.#byeolModel.create({name: tempName, providerId, provider, zodiacId: zodiac?.id});
     }
 
-    isCanUseName = async (name) => {
-        if (!name) {
-            throw new NameRequiredError();
-        }
-        const count = await this.#byeolModel.count({where: {name}});
-        return count !== 0;
-    }
-
     /**
-     *
-     * @param id
-     * @returns {Promise<Byeol>}
+     * 별의 아이디로 별을 찾습니다.
+     * @param id - 별의 아이디
+     * @returns {Promise<Model<any, TModelAttributes>>}
      */
-    read = async ({id}) => {
+    read = async id => {
         this.#logger.info(`ByeolService.read: id: ${id}`);
+        await this.validateId(id);
+
         const options = {
             include: [
                 {
@@ -95,23 +95,30 @@ export default class ByeolService {
         return await this.#byeolModel.findByPk(id, options);
     }
 
-    readByByeolName = async (name) => {
+    /**
+     * 별의 이름으로 별을 찾습니다.
+     * @param name
+     * @returns {Promise<Byeol>}
+     */
+    readByName = async (name) => {
         this.#logger.info(`ByeolService.readByByeolName: name: ${name}`);
+        await this.validateName(name);
         return await this.#byeolModel.findOne({where: {name}});
     }
 
     /**
-     * @returns {Promise<Byeol[]>}
+     * 모든 별을 출력합니다. (페이징)
+     * @param page
+     * @param pageSize
+     * @returns {Promise<Array<Byeol>>}
      */
     readAll = async (page = 1, pageSize = 10) => {
+        this.#logger.info(`ByeolService.readAll: page: ${page}, pageSize: ${pageSize}`);
+
         const offset = (page - 1) * pageSize;
         const limit = pageSize;
-
         this.#logger.info(`ByeolService.readAll: offset: ${offset}, limit: ${limit}`);
-        return await this.#byeolModel.findAll({
-            offset,
-            limit,
-        });
+        return await this.#byeolModel.findAll({offset, limit});
     }
 
     /**
@@ -122,10 +129,8 @@ export default class ByeolService {
      */
     updateName = async (user, name) => {
         this.#logger.info(`ByeolService.update: user: ${user}, name: ${name}`);
-        const isCanUseName = await this.isCanUseName(name);
-        if (isCanUseName) {
-            throw new NameAlreadyExistsError();
-        }
+        await this.validateId(user.id);
+        await this.validateName(name);
 
         const instance = await this.#byeolModel.findByPk(user.id);
         return await instance.update({name});
@@ -146,16 +151,10 @@ export default class ByeolService {
     }
 
     /**
-     * 별자리를 선택할 수 있는지 검사합니다.
-     * @param instance
+     * 별을 삭제합니다.
+     * @param user
      * @returns {Promise<void>}
      */
-    validateCanChangeZodiac = async (instance) => {
-        if (instance.zodiacId) {
-            throw new CanNotChangeZodiacError();
-        }
-    }
-
     delete = async user => {
         this.#logger.info(`ByeolService.delete: user: ${user}`);
         const condition = {
@@ -164,26 +163,6 @@ export default class ByeolService {
             }
         }
         return await this.#byeolModel.destroy(condition);
-    }
-
-    /**
-     *
-     * @param {number} id
-     * @returns {Promise<*>}
-     */
-    findByPk = async (id) => {
-        this.#logger.info(`ByeolService.findByPk: id: ${id}`);
-        return await this.#byeolModel.findByPk(id, {
-            include: [{
-                model: Zari
-            }]
-        });
-    }
-
-    updateByeol = async (byeolId, byeol) => {
-        this.#logger.info(`ByeolService.updateByeol: byeolId: ${byeolId}, byeol: ${byeol}`);
-        const byeolInstance = await Byeol.findByPk(byeolId);
-        return await byeolInstance.update({byeol});
     }
 
     userExists = async (providerId, provider) => {
@@ -196,5 +175,52 @@ export default class ByeolService {
         }
         const byeol = await this.#byeolModel.findOne(condition);
         return !!byeol;
+    }
+
+    /**
+     * 별의 아이디가 존재한다면 에러를 발생시킵니다.
+     * @param id
+     * @returns {Promise<void>}
+     */
+    validateId = async (id) => {
+        this.#logger.info(`ByeolService.validateByeolId: byeolId: ${id}`);
+        if (!id) {
+            throw new IdRequiredError();
+        }
+
+        const byeol = await this.#byeolModel.findByPk(id);
+        if (byeol) {
+            throw new ByeolIdAlreadyExistsError();
+        }
+    }
+
+    /**
+     * 별의 이름을 검사하고 에러를 발생시킵니다.
+     * @param name
+     * @returns {Promise<void>}
+     */
+    validateName = async (name) => {
+        this.#logger.info(`ByeolService.validateByeolName: name: ${name}`);
+
+        if (!name) {
+            throw new NameRequiredError();
+        }
+
+        const byeol = await this.#byeolModel.findOne({where: {name}});
+        if (byeol) {
+            throw new NameAlreadyExistsError();
+        }
+    }
+
+    /**
+     * 이미 별자리를 선택한 별은 다시 선택할 수 없습니다.
+     * 선택된 별자리가 있다면 에러를 발생시킵니다.
+     * @param instance
+     * @returns {Promise<void>}
+     */
+    validateCanChangeZodiac = async (instance) => {
+        if (instance.zodiacId) {
+            throw new CanNotChangeZodiacError();
+        }
     }
 }

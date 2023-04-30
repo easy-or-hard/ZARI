@@ -1,8 +1,8 @@
 import CustomLogger from "../../utils/configure/CustomLogger.js";
 import express from "express";
 import ByeolService from "../services/ByeolService.js";
+import ZodiacService from "../services/ZodiacService.js";
 import Byeol from "../models/Byeol.js";
-import {NameAlreadyExistsError} from "../../utils/errors/CustomError.js";
 import CustomProcess from "../../utils/configure/CustomProcess.js";
 
 export default class ByeolController {
@@ -28,6 +28,11 @@ export default class ByeolController {
     #byeolService;
 
     /**
+     * @type {ZodiacService}
+     */
+    #zodiacService;
+
+    /**
      * @type {CustomLogger}
      */
     #logger;
@@ -41,6 +46,7 @@ export default class ByeolController {
                     _router = express.Router(),
                     _byeol = Byeol,
                     _byeolService = new ByeolService(),
+                    _zodiacService = new ZodiacService(),
                     _logger = new CustomLogger(),
                     _process = new CustomProcess(),
                 } = {}) {
@@ -51,6 +57,7 @@ export default class ByeolController {
         this.router = _router;
         this.#byeol = _byeol;
         this.#byeolService = _byeolService;
+        this.#zodiacService = _zodiacService;
         this.#logger = _logger;
         this.#process = _process;
 
@@ -70,84 +77,18 @@ export default class ByeolController {
              *     tags:
              *       - Byeol
              *     security:
-             *       - BearerAuth: []
+             *       - GitHubAuth: []
              *     responses:
              *       200:
              *         description: 별 정보가 성공적으로 검색됨
              *         content:
              *           application/json:
              *             schema:
-             *               type: object
-             *               properties:
-             *                 id:
-             *                   type: integer
-             *                   example: 1
-             *                 byeol:
-             *                   type: string
-             *                   example: "naruto"
-             *                 providerId:
-             *                   type: string
-             *                   example: "1"
-             *                 provider:
-             *                   type: string
-             *                   example: "none"
-             *                 createdAt:
-             *                   type: string
-             *                   format: date-time
-             *                   example: "2023-04-28T08:28:22.086Z"
-             *                 updatedAt:
-             *                   type: string
-             *                   format: date-time
-             *                   example: "2023-04-28T08:28:22.086Z"
-             *                 Zari:
-             *                   type: object
-             *                   properties:
-             *                     id:
-             *                       type: integer
-             *                       example: 1
-             *                     createdAt:
-             *                       type: string
-             *                       format: date-time
-             *                       example: "2023-04-28T08:28:22.133Z"
-             *                     updatedAt:
-             *                       type: string
-             *                       format: date-time
-             *                       example: "2023-04-28T08:28:22.133Z"
-             *                     ByeolId:
-             *                       type: integer
-             *                       example: 1
-             *                     ZodiacId:
-             *                       type: integer
-             *                       example: 8
-             *                     Banzzacks:
-             *                       type: array
-             *                       items:
-             *                         type: object
-             *                         properties:
-             *                           id:
-             *                             type: integer
-             *                             example: 1
-             *                           banzzack:
-             *                             type: string
-             *                             example: "I wish you a happy start to the day. You are special."
-             *                           createdAt:
-             *                             type: string
-             *                             format: date-time
-             *                             example: "2023-04-28T08:28:22.460Z"
-             *                           updatedAt:
-             *                             type: string
-             *                             format: date-time
-             *                             example: "2023-04-28T08:28:22.460Z"
-             *                           ByeolId:
-             *                             type: integer
-             *                             example: 4
-             *                           ZariId:
-             *                             type: integer
-             *                             example: 1
+             *               $ref: '#/components/schemas/Byeol'
              *       401:
-             *         description: 인증되지 않은 접근
+             *         $ref: '#/components/responses/UnauthorizedError'
              *       500:
-             *         description: 별 정보를 검색하는 동안 오류 발생
+             *         $ref: '#/components/responses/InternalServerError'
              */
             .get(this.read)
             /**
@@ -159,7 +100,7 @@ export default class ByeolController {
              *     tags:
              *       - Byeol
              *     security:
-             *       - BearerAuth: []
+             *       - GitHubAuth: []
              *     requestBody:
              *       description: 별의 새로운 이름을 제공합니다.
              *       required: true
@@ -175,22 +116,11 @@ export default class ByeolController {
              *       200:
              *         description: 별의 이름이 성공적으로 변경되었습니다.
              *       400:
-             *         description: 잘못된 요청, 필수 값 누락 또는 이름이 이미 존재함
-             *         content:
-             *           application/json:
-             *             schema:
-             *               type: object
-             *               properties:
-             *                 error:
-             *                   type: string
-             *                   example: "NameAlreadyExistsError"
-             *                 message:
-             *                   type: string
-             *                   example: "이 별 이름은 이미 존재합니다."
-             *       401:
-             *         description: 인증되지 않은 접근
+             *         $ref: '#/components/responses/NameRequiredError'
+             *       409:
+             *         $ref: '#/components/responses/NameAlreadyExistsError'
              *       500:
-             *         description: 별의 이름을 변경하는 동안 오류가 발생했습니다.
+             *         $ref: '#/components/responses/InternalServerError'
              */
             .put(this.update);
 
@@ -216,12 +146,12 @@ export default class ByeolController {
          *           application/json:
          *             schema:
          *               $ref: '#/components/schemas/Byeol'
-         *       404:
-         *         description: 조회된 별이 없음
+         *       401:
+         *         $ref: '#/components/responses/UnauthorizedError'
          *       500:
-         *         description: 서버 에러
+         *         $ref: '#/components/responses/InternalServerError'
          */
-        this.router.get('/api/byeol/:name', this.readByByeolName);
+        this.router.get('/api/byeol/:name', this.readByName);
         /**
          * @swagger
          * /api/byeol/is-can-use-name/{name}:
@@ -240,8 +170,12 @@ export default class ByeolController {
          *     responses:
          *       200:
          *         description: 사용 가능한 이름입니다.
-         *       400:
-         *         description: 사용 불가능한 이름입니다.
+         *       401:
+         *         $ref: '#/components/responses/NameRequiredError'
+         *       409:
+         *         $ref: '#/components/responses/NameAlreadyExistsError'
+         *       500:
+         *         $ref: '#/components/responses/InternalServerError'
          */
         this.router.get('/api/byeol/is-can-use-name/:name', this.isCanUseName);
         /**
@@ -253,7 +187,7 @@ export default class ByeolController {
          *     tags:
          *       - Byeol
          *     security:
-         *       - BearerAuth: []
+         *       - GitHubAuth: []
          *     requestBody:
          *       description: 변경할 별자리의 ID를 제공하세요.
          *       required: true
@@ -269,22 +203,11 @@ export default class ByeolController {
          *       200:
          *         description: 별의 별자리가 성공적으로 변경되었습니다.
          *       400:
-         *         description: 잘못된 요청, 필수 값 누락 또는 이미 설정된 별자리
-         *         content:
-         *           application/json:
-         *             schema:
-         *               type: object
-         *               properties:
-         *                 error:
-         *                   type: string
-         *                   example: "CanNotChangeZodiacError"
-         *                 message:
-         *                   type: string
-         *                   example: "별자리를 변경할 수 없습니다."
+         *         $ref: '#/components/responses/BadRequestError'
          *       401:
-         *         description: 인증되지 않은 접근
+         *         $ref: '#/components/responses/UnauthorizedError'
          *       500:
-         *         description: 별의 별자리를 업데이트하는 동안 오류가 발생했습니다.
+         *         $ref: '#/components/responses/InternalServerError'
          */
 
         this.router.put('/api/byeol/zodiac', this.setZodiac);
@@ -298,10 +221,10 @@ export default class ByeolController {
          *     tags:
          *       - Byeol
          *     security:
-         *       - BearerAuth: []
+         *       - GitHubAuth: []
          *     responses:
          *       200:
-         *         description: 별이 삭제되었습니다. 별에 기록된 반짝임도 삭제되었습니다.
+         *         description: 별과 별에 기록된 반짝임 삭제 성공.
          *         content:
          *           application/json:
          *             schema:
@@ -311,9 +234,9 @@ export default class ByeolController {
          *                   type: string
          *                   example: "별이 삭제되었습니다. 별에 기록된 반짝임도 삭제되었습니다."
          *       401:
-         *         description: 인증되지 않은 접근
+         *         $ref: '#/components/responses/UnauthorizedError'
          *       500:
-         *         description: 별을 삭제하는 동안 오류가 발생했습니다.
+         *         $ref: '#/components/responses/InternalServerError'
          */
         this.router.delete('/api/byeol', this.delete);
     }
@@ -346,9 +269,9 @@ export default class ByeolController {
         return res.json(byeol);
     }
 
-    readByByeolName = async (req, res, next) => {
+    readByName = async (req, res, next) => {
         const {name} = req.params;
-        const byeol = await this.#byeolService.readByByeolName(name);
+        const byeol = await this.#byeolService.readByName(name);
         return res.json(byeol);
     }
 
@@ -366,7 +289,7 @@ export default class ByeolController {
             const {name} = req.body;
 
             await this.#byeolService.updateName(user, name);
-            return res.status(200).send("별의 이름이 변경되었습니다.");
+            return res.send("별의 이름이 변경되었습니다.");
         } catch (e) {
             return next(e);
         }
@@ -375,10 +298,8 @@ export default class ByeolController {
     isCanUseName = async (req, res, next) => {
         try {
             const {name} = req.params;
-            const isCanUseName = await this.#byeolService.isCanUseName(name);
-            return isCanUseName
-                ? res.status(200).send("사용 가능한 이름입니다.")
-                : next(new NameAlreadyExistsError());
+            await this.#byeolService.validateName(name);
+            res.send("사용 가능한 이름입니다.");
         } catch (e) {
             return next(e);
         }

@@ -42,7 +42,7 @@ export default class CustomSwaggerSpec {
                 ],
             },
             definition: {}, // do not use this, instead use swaggerDefinition field
-            apis: ["./src/server/MVC/**/*.js"]
+            apis: ["./src/**/*.js"]
         };
         const swaggerOptions = {
             swaggerOptions: {

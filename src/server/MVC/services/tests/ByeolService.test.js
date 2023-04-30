@@ -4,9 +4,11 @@ import CustomSequelize from "../../../utils/configure/CustomSequelize.js";
 import Zodiac from "../../models/Zodiac.js";
 import DummyData from "../../../../dummy/DummyData.js";
 import _ from 'lodash';
+import CustomProcess from "../../../utils/configure/CustomProcess.js";
 const {sample} = _;
 describe('ByeolModel', () => {
-    const sequelize = new CustomSequelize();
+    const customProcess = new CustomProcess('test');
+    const sequelize = new CustomSequelize({_customProcess: customProcess});
     const byeolService = new ByeolService();
     let byeolId;
     let zodiacList;
@@ -43,11 +45,6 @@ describe('ByeolModel', () => {
         expect(instances.id).to.be.equal(tempId);
     });
 
-    it('자리를 포함한 별 조회', async () => {
-        const instances = await byeolService.findByPk(byeolId);
-        expect(instances).to.be.ok;
-    });
-
     it('여러 별 조회', async () => {
         const instances = await byeolService.readAll();
         expect(instances).to.be.ok;
@@ -61,14 +58,13 @@ describe('ByeolModel', () => {
     });
 
     it('별 수정', async () => {
-        const byeolId = 1;
-        const byeol = '앙_테스트띠';
-        const instances = await byeolService.updateByeol(byeolId, byeol);
+        const id = 1;
+        const name = '앙_테스트띠';
+        const instances = await byeolService.updateName({id}, name);
 
         expect(instances).to.be.ok;
-        expect(instances.byeol).to.be.equal('별이 있다.');
-        assert.equal(instances.id, byeolId, '별 아이디가 같다.');
-        assert.equal(instances.byeol, byeol, '별이 같다.');
+        assert.equal(instances.id, id, '별 아이디가 같다.');
+        assert.equal(instances.name, name, '별 이름이 같다.');
     });
 
 });
