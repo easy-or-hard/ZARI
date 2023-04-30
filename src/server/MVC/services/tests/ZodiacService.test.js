@@ -5,8 +5,8 @@ import Zodiac from "../../models/Zodiac.js";
 import DummyData from "../../../../dummy/DummyData.js";
 import CustomProcess from "../../../utils/configure/CustomProcess.js";
 describe('ByeolModel', () => {
-    const process = new CustomProcess('test')
-    const sequelize = new CustomSequelize(process);
+    const customProcess = new CustomProcess('test');
+    const sequelize = new CustomSequelize({_customProcess: customProcess});
     const zodiacService = new ZodiacService();
     let zodiacList;
 

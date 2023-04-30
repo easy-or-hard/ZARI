@@ -8,8 +8,8 @@ import CustomProcess from "../../../utils/configure/CustomProcess.js";
 const {sample} = _;
 
 describe('Byeol', () => {
-    const process = new CustomProcess('test')
-    const sequelize = new CustomSequelize(process);
+    const customProcess = new CustomProcess('test');
+    const sequelize = new CustomSequelize({_customProcess: customProcess});
     let zodiacList;
 
     before(async () => {

@@ -10,8 +10,8 @@ import CustomProcess from "../../../utils/configure/CustomProcess.js";
 
 const {sample} = _;
 describe('ByeolModel', () => {
-    const process = new CustomProcess('test')
-    const sequelize = new CustomSequelize(process);
+    const customProcess = new CustomProcess('test');
+    const sequelize = new CustomSequelize({_customProcess: customProcess});
     const banzzackService = new BanzzackService();
     let zodiacList, byeolList, byeol;
 

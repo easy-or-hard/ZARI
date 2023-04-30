@@ -5,8 +5,8 @@ import Zodiac from "../Zodiac.js";
 import CustomProcess from "../../../utils/configure/CustomProcess.js";
 
 describe('Zodiac', () => {
-    const process = new CustomProcess('test')
-    const sequelize = new CustomSequelize(process);
+    const customProcess = new CustomProcess('test');
+    const sequelize = new CustomSequelize({_customProcess: customProcess});
 
     before(async () => {
         await sequelize.sync();
