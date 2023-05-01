@@ -116,7 +116,7 @@ export default class ByeolController {
              *       200:
              *         description: 별의 이름이 성공적으로 변경되었습니다.
              *       400:
-             *         $ref: '#/components/responses/NameRequiredError'
+             *         $ref: '#/components/responses/EmptyNameError'
              *       409:
              *         $ref: '#/components/responses/NameAlreadyExistsError'
              *       500:
@@ -171,7 +171,7 @@ export default class ByeolController {
          *       200:
          *         description: 사용 가능한 이름입니다.
          *       401:
-         *         $ref: '#/components/responses/NameRequiredError'
+         *         $ref: '#/components/responses/EmptyNameError'
          *       409:
          *         $ref: '#/components/responses/NameAlreadyExistsError'
          *       500:
@@ -202,8 +202,6 @@ export default class ByeolController {
          *     responses:
          *       200:
          *         description: 별의 별자리가 성공적으로 변경되었습니다.
-         *       400:
-         *         $ref: '#/components/responses/BadRequestError'
          *       401:
          *         $ref: '#/components/responses/UnauthorizedError'
          *       500:
@@ -265,7 +263,7 @@ export default class ByeolController {
      */
     read = async (req, res, next) => {
         const user = req.user;
-        const byeol = await this.#byeolService.read(user);
+        const byeol = await this.#byeolService.read(user.id);
         return res.json(byeol);
     }
 
@@ -298,7 +296,8 @@ export default class ByeolController {
     isCanUseName = async (req, res, next) => {
         try {
             const {name} = req.params;
-            await this.#byeolService.validateName(name);
+            await this.#byeolService.validateEmptyName(name);
+            await this.#byeolService.validateExistsName(name);
             res.send("사용 가능한 이름입니다.");
         } catch (e) {
             return next(e);
@@ -321,7 +320,7 @@ export default class ByeolController {
             const {user} = req;
             await this.#byeolService.delete(user);
             res.clearCookie(this.#process.env.JWT_TOKEN_NAME);
-            return res.status(200).send("별이 삭제되었습니다. 별에 기록되었던 반짝도 삭제 되었습니다.");
+            return res.status(200).send("별이 삭제되었습니다. 별에 기록되었던 반짝이도 삭제 되었습니다.");
         } catch (e) {
             return next(e);
         }

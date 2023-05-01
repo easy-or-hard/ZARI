@@ -45,6 +45,7 @@ export default class CustomSwaggerSpec {
             apis: ["./src/**/*.js"]
         };
         const swaggerOptions = {
+            validatorUrl: null, // Add this line to disable caching
             swaggerOptions: {
                 oauth2RedirectUrl: 'http://localhost:3000/auth/github/callback',
             },

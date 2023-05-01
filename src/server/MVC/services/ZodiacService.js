@@ -1,6 +1,6 @@
 import Zodiac from "../models/Zodiac.js";
 import CustomLogger from "../../lib/configure/CustomLogger.js";
-import {IdRequiredError} from "../../lib/errors/CustomError.js";
+import {EmptyIdError, NotExistsIdError} from "../../lib/errors/CustomError.js";
 
 export default class ZariService {
     static #instance;
@@ -50,26 +50,28 @@ export default class ZariService {
     }
 
     /**
-     * 입력 ID가 없거나, 검색 결과가 존재하지 않는다면 오류를 발생시킵니다.
-     * @param zodiacId
-     * @returns {Promise<boolean>}
+     * 입력된 ID 값이 존재하는지 검사합니다.
+     * @param id
+     * @returns {Promise<void>}
      */
+    validateEmptyId = async (id) => {
+        this.#logger.info(`ZariService.validateEmptyId - id: ${id}`);
 
-    validateZodiacId = async (zodiacId) => {
-        this.#logger.info(`ZariService.validateZodiacId - zodiacId: ${zodiacId}`);
-
-        if (!zodiacId) {
-            throw new IdRequiredError();
+        if (!id) {
+            throw new EmptyIdError();
         }
+    }
 
-        const condition = {
-            where: {
-                id: zodiacId
-            }
-        }
-        const count = await this.#zodiac.count(condition);
-        if (count > 0) {
-            throw new Error(`Zodiac ID ${zodiacId} is not exist`);
+    /**
+     * 입력된 ID 값이 데이터 베이스에 있는지 검사합니다.
+     * @param id
+     * @returns {Promise<void>}
+     */
+    validateNotExistsId = async (id) => {
+        this.#logger.info(`ZariService.validateNotExistsId - id: ${id}`);
+
+        if (!id) {
+            throw new NotExistsIdError();
         }
     }
 }

@@ -3,10 +3,10 @@ import CustomLogger from "../../lib/configure/CustomLogger.js";
 import Banzzack from "../models/Banzzack.js";
 import Temp from "../../lib/naming/Temp.js";
 import {
-    ByeolIdAlreadyExistsError,
-    CanNotChangeZodiacError, IdRequiredError,
-    NameAlreadyExistsError,
-    NameRequiredError
+    ExistsIdError,
+    ExistsInstanceError, EmptyIdError,
+    ExistsNameError,
+    EmptyNameError
 } from "../../lib/errors/CustomError.js";
 import Zodiac from "../models/Zodiac.js";
 import ZodiacService from "./ZodiacService.js";
@@ -61,7 +61,8 @@ export default class ByeolService {
 
         while (makeName) {
             try {
-                await this.validateName(tempName);
+                await this.validateEmptyName(tempName);
+                await this.validateExistsName(tempName);
                 makeName = false;
             } catch (e) {
                 tempName = Temp.generateRandomKoreanName();
@@ -78,7 +79,7 @@ export default class ByeolService {
      */
     read = async id => {
         this.#logger.info(`ByeolService.read: id: ${id}`);
-        await this.validateId(id);
+        await this.validateEmptyId(id);
 
         const options = {
             include: [
@@ -102,7 +103,8 @@ export default class ByeolService {
      */
     readByName = async (name) => {
         this.#logger.info(`ByeolService.readByByeolName: name: ${name}`);
-        await this.validateName(name);
+        await this.validateEmptyName(name);
+        await this.validateExistsName(name);
         return await this.#byeolModel.findOne({where: {name}});
     }
 
@@ -129,8 +131,11 @@ export default class ByeolService {
      */
     updateName = async (user, name) => {
         this.#logger.info(`ByeolService.update: user: ${user}, name: ${name}`);
-        await this.validateId(user.id);
-        await this.validateName(name);
+
+        await this.validateEmptyId(user.id);
+
+        await this.validateEmptyName(name);
+        await this.validateExistsName(name);
 
         const instance = await this.#byeolModel.findByPk(user.id);
         return await instance.update({name});
@@ -144,9 +149,10 @@ export default class ByeolService {
      */
     setZodiac = async (user, zodiacId) => {
         this.#logger.info(`ByeolService.update: user: ${user}, zodiacId: ${zodiacId}`);
-        await this.#zodiacService.validateZodiacId(zodiacId);
+        await this.#zodiacService.validateEmptyId(zodiacId);
+        await this.#zodiacService.validateNotExistsId(zodiacId);
         const instance = await this.#byeolModel.findByPk(user.id);
-        await this.validateCanChangeZodiac(instance);
+        await this.validateExistsInstance(instance);
         return await instance.update({zodiacId});
     }
 
@@ -178,37 +184,47 @@ export default class ByeolService {
     }
 
     /**
-     * 별의 아이디가 존재한다면 에러를 발생시킵니다.
+     * 별의 아이디가 비어있다면 에러를 발생시킵니다.
      * @param id
      * @returns {Promise<void>}
      */
-    validateId = async (id) => {
-        this.#logger.info(`ByeolService.validateByeolId: byeolId: ${id}`);
+    validateEmptyId = async (id) => {
+        this.#logger.info(`ByeolService.validateIsEmptyId: byeolId: ${id}`);
         if (!id) {
-            throw new IdRequiredError();
-        }
-
-        const byeol = await this.#byeolModel.findByPk(id);
-        if (byeol) {
-            throw new ByeolIdAlreadyExistsError();
+            throw new EmptyIdError();
         }
     }
 
     /**
-     * 별의 이름을 검사하고 에러를 발생시킵니다.
+     * 별의 아이디가 이미 존재한다면 에러를 발생시킵니다.
+     * @param id
+     * @returns {Promise<void>}
+     */
+    validateAlreadyExistsId = async (id) => {
+        this.#logger.info(`ByeolService.validateAlreadyExistsId: byeolId: ${id}`);
+        const byeol = await this.#byeolModel.findByPk(id);
+        if (!byeol) {
+            throw new ExistsIdError();
+        }
+    }
+
+    /**
+     * 별의 이름이 비어있다면 에러를 발생시킵니다.
      * @param name
      * @returns {Promise<void>}
      */
-    validateName = async (name) => {
-        this.#logger.info(`ByeolService.validateByeolName: name: ${name}`);
-
+    validateEmptyName = async (name) => {
+        this.#logger.info(`ByeolService.validateEmptyId: id: ${name}`);
         if (!name) {
-            throw new NameRequiredError();
+            throw new EmptyNameError();
         }
+    }
 
+    validateExistsName = async (name) => {
+        this.#logger.info(`ByeolService.validateAlreadyExistsName: name: ${name}`);
         const byeol = await this.#byeolModel.findOne({where: {name}});
         if (byeol) {
-            throw new NameAlreadyExistsError();
+            throw new ExistsNameError();
         }
     }
 
@@ -218,9 +234,9 @@ export default class ByeolService {
      * @param instance
      * @returns {Promise<void>}
      */
-    validateCanChangeZodiac = async (instance) => {
+    validateExistsInstance = async (instance) => {
         if (instance.zodiacId) {
-            throw new CanNotChangeZodiacError();
+            throw new ExistsInstanceError();
         }
     }
 }

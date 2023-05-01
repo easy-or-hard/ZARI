@@ -30,15 +30,6 @@ export class InternalServerError extends CustomError {
     }
 }
 
-export class NotFoundError extends CustomError {
-    constructor(message) {
-        let defaultMessage = message || "Not Found";
-        super(defaultMessage);
-        this.name = 'NotFoundError';
-        this.statusCode = 404;
-    }
-}
-
 export class TokenValidationError extends CustomError {
     constructor(message) {
         let defaultMessage = message || "토큰 검증 실패, 토큰 만료 또는 잘못된 토큰입니다.";
@@ -49,56 +40,11 @@ export class TokenValidationError extends CustomError {
 }
 
 /**
- * @swagger
- * components:
- *   responses:
- *     NameAlreadyExistsError:
- *       description: 존재하는 이름을 재사용하려면 오류 발생
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               message:
- *                 type: string
- *                 example: 이미 존재하는 이름입니다.
+ * 인스턴스가 이미 있으면 에러 발생
  */
-export class NameAlreadyExistsError extends CustomError {
+export class ExistsInstanceError extends CustomError {
     constructor(message) {
-        let defaultMessage = message || "이미 존재하는 이름입니다.";
-        super(defaultMessage);
-        this.name = 'NameAlreadyExistsError';
-        this.statusCode = 409;
-    }
-}
-
-/**
- * @swagger
- * components:
- *   responses:
- *     NameRequiredError:
- *       description: 이름은 필수 입니다.
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               message:
- *                 type: string
- *                 example: 이름이 비었습니다. 이름은 필수 입니다.
- */
-export class NameRequiredError extends CustomError {
-    constructor(message) {
-        let defaultMessage = message || "이름은 필수입니다.";
-        super(defaultMessage);
-        this.name = 'NameRequiredError';
-        this.statusCode = 400;
-    }
-}
-
-export class CanNotChangeZodiacError extends CustomError {
-    constructor(message) {
-        let defaultMessage = message || "한 번 선택한 별자리는 변경할 수 없습니다.";
+        let defaultMessage = message || "이미 존재하는 인스턴스 입니다.";
         super(defaultMessage);
         this.name = 'canNotChangeZodiacError';
         this.statusCode = 409;
@@ -129,12 +75,40 @@ export class UnauthorizedError extends CustomError {
     }
 }
 
+export class EmptyIdError extends CustomError {
+    constructor(message) {
+        let defaultMessage = message || "ID가 비었습니다.";
+        super(defaultMessage);
+        this.name = 'EmptyIdError';
+        this.statusCode = 400;
+    }
+}
+
+export class ExistsIdError extends CustomError {
+    constructor(message) {
+        let defaultMessage = message || "이미 존재하는 ID입니다.";
+        super(defaultMessage);
+        this.name = 'ExistsIdError';
+        this.statusCode = 409;
+    }
+}
+
+export class NotExistsIdError extends CustomError {
+    constructor(message) {
+        let defaultMessage = message || "존재하지 않는 ID입니다.";
+        super(defaultMessage);
+        this.name = 'NotExistsIdError';
+        this.statusCode = 404;
+    }
+}
+
+
 /**
  * @swagger
  * components:
  *   responses:
- *     ByeolIdAlreadyExistsError:
- *       description: 존재하는 ID를 재사용하려면 오류 발생
+ *     EmptyNameError:
+ *       description: 이름이 비었습니다.
  *       content:
  *         application/json:
  *           schema:
@@ -142,14 +116,14 @@ export class UnauthorizedError extends CustomError {
  *             properties:
  *               message:
  *                 type: string
- *                 example: 이미 존재하는 ID입니다.
+ *                 example: 이름이 비었습니다.
  */
-export class ByeolIdAlreadyExistsError extends CustomError {
+export class EmptyNameError extends CustomError {
     constructor(message) {
-        let defaultMessage = message || "이미 존재하는 ID입니다.";
+        let defaultMessage = message || "이름이 비었습니다.";
         super(defaultMessage);
-        this.name = 'ByeolIdAlreadyExistsError';
-        this.statusCode = 409;
+        this.name = 'EmptyNameError';
+        this.statusCode = 400;
     }
 }
 
@@ -157,8 +131,8 @@ export class ByeolIdAlreadyExistsError extends CustomError {
  * @swagger
  * components:
  *   responses:
- *     IdRequiredError:
- *       description: ID를 입력하지 않았을 때 발생하는 오류
+ *     NameAlreadyExistsError:
+ *       description: 존재하는 이름을 재사용하려면 오류 발생
  *       content:
  *         application/json:
  *           schema:
@@ -166,13 +140,31 @@ export class ByeolIdAlreadyExistsError extends CustomError {
  *             properties:
  *               message:
  *                 type: string
- *                 example: ID는 필수 값 입니다.
+ *                 example: 이미 존재하는 이름입니다.
  */
-export class IdRequiredError extends CustomError {
+export class ExistsNameError extends CustomError {
     constructor(message) {
-        let defaultMessage = message || "ID는 필수 입니다.";
+        let defaultMessage = message || "이미 존재하는 이름입니다.";
         super(defaultMessage);
-        this.name = 'IdRequiredError';
+        this.name = 'ExistsNameError';
+        this.statusCode = 409;
+    }
+}
+
+export class NotExistsNameError extends CustomError {
+    constructor(message) {
+        let defaultMessage = message || "존재하지 않는 이름입니다.";
+        super(defaultMessage);
+        this.name = 'NotExistsNameError';
+        this.statusCode = 404;
+    }
+}
+
+export class EmptyUserError extends CustomError {
+    constructor(message) {
+        let defaultMessage = message || "사용자가 비었습니다. (로그인이 필요합니다.)";
+        super(defaultMessage);
+        this.name = 'EmptyUserError';
         this.statusCode = 400;
     }
 }
