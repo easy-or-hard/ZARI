@@ -1,12 +1,12 @@
 import express from "express";
-import CustomPassport from "../../utils/security/auth/CustomPassport.js";
-import CustomJwt from "../../utils/security/auth/CustomJwt.js";
-import CustomProcess from "../../utils/configure/CustomProcess.js";
-import CustomLogger from "../../utils/configure/CustomLogger.js";
+import CustomPassport from "../../lib/security/auth/CustomPassport.js";
+import CustomJwt from "../../lib/security/auth/CustomJwt.js";
+import CustomProcess from "../../lib/configure/CustomProcess.js";
+import CustomLogger from "../../lib/configure/CustomLogger.js";
 import ByeolService from "../services/ByeolService.js";
 import ByeolController from "./ByeolController.js";
 import Byeol from "../models/Byeol.js";
-import {UnauthorizedError} from "../../utils/errors/CustomError.js";
+import {UnauthorizedError} from "../../lib/errors/CustomError.js";
 
 /**
  * @swagger
@@ -66,7 +66,6 @@ export default class AuthController {
      */
     #byeolService;
 
-
     constructor({
                     _router = express.Router(),
                     _passport = new CustomPassport(),
@@ -103,19 +102,26 @@ export default class AuthController {
          *   get:
          *     summary: 가능한 인증 목록 반환
          *     tags: [Auth]
-         *     description: 사용 가능한 인증 제공자 목록을 반환합니다. http://현재사용중인도메인/auth/github 로 접속하면 로그인 페이지로 리다이렉트 됩니다. 새 창의 접속하세요.
+         *     description: 사용 가능한 인증 제공자 목록을 반환합니다. http://현재사용중인도메인/auth/github 로 접속하면 로그인 페이지로 리다이렉트 됩니다. 새 창에서 접속하세요.
          *     responses:
          *       200:
          *         description: 사용 가능한 인증 제공자 목록을 반환.
          *         content:
          *           application/json:
          *             schema:
-         *               type: object
-         *               additionalProperties:
-         *                 type: string
-         *               example:
-         *                 google: "/auth/google"
-         *                 github: "/auth/github"
+         *               type: array
+         *               items:
+         *                 type: object
+         *                 properties:
+         *                   provider:
+         *                     type: string
+         *                   url:
+         *                     type: string
+         *             example:
+         *               - provider: google
+         *                 url: "/auth/google"
+         *               - provider: github
+         *                 url: "/auth/github"
          */
         this.router.get('/api/auth', this.authPossible);
 
@@ -125,7 +131,6 @@ export default class AuthController {
          */
         this.router.get('/api/byeol', this.jwtVerifier);
 
-
         this.router.post('*', this.jwtVerifier);
         this.router.put('*', this.jwtVerifier);
         this.router.delete('*', this.jwtVerifier);
@@ -134,14 +139,32 @@ export default class AuthController {
             this.router.get(`/auth/${auth}`, this.#passport.authenticate(auth).bind(this));
             this.router.get(`/auth/${auth}/callback`, this.#passport.authenticateCallback(auth).bind(this), this.signUpIfNewUser, this.jwtGenerator);
         }
+
+        this.router.get('/auth/sign-out', this.authSignOut);
+        this.router.get('/auth/complete', this.jwtVerifier, this.authComplete);
+    }
+
+    authComplete = async (req, res, next) => {
+        this.#logger.info('authComplete');
+        return res.json({message: 'authorization success, 창을 닫으셔도 됩니다.'});
+    }
+
+    authSignOut = async (req, res, next) => {
+        this.#logger.info('authSignOut');
+        res.clearCookie(this.#process.env.JWT_TOKEN_NAME);
+        return res.json({message: 'sign-out success'});
     }
 
     authPossible = async (req, res, next) => {
         this.#logger.info('authPossible');
         const authList = CustomPassport.authPossibleList;
-        const supportedAuthList = {};
+        const supportedAuthList = [];
         for (const auth of authList) {
-            supportedAuthList[auth] = `/auth/${auth}`
+            const authInfo = {
+                provider: auth,
+                url: `/auth/${auth}`
+            }
+            supportedAuthList.push(authInfo);
         }
         return res.json(supportedAuthList);
     }
@@ -157,15 +180,14 @@ export default class AuthController {
     jwtGenerator = async (req, res, next) => {
         this.#logger.info('jwtGenerator');
         const token = this.#jwt.sign(req.user);
+        res.set('Authorization', `Bearer ${token}`);
         res.cookie(this.#process.env.JWT_TOKEN_NAME, token, {
             httpOnly: true,
             secure: true,
             maxAge: 1000 * 60 * 60 * 24 * 7,
             sameSite: 'strict',
         });
-        return res.status(200).json({
-            message: '인증이 성공했습니다. 창을 닫으셔도 됩니다.'
-        });
+        return res.redirect('/auth/complete');
     }
 
     /**
@@ -177,9 +199,11 @@ export default class AuthController {
      * @returns {Promise<*>}
      */
     jwtVerifier = async (req, res, next) => {
+        this.#logger.info('jwtVerifier');
+
         try {
-            const token = req.cookies[this.#process.env.JWT_TOKEN_NAME];
-            req.user = await this.#jwt.verifyAndGetPayload(token);
+            const jwtToken = this.#getJwtToken(req);
+            req.user = this.#jwt.verifyAndGetPayload(jwtToken);
             this.#logger.info('jwtVerifier', 'JWT 인증 성공');
             return next();
         } catch (err) {
@@ -220,5 +244,26 @@ export default class AuthController {
         req.user.id = byeolInstance.id;
 
         return next();
+    }
+
+    /**
+     * JWT 토큰을 가져온다.
+     * 쿠키먼저 확인하고, 헤더를 확인한다. 브라우저 요청에 대해서도 응답해줌.
+     * @param req
+     * @returns {*|Promise<unknown>}
+     */
+    #getJwtToken = req => {
+        let jwtToken;
+
+        jwtToken = req.cookies[this.#process.env.JWT_TOKEN_NAME];
+        if (jwtToken) {
+            return jwtToken;
+        }
+
+        jwtToken = req.headers['authorization'];
+        if (jwtToken) {
+            return jwtToken.split(' ')[1];
+        }
+        return this.#jwt.verifyAndGetPayload(jwtToken);
     }
 }
