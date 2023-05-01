@@ -1,13 +1,13 @@
 import Byeol from "../models/Byeol.js";
-import CustomLogger from "../../utils/configure/CustomLogger.js";
+import CustomLogger from "../../lib/configure/CustomLogger.js";
 import Banzzack from "../models/Banzzack.js";
-import Temp from "../../utils/naming/Temp.js";
+import Temp from "../../lib/naming/Temp.js";
 import {
     ByeolIdAlreadyExistsError,
     CanNotChangeZodiacError, IdRequiredError,
     NameAlreadyExistsError,
     NameRequiredError
-} from "../../utils/errors/CustomError.js";
+} from "../../lib/errors/CustomError.js";
 import Zodiac from "../models/Zodiac.js";
 import ZodiacService from "./ZodiacService.js";
 

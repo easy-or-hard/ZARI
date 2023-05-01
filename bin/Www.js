@@ -1,7 +1,7 @@
 import App from "../App.js";
-import CustomProcess from "../src/server/utils/configure/CustomProcess.js";
-import CustomSequelize from '../src/server/utils/configure/CustomSequelize.js';
-import CustomLogger from '../src/server/utils/configure/CustomLogger.js';
+import CustomProcess from "../src/server/lib/configure/CustomProcess.js";
+import CustomSequelize from '../src/server/lib/configure/CustomSequelize.js';
+import CustomLogger from '../src/server/lib/configure/CustomLogger.js';
 
 class Www {
     /**

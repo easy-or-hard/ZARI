@@ -1,9 +1,9 @@
 import {expect, assert} from 'chai';
-import CustomSequelize from "../../../utils/configure/CustomSequelize.js";
+import CustomSequelize from "../../../lib/configure/CustomSequelize.js";
 import ZodiacService from "../ZodiacService.js";
 import Zodiac from "../../models/Zodiac.js";
 import DummyData from "../../../../dummy/DummyData.js";
-import CustomProcess from "../../../utils/configure/CustomProcess.js";
+import CustomProcess from "../../../lib/configure/CustomProcess.js";
 describe('ByeolModel', () => {
     const customProcess = new CustomProcess('test');
     const sequelize = new CustomSequelize({_customProcess: customProcess});

@@ -1,9 +1,9 @@
-import CustomLogger from "../../utils/configure/CustomLogger.js";
+import CustomLogger from "../../lib/configure/CustomLogger.js";
 import express from "express";
 import ByeolService from "../services/ByeolService.js";
 import ZodiacService from "../services/ZodiacService.js";
 import Byeol from "../models/Byeol.js";
-import CustomProcess from "../../utils/configure/CustomProcess.js";
+import CustomProcess from "../../lib/configure/CustomProcess.js";
 
 export default class ByeolController {
     /**

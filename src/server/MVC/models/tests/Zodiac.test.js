@@ -1,8 +1,8 @@
 import {expect, assert} from 'chai';
-import CustomSequelize from "../../../utils/configure/CustomSequelize.js";
+import CustomSequelize from "../../../lib/configure/CustomSequelize.js";
 import DummyData from "../../../../dummy/DummyData.js";
 import Zodiac from "../Zodiac.js";
-import CustomProcess from "../../../utils/configure/CustomProcess.js";
+import CustomProcess from "../../../lib/configure/CustomProcess.js";
 
 describe('Zodiac', () => {
     const customProcess = new CustomProcess('test');

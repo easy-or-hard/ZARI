@@ -1,6 +1,6 @@
 import {Router} from "express";
 import ZodiacService from "../services/ZodiacService.js";
-import CustomLogger from "../../utils/configure/CustomLogger.js";
+import CustomLogger from "../../lib/configure/CustomLogger.js";
 
 export default class ZodiacController {
     /**

@@ -1,10 +1,10 @@
 import {expect, assert} from 'chai';
 import Byeol from '../Byeol.js';
-import CustomSequelize from "../../../utils/configure/CustomSequelize.js";
+import CustomSequelize from "../../../lib/configure/CustomSequelize.js";
 import DummyData from "../../../../dummy/DummyData.js";
 import Zodiac from "../Zodiac.js";
 import _ from 'lodash';
-import CustomProcess from "../../../utils/configure/CustomProcess.js";
+import CustomProcess from "../../../lib/configure/CustomProcess.js";
 const {sample} = _;
 
 describe('Byeol', () => {

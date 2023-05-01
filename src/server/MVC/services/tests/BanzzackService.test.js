@@ -1,12 +1,12 @@
 import {expect, assert} from 'chai';
 import BanzzackService from "../BanzzackService.js";
-import CustomSequelize from "../../../utils/configure/CustomSequelize.js";
+import CustomSequelize from "../../../lib/configure/CustomSequelize.js";
 import Zodiac from "../../models/Zodiac.js";
 import DummyData from "../../../../dummy/DummyData.js";
 import _ from 'lodash';
 import Byeol from "../../models/Byeol.js";
 import Banzzack from "../../models/Banzzack.js";
-import CustomProcess from "../../../utils/configure/CustomProcess.js";
+import CustomProcess from "../../../lib/configure/CustomProcess.js";
 
 const {sample} = _;
 describe('ByeolModel', () => {

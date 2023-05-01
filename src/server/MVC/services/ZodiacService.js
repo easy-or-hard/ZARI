@@ -1,6 +1,6 @@
 import Zodiac from "../models/Zodiac.js";
-import CustomLogger from "../../utils/configure/CustomLogger.js";
-import {IdRequiredError} from "../../utils/errors/CustomError.js";
+import CustomLogger from "../../lib/configure/CustomLogger.js";
+import {IdRequiredError} from "../../lib/errors/CustomError.js";
 
 export default class ZariService {
     static #instance;

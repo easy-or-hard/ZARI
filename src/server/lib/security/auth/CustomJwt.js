@@ -55,7 +55,7 @@ export default class CustomJwt {
             }
         });
 
-    verifyAndGetPayload = async jwtToken =>
+    verifyAndGetPayload = jwtToken =>
         new Promise((resolve, reject) => {
             try {
                 const decoded = jwt.verify(jwtToken, this.#customProcess.env.JWT_SECRET_KEY);

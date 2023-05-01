@@ -1,4 +1,4 @@
-import CustomLogger from "../../utils/configure/CustomLogger.js";
+import CustomLogger from "../../lib/configure/CustomLogger.js";
 import Banzzack from "../models/Banzzack.js";
 
 export default class BanzzackService {
