@@ -105,12 +105,11 @@ export default class AuthController {
         this.#logger.info('routerInitialize');
 
         // JWT TOKEN 리프레시는 라우터 최상단에 위치해야 합니다.
-        this.router.use('/api/*')
+        this.router.route('/api/*')
             .get(this.jwtTokenRefresh)
             .post(this.jwtTokenRefresh)
             .put(this.jwtTokenRefresh)
-            .delete(this.jwtTokenRefresh)
-            .patch(this.jwtTokenRefresh);
+            .delete(this.jwtTokenRefresh);
 
         /**
          * @swagger
