@@ -1,14 +1,21 @@
 import styled from "styled-components";
 
 type ButtonProps = {
+  type: "button" | "submit";
   text: string;
-  liner?: boolean;
   onClick?: () => void;
+  disabled: boolean;
 };
-interface StyledProps {
-  liner?: boolean;
-}
-const ButtonWrap = styled.button<StyledProps>`
+const Button = (props: ButtonProps) => {
+  const { type, text, onClick, disabled } = props;
+  return (
+    <ButtonWrap type={type} onClick={onClick} disabled={disabled}>
+      {text}
+    </ButtonWrap>
+  );
+};
+
+const ButtonWrap = styled.button`
   height: 6rem;
   width: 100%;
   border-radius: 8px;
@@ -16,23 +23,6 @@ const ButtonWrap = styled.button<StyledProps>`
   font-size: var(--button-font);
   font-weight: 700;
   transition: 0.2s all;
-  ${(props) =>
-    props.liner
-      ? `border:1px solid #fff;
-  background-color:transparent;
-  color:#fff;`
-      : `background-color: #fff;`}
-  :hover {
-    opacity: 0.9;
-  }
 `;
-
-const Button: React.FC<ButtonProps> = ({ text, liner, onClick }) => {
-  return (
-    <ButtonWrap type="button" onClick={onClick} liner={liner}>
-      {text}
-    </ButtonWrap>
-  );
-};
 
 export default Button;
